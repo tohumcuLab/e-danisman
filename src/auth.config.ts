@@ -9,21 +9,27 @@ export const authConfig = {
   callbacks: {
     async redirect({ url, baseUrl }) {
       const siteUrl = process.env.NEXTAUTH_URL || process.env.AUTH_URL || "https://sor.hobitohum.com";
+      if (url.includes("localhost")) {
+        const path = url.replace(/^https?:\/\/localhost(:\d+)?/, "");
+        return `${siteUrl}${path.startsWith("/") ? path : "/" + path}`;
+      }
       if (url.startsWith("/")) return `${siteUrl}${url}`;
-      if (url.includes("localhost")) return siteUrl;
-      return url;
+      return url.startsWith("http") ? url : siteUrl;
     },
     authorized({ auth, request: { nextUrl } }) {
       const isLoggedIn = !!auth?.user;
       const isAuthPage = nextUrl.pathname.startsWith("/giris") || nextUrl.pathname.startsWith("/kayit");
-      const isProtected = nextUrl.pathname.startsWith("/profil") || nextUrl.pathname.startsWith("/soru/sor");
+      const isProtected = nextUrl.pathname.startsWith("/profil") || nextUrl.pathname.startsWith("/soru/sor") || nextUrl.pathname.startsWith("/admin");
+
+      const siteUrl = process.env.NEXTAUTH_URL || process.env.AUTH_URL || "https://sor.hobitohum.com";
 
       if (isProtected) {
         if (isLoggedIn) return true;
-        return false; // Redirect unauthenticated users to login page
+        const loginUrl = new URL("/giris", siteUrl);
+        loginUrl.searchParams.set("callbackUrl", `${siteUrl}${nextUrl.pathname}${nextUrl.search}`);
+        return Response.redirect(loginUrl);
       } else if (isAuthPage) {
         if (isLoggedIn) {
-          const siteUrl = process.env.NEXTAUTH_URL || process.env.AUTH_URL || "https://sor.hobitohum.com";
           return Response.redirect(new URL("/", siteUrl));
         }
         return true;

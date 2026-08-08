@@ -1,4 +1,3 @@
-import "dotenv/config";
 import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { authConfig } from "./auth.config";
@@ -7,7 +6,7 @@ import bcrypt from "bcryptjs";
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   ...authConfig,
-  secret: process.env.AUTH_SECRET || process.env.NEXTAUTH_SECRET,
+  secret: process.env.AUTH_SECRET || process.env.NEXTAUTH_SECRET || "hobitohum_tarimsal_secret_key_2026",
   trustHost: true,
   providers: [
     CredentialsProvider({

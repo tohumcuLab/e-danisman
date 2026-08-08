@@ -1,9 +1,8 @@
-import "dotenv/config";
 import type { NextAuthConfig } from "next-auth";
 
 export const authConfig = {
   trustHost: true,
-  secret: process.env.AUTH_SECRET || process.env.NEXTAUTH_SECRET,
+  secret: process.env.AUTH_SECRET || process.env.NEXTAUTH_SECRET || "hobitohum_tarimsal_secret_key_2026",
   pages: {
     signIn: "/giris",
   },

@@ -1,3 +1,4 @@
+import "dotenv/config";
 import type { NextAuthConfig } from "next-auth";
 
 export const authConfig = {

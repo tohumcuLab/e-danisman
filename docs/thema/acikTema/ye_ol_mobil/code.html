@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+
+<html class="light" lang="tr"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Hobi Tohum - Kayıt Ol</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "inverse-primary": "#74db98",
+                    "on-secondary-fixed-variant": "#7f2b00",
+                    "on-primary-container": "#d7ffde",
+                    "on-tertiary-fixed": "#241a00",
+                    "on-tertiary": "#ffffff",
+                    "surface-container-highest": "#e2e2e5",
+                    "on-primary": "#ffffff",
+                    "surface-container": "#eeeef0",
+                    "on-surface-variant": "#3e4a40",
+                    "surface": "#f9f9fc",
+                    "tertiary-fixed-dim": "#e9c349",
+                    "surface-container-low": "#f3f3f6",
+                    "surface-tint": "#006d3c",
+                    "on-tertiary-fixed-variant": "#574500",
+                    "surface-variant": "#e2e2e5",
+                    "secondary-fixed": "#ffdbce",
+                    "outline": "#6e7a6f",
+                    "tertiary-container": "#cca730",
+                    "on-primary-fixed-variant": "#00522c",
+                    "on-secondary-fixed": "#370e00",
+                    "inverse-surface": "#2f3133",
+                    "error-container": "#ffdad6",
+                    "background": "#f9f9fc",
+                    "on-surface": "#1a1c1e",
+                    "secondary-container": "#fc6c29",
+                    "secondary": "#a63b00",
+                    "primary-fixed-dim": "#74db98",
+                    "on-secondary-container": "#5a1c00",
+                    "on-primary-fixed": "#00210e",
+                    "surface-container-lowest": "#ffffff",
+                    "on-error-container": "#93000a",
+                    "tertiary-fixed": "#ffe088",
+                    "on-background": "#1a1c1e",
+                    "surface-container-high": "#e8e8ea",
+                    "secondary-fixed-dim": "#ffb599",
+                    "on-error": "#ffffff",
+                    "inverse-on-surface": "#f0f0f3",
+                    "tertiary": "#735c00",
+                    "outline-variant": "#bdcabd",
+                    "surface-bright": "#f9f9fc",
+                    "primary-fixed": "#90f8b2",
+                    "primary-container": "#008148",
+                    "primary": "#006537",
+                    "surface-dim": "#dadadc",
+                    "on-tertiary-container": "#4f3e00",
+                    "on-secondary": "#ffffff",
+                    "error": "#ba1a1a"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.125rem",
+                    "lg": "0.25rem",
+                    "xl": "0.5rem",
+                    "full": "0.75rem"
+            },
+            "spacing": {
+                    "xs": "4px",
+                    "lg": "40px",
+                    "margin-mobile": "16px",
+                    "md": "24px",
+                    "xl": "64px",
+                    "sm": "12px",
+                    "gutter": "16px",
+                    "base": "8px",
+                    "margin-desktop": "32px"
+            },
+            "fontFamily": {
+                    "display-lg-mobile": ["Work Sans"],
+                    "display-lg": ["Work Sans"],
+                    "body-md": ["Work Sans"],
+                    "body-lg": ["Work Sans"],
+                    "label-caps": ["JetBrains Mono"],
+                    "headline-md": ["Work Sans"]
+            },
+            "fontSize": {
+                    "display-lg-mobile": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                    "label-caps": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "500"}],
+                    "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body {
+            background-color: #f9f9fc;
+            color: #1a1c1e;
+            font-family: 'Work Sans', sans-serif;
+            overflow-x: hidden;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(8px);
+            border: 1px solid #E1E4E1;
+        }
+        .input-focus-ring:focus {
+            outline: none;
+            border-color: #008148;
+            box-shadow: 0 0 0 1px #008148;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="min-h-screen flex flex-col items-center justify-center bg-surface p-gutter relative">
+<!-- Background Decor (Atmospheric) -->
+<div class="absolute inset-0 z-0 overflow-hidden pointer-events-none opacity-40">
+<div class="absolute -top-[10%] -left-[10%] w-[40%] h-[40%] rounded-full bg-primary-fixed-dim blur-[120px]"></div>
+<div class="absolute -bottom-[10%] -right-[10%] w-[30%] h-[30%] rounded-full bg-secondary-fixed blur-[100px]"></div>
+</div>
+<!-- Main Registration Shell -->
+<main class="w-full max-w-md z-10 flex flex-col gap-md animate-in fade-in slide-in-from-bottom-4 duration-700">
+<!-- Brand Header (Based on TopAppBar specs) -->
+<header class="flex flex-col items-center gap-sm text-center">
+<div class="w-16 h-16 bg-primary-container rounded-xl flex items-center justify-center shadow-lg transform hover:rotate-6 transition-transform duration-300">
+<span class="material-symbols-outlined text-on-primary-container text-4xl" style="font-variation-settings: 'FILL' 1;">potted_plant</span>
+</div>
+<div class="mt-base">
+<h1 class="font-display-lg-mobile text-display-lg-mobile text-primary tracking-tight">Hobi Tohum</h1>
+<p class="font-body-md text-body-md text-on-surface-variant mt-xs">Doğayla olan bağınızı yeşertmeye başlayın.</p>
+</div>
+</header>
+<!-- Form Card -->
+<div class="glass-card p-md md:p-lg rounded-xl shadow-sm border-outline-variant">
+<form class="flex flex-col gap-base" id="signupForm">
+<!-- Ad Soyad -->
+<div class="flex flex-col gap-xs">
+<label class="font-label-caps text-label-caps text-on-surface-variant" for="fullName">AD SOYAD</label>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant">person</span>
+<input class="w-full pl-10 pr-4 py-3 bg-surface-container-lowest border border-outline-variant rounded-lg font-body-md text-body-md text-on-surface placeholder:text-outline input-focus-ring transition-all" id="fullName" name="fullName" placeholder="Örn: Ahmet Yılmaz" required="" type="text"/>
+</div>
+</div>
+<!-- E-posta -->
+<div class="flex flex-col gap-xs">
+<label class="font-label-caps text-label-caps text-on-surface-variant" for="email">E-POSTA</label>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant">mail</span>
+<input class="w-full pl-10 pr-4 py-3 bg-surface-container-lowest border border-outline-variant rounded-lg font-body-md text-body-md text-on-surface placeholder:text-outline input-focus-ring transition-all" id="email" name="email" placeholder="ahmet@email.com" required="" type="email"/>
+</div>
+</div>
+<!-- Şehir & Üretim Alanı (Row) -->
+<div class="grid grid-cols-2 gap-sm">
+<div class="flex flex-col gap-xs">
+<label class="font-label-caps text-label-caps text-on-surface-variant" for="city">ŞEHİR</label>
+<div class="relative">
+<select class="w-full appearance-none pl-3 pr-8 py-3 bg-surface-container-lowest border border-outline-variant rounded-lg font-body-md text-body-md text-on-surface input-focus-ring transition-all" id="city" name="city" required="">
+<option disabled="" selected="" value="">Seçiniz</option>
+<option value="istanbul">İstanbul</option>
+<option value="ankara">Ankara</option>
+<option value="izmir">İzmir</option>
+<option value="antalya">Antalya</option>
+<option value="bursa">Bursa</option>
+</select>
+<span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-on-surface-variant pointer-events-none">expand_more</span>
+</div>
+</div>
+<div class="flex flex-col gap-xs">
+<label class="font-label-caps text-label-caps text-on-surface-variant" for="area">ÜRETİM ALANI</label>
+<div class="relative">
+<select class="w-full appearance-none pl-3 pr-8 py-3 bg-surface-container-lowest border border-outline-variant rounded-lg font-body-md text-body-md text-on-surface input-focus-ring transition-all" id="area" name="area" required="">
+<option disabled="" selected="" value="">Seçiniz</option>
+<option value="meyve">Meyve</option>
+<option value="sebze">Sebze</option>
+<option value="sus">Süs Bitkisi</option>
+<option value="tibbi">Tıbbi Nane</option>
+</select>
+<span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-on-surface-variant pointer-events-none">potted_plant</span>
+</div>
+</div>
+</div>
+<!-- Şifre -->
+<div class="flex flex-col gap-xs">
+<label class="font-label-caps text-label-caps text-on-surface-variant" for="password">ŞİFRE</label>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant">lock</span>
+<input class="w-full pl-10 pr-10 py-3 bg-surface-container-lowest border border-outline-variant rounded-lg font-body-md text-body-md text-on-surface placeholder:text-outline input-focus-ring transition-all" id="password" name="password" placeholder="••••••••" required="" type="password"/>
+<button class="absolute right-3 top-1/2 -translate-y-1/2 text-on-surface-variant hover:text-primary transition-colors" onclick="togglePassword()" type="button">
+<span class="material-symbols-outlined" id="eyeIcon">visibility</span>
+</button>
+</div>
+</div>
+<!-- Submit Button -->
+<button class="mt-sm bg-primary-container text-on-primary-container font-headline-md text-headline-md py-4 px-md rounded-xl hover:opacity-90 active:scale-95 transition-all shadow-md flex items-center justify-center gap-base" type="submit">
+<span>Üye Ol</span>
+<span class="material-symbols-outlined">arrow_forward</span>
+</button>
+</form>
+</div>
+<!-- Footer Link -->
+<div class="text-center mt-base">
+<p class="font-body-md text-body-md text-on-surface-variant">
+                Zaten hesabınız var mı? 
+                <a class="text-primary font-bold hover:underline decoration-2 underline-offset-4 ml-xs transition-all" href="#">Giriş Yap</a>
+</p>
+</div>
+</main>
+<!-- Side Image Decor (Responsive - Desktop only) -->
+<div class="hidden lg:block absolute top-1/2 right-[5%] -translate-y-1/2 w-[320px] h-[480px] rounded-3xl overflow-hidden shadow-2xl border-4 border-white rotate-3">
+<img class="w-full h-full object-cover" data-alt="A high-contrast professional photograph of a lush home greenhouse filled with organic vegetable sprouts in wooden crates. The scene is illuminated by warm morning sunlight streaming through glass panels, creating a vibrant light-mode aesthetic. The composition highlights deep garden greens and rich soil browns, perfectly matching the corporate agricultural branding of Hobi Tohum. The atmosphere is productive, peaceful, and expert-level horticulture." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDiZ8GOwpgoiFMwRnA3od4i5Rc1Ki-aTCgPos-w7clVBexSljVEMJ7V1rWOaWQWFmfSXAt2j-OWlCZQwSNIcndWlln2aWUET3BX0nrW8zkDesft5xG_Gsi4g6VmeibObrtaaZCixuj1I4yIjGqmxli_ARHrfVLNfmvnNayB6z4_RX6SwDmg35bFgdcVT7nTRuicnLTtP4wbjlbVcPcwrJ7GXLwOUvpjBZIEbd39kAVmxYrprJx6vAzDvQH3JkwZeRI1j-mK9Y2UpKU"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
+<div class="absolute bottom-4 left-4 text-white">
+<p class="font-label-caps text-label-caps opacity-80 uppercase tracking-widest">Hobi Tohum</p>
+<p class="font-headline-md text-headline-md font-bold">Verimliliği Keşfedin</p>
+</div>
+</div>
+<!-- Feedback Toast (Hidden by default) -->
+<div class="fixed bottom-gutter left-1/2 -translate-x-1/2 bg-inverse-surface text-inverse-on-surface px-md py-sm rounded-full shadow-lg translate-y-32 transition-transform duration-300 flex items-center gap-base" id="toast">
+<span class="material-symbols-outlined text-primary-fixed">check_circle</span>
+<span class="font-body-md text-body-md">Kayıt işleminiz başarılı! Yönlendiriliyorsunuz...</span>
+</div>
+<script>
+        // Password Visibility Toggle
+        function togglePassword() {
+            const pwd = document.getElementById('password');
+            const icon = document.getElementById('eyeIcon');
+            if (pwd.type === 'password') {
+                pwd.type = 'text';
+                icon.innerText = 'visibility_off';
+            } else {
+                pwd.type = 'password';
+                icon.innerText = 'visibility';
+            }
+        }
+
+        // Form Submission Interaction
+        document.getElementById('signupForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const btn = e.target.querySelector('button[type="submit"]');
+            const originalContent = btn.innerHTML;
+            
+            // Loading State
+            btn.disabled = true;
+            btn.innerHTML = `<span class="material-symbols-outlined animate-spin">progress_activity</span><span>İşleniyor...</span>`;
+            
+            setTimeout(() => {
+                const toast = document.getElementById('toast');
+                toast.classList.remove('translate-y-32');
+                toast.classList.add('-translate-y-4');
+                
+                setTimeout(() => {
+                    // Reset or Redirect logic here
+                    btn.innerHTML = originalContent;
+                    btn.disabled = false;
+                }, 2000);
+            }, 1000);
+        });
+
+        // Add subtle mouse-tracking movement to background blobs
+        document.addEventListener('mousemove', (e) => {
+            const x = e.clientX / window.innerWidth;
+            const y = e.clientY / window.innerHeight;
+            const blobs = document.querySelectorAll('.absolute.rounded-full');
+            blobs.forEach((blob, i) => {
+                const speed = (i + 1) * 20;
+                blob.style.transform = `translate(${x * speed}px, ${y * speed}px)`;
+            });
+        });
+    </script>
+</body></html>

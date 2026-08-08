@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+
+<html lang="tr"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Hobi Tohum - Profil</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "inverse-primary": "#74db98",
+                    "on-secondary-fixed-variant": "#7f2b00",
+                    "on-primary-container": "#d7ffde",
+                    "on-tertiary-fixed": "#241a00",
+                    "on-tertiary": "#ffffff",
+                    "surface-container-highest": "#e2e2e5",
+                    "on-primary": "#ffffff",
+                    "surface-container": "#eeeef0",
+                    "on-surface-variant": "#3e4a40",
+                    "surface": "#f9f9fc",
+                    "tertiary-fixed-dim": "#e9c349",
+                    "surface-container-low": "#f3f3f6",
+                    "surface-tint": "#006d3c",
+                    "on-tertiary-fixed-variant": "#574500",
+                    "surface-variant": "#e2e2e5",
+                    "secondary-fixed": "#ffdbce",
+                    "outline": "#6e7a6f",
+                    "tertiary-container": "#cca730",
+                    "on-primary-fixed-variant": "#00522c",
+                    "on-secondary-fixed": "#370e00",
+                    "inverse-surface": "#2f3133",
+                    "error-container": "#ffdad6",
+                    "background": "#f9f9fc",
+                    "on-surface": "#1a1c1e",
+                    "secondary-container": "#fc6c29",
+                    "secondary": "#a63b00",
+                    "primary-fixed-dim": "#74db98",
+                    "on-secondary-container": "#5a1c00",
+                    "on-primary-fixed": "#00210e",
+                    "surface-container-lowest": "#ffffff",
+                    "on-error-container": "#93000a",
+                    "tertiary-fixed": "#ffe088",
+                    "on-background": "#1a1c1e",
+                    "surface-container-high": "#e8e8ea",
+                    "secondary-fixed-dim": "#ffb599",
+                    "on-error": "#ffffff",
+                    "inverse-on-surface": "#f0f0f3",
+                    "tertiary": "#735c00",
+                    "outline-variant": "#bdcabd",
+                    "surface-bright": "#f9f9fc",
+                    "primary-fixed": "#90f8b2",
+                    "primary-container": "#008148",
+                    "primary": "#006537",
+                    "surface-dim": "#dadadc",
+                    "on-tertiary-container": "#4f3e00",
+                    "on-secondary": "#ffffff",
+                    "error": "#ba1a1a"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.125rem",
+                    "lg": "0.25rem",
+                    "xl": "0.5rem",
+                    "full": "0.75rem"
+            },
+            "spacing": {
+                    "xs": "4px",
+                    "lg": "40px",
+                    "margin-mobile": "16px",
+                    "md": "24px",
+                    "xl": "64px",
+                    "sm": "12px",
+                    "gutter": "16px",
+                    "base": "8px",
+                    "margin-desktop": "32px"
+            },
+            "fontFamily": {
+                    "display-lg-mobile": ["Work Sans"],
+                    "display-lg": ["Work Sans"],
+                    "body-md": ["Work Sans"],
+                    "body-lg": ["Work Sans"],
+                    "label-caps": ["JetBrains Mono"],
+                    "headline-md": ["Work Sans"]
+            },
+            "fontSize": {
+                    "display-lg-mobile": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                    "label-caps": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "500"}],
+                    "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body {
+            font-family: 'Work Sans', sans-serif;
+            background-color: #f9f9fc;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background min-h-screen pb-32">
+<!-- TopAppBar -->
+<header class="bg-surface-container dark:bg-surface-container-high border-b border-outline-variant dark:border-outline-variant docked full-width top-0 z-50 sticky">
+<div class="flex justify-between items-center px-gutter py-sm w-full">
+<div class="flex items-center gap-sm">
+<div class="w-10 h-10 rounded-full overflow-hidden border border-outline">
+<img class="w-full h-full object-cover" data-alt="A professional close-up of a middle-aged male gardener with a friendly expression, set against a blurred background of a lush green greenhouse. The lighting is natural and bright, emphasizing a light-mode corporate aesthetic. The overall mood is approachable, expert, and vital, matching an agricultural technology platform's clean design system." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDRuOxgaxzqwExDRY-MImJHRM0o7gu5yc5JSF8g0_ViYpNAILnwAReW373vFNFfJOmO_RHbOH1AGRyhQ0F-gPrnROGbD7dMJyVDEDseOySd9UEeb0BAoagGOfahVTQHJbZiTJtPDf48Ujctl6tVCJOtuLoWD6d1HI8_-7bvFIZsDz4VeItgsIZ4RR97PSsOpo8hLQQxn4NhvJxBUWmH7tKAZIxi4YxwHIWEGbUyAvvUdrJXhYd-8gDHRRINaZ0vJeKhfSFDoJ93Cl8"/>
+</div>
+<h1 class="font-headline-lg-mobile text-headline-lg-mobile font-bold text-primary dark:text-primary-fixed-dim">Hobi Tohum</h1>
+</div>
+<button class="material-symbols-outlined text-on-surface-variant hover:bg-surface-variant p-2 rounded-full transition-colors active:scale-95">
+                notifications
+            </button>
+</div>
+</header>
+<main class="max-w-[1280px] mx-auto px-gutter py-md space-y-md">
+<!-- Profile Header Section -->
+<section class="flex flex-col items-center text-center space-y-sm">
+<div class="relative">
+<div class="w-24 h-24 rounded-full border-2 border-primary p-1">
+<img class="w-full h-full rounded-full object-cover" data-alt="A high-quality portrait of a Turkish agriculturist, Ahmet Yılmaz, wearing a clean linen shirt. The background shows a soft-focus agricultural research lab with microgreens. The image is bright and airy, following a modern corporate style with high-contrast vitality. The lighting is soft but well-defined, suggesting professionalism and warmth." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCZl-LTdoor9FNvZAT_ILqS40VgrPe5vQ6TI24K4ws1yMJwWYoJhGHXZc4KDiaCuIPhd7328vyJLyE1LlDxY3ZVWCYW4ytROdndXPO6DDGG7rZSBQqqQtMAnZLN9GWPiOhY6W7gco4LdxlB9eMZofkucHtQt0ZuDEnsORfmAaYulKKTEMP1Ki9mFlE4QL8fEwwX-_RK8EyvyWvH7IrcBIqVYC_g80IuoVzGsj2REbvRcobBTzgUywC2_Ka9cogHRab3cS5tA3tNH2M"/>
+</div>
+<div class="absolute bottom-0 right-0 bg-primary text-on-primary rounded-full p-1 border-2 border-white">
+<span class="material-symbols-outlined text-[16px]">edit</span>
+</div>
+</div>
+<div>
+<h2 class="font-headline-md text-headline-md text-on-surface">Ahmet Yılmaz</h2>
+<div class="flex items-center justify-center gap-xs text-on-surface-variant font-body-md text-body-md">
+<span class="material-symbols-outlined text-[18px]">location_on</span>
+                    Konya, Karatay
+                </div>
+</div>
+</section>
+<!-- Stats & Membership Cards (Bento Style) -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-sm">
+<!-- Credit Balance Card -->
+<div class="bg-surface-container-low border border-outline-variant p-md rounded-xl flex items-center justify-between shadow-sm">
+<div class="space-y-xs">
+<span class="font-label-caps text-label-caps text-on-surface-variant uppercase">MEVCUT BAKİYE</span>
+<div class="flex items-center gap-sm">
+<span class="material-symbols-outlined text-secondary text-[28px]">payments</span>
+<span class="font-headline-md text-headline-md text-on-surface">150 Kredi</span>
+</div>
+</div>
+<button class="bg-primary text-on-primary px-4 py-2 rounded-lg font-bold font-body-md text-body-md hover:opacity-90 transition-opacity active:scale-95">
+                    Yükle
+                </button>
+</div>
+<!-- Membership Status Card -->
+<div class="bg-surface-container-low border border-outline-variant p-md rounded-xl shadow-sm space-y-sm">
+<div class="flex justify-between items-start">
+<div class="space-y-xs">
+<span class="font-label-caps text-label-caps text-on-surface-variant uppercase">ÜYELİK DURUMU</span>
+<div class="flex items-center gap-sm">
+<span class="material-symbols-outlined text-tertiary text-[28px]">stars</span>
+<span class="font-headline-md text-headline-md text-on-surface">Ücretsiz Kullanıcı</span>
+</div>
+</div>
+<div class="bg-tertiary-container text-on-tertiary-container font-label-caps text-label-caps px-2 py-1 rounded">STANDART</div>
+</div>
+<button class="w-full bg-gradient-to-r from-[#D4AF37] to-[#F2D472] text-[#1A1C1E] font-label-caps text-label-caps py-3 rounded-lg font-bold hover:brightness-110 transition-all active:scale-[0.98] shadow-md flex items-center justify-center gap-2">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">workspace_premium</span>
+                    PREMIUM'A GEÇ
+                </button>
+</div>
+</div>
+<!-- Main Navigation Sections -->
+<div class="space-y-md pt-base">
+<!-- Questions Section -->
+<section class="space-y-sm">
+<div class="flex items-center justify-between px-xs">
+<h3 class="font-headline-md text-headline-md text-on-surface">Sorularım</h3>
+<button class="text-primary font-label-caps text-label-caps font-bold">TÜMÜNÜ GÖR</button>
+</div>
+<div class="space-y-sm">
+<div class="bg-surface-container-lowest border border-outline-variant p-sm rounded-lg flex items-center gap-sm hover:bg-surface-container-low transition-colors cursor-pointer group">
+<div class="w-12 h-12 bg-secondary-container/20 rounded-lg flex items-center justify-center text-secondary">
+<span class="material-symbols-outlined">psychology</span>
+</div>
+<div class="flex-1 min-w-0">
+<p class="font-body-md text-body-md text-on-surface truncate">Domates fidelerimde sararma sorunu...</p>
+<p class="font-label-caps text-[10px] text-on-surface-variant">2 SAAT ÖNCE • 3 YANIT</p>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant group-hover:translate-x-1 transition-transform">chevron_right</span>
+</div>
+</div>
+</section>
+<!-- Saved Content Section -->
+<section class="space-y-sm">
+<div class="flex items-center justify-between px-xs">
+<h3 class="font-headline-md text-headline-md text-on-surface">Kaydedilenler</h3>
+</div>
+<div class="grid grid-cols-2 gap-sm">
+<div class="group relative aspect-square rounded-xl overflow-hidden border border-outline-variant">
+<img class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" data-alt="A macro photograph of healthy green sprout seeds growing in rich dark soil, symbolizing agricultural vitality. The lighting is high-contrast and professional, with a clean and modern look. The image fits a premium seed catalog aesthetic, emphasizing growth and productivity in an expert horticultural context." src="https://lh3.googleusercontent.com/aida-public/AB6AXuC5FLSnoe-lYpRF46Z769th4dMW-KXTprqwp1MksneJrjYfKHECErXdPOH7GkXdJTFP-1SUhFehDt_JTJ_1_D-yfVNIevHmU2vVz7hrp-GhRH2w594JI7fv0OmLXg-oWk-4URWMUAOQ9u7aPp8XcgFf2IudTBAhdP4gDw9pMxrOkT2tL4DMMe6iSHW4rdvQdxOhwBZNtyheqYqkBTFzm7T41U_CgjxeGmGpENiDPlQAxy-VoIe8V4q5eoTpPAZt0-ldNP9FsxUY7rk"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex flex-col justify-end p-sm">
+<p class="text-white font-body-md text-body-md font-bold">Tohum Rehberi</p>
+</div>
+</div>
+<div class="group relative aspect-square rounded-xl overflow-hidden border border-outline-variant">
+<img class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" data-alt="A beautiful modern hydroponic system layout showing structured pipes and vibrant salad greens. The scene is bright and meticulously organized, reflecting a systematic data-driven approach to farming. High-key lighting highlights the fresh green tones and the sophisticated engineering of contemporary agriculture." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD9035HaZuSkniLokm6ickuaxH2ujVvc21PW-q9K4mofxR8A89c-N4_O3x7XTqESaRrONd9AQofOP72ICwwYIE5Y_Coge15jw8UF-YnoyVWlKyRMxCgJLwNomja5Ozq3CsKYms5twZFOD3kfEk0-LnuylcpF4HBVGqFAvUdmRHH6FlXjsP6laPJUxI0mTe4IR6rMuQWvCEpwMHXgY7esHdGGJKpi5iQ5Y4n06tNEQSDsb4c3PQF6A6n8GYTT9A6GBUurAzpRqGE0II"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex flex-col justify-end p-sm">
+<p class="text-white font-body-md text-body-md font-bold">Modern Ekim</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Account Settings Section -->
+<section class="space-y-sm">
+<h3 class="font-headline-md text-headline-md text-on-surface px-xs">Hesap Ayarları</h3>
+<div class="bg-surface-container-low rounded-xl border border-outline-variant overflow-hidden">
+<div class="flex items-center gap-md p-md border-b border-outline-variant hover:bg-surface-variant transition-colors cursor-pointer">
+<span class="material-symbols-outlined text-on-surface-variant">person</span>
+<div class="flex-1 font-body-md text-body-md text-on-surface">Kişisel Bilgiler</div>
+<span class="material-symbols-outlined text-on-surface-variant text-[18px]">chevron_right</span>
+</div>
+<div class="flex items-center gap-md p-md border-b border-outline-variant hover:bg-surface-variant transition-colors cursor-pointer">
+<span class="material-symbols-outlined text-on-surface-variant">security</span>
+<div class="flex-1 font-body-md text-body-md text-on-surface">Güvenlik ve Şifre</div>
+<span class="material-symbols-outlined text-on-surface-variant text-[18px]">chevron_right</span>
+</div>
+<div class="flex items-center gap-md p-md border-b border-outline-variant hover:bg-surface-variant transition-colors cursor-pointer">
+<span class="material-symbols-outlined text-on-surface-variant">notifications_active</span>
+<div class="flex-1 font-body-md text-body-md text-on-surface">Bildirim Tercihleri</div>
+<span class="material-symbols-outlined text-on-surface-variant text-[18px]">chevron_right</span>
+</div>
+<div class="flex items-center gap-md p-md hover:bg-surface-variant transition-colors cursor-pointer text-error">
+<span class="material-symbols-outlined">logout</span>
+<div class="flex-1 font-body-md text-body-md">Çıkış Yap</div>
+</div>
+</div>
+</section>
+</div>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 w-full z-50 shadow-lg border-t border-outline-variant bg-surface-container dark:bg-surface-container-high h-16 flex justify-around items-center px-md">
+<!-- Akış -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-surface-variant px-4 py-1 hover:text-primary dark:hover:text-primary-fixed-dim transition-colors" href="#">
+<span class="material-symbols-outlined">dynamic_feed</span>
+<span class="font-label-sm text-[10px] mt-1">Akış</span>
+</a>
+<!-- Keşfet -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-surface-variant px-4 py-1 hover:text-primary dark:hover:text-primary-fixed-dim transition-colors" href="#">
+<span class="material-symbols-outlined">explore</span>
+<span class="font-label-sm text-[10px] mt-1">Keşfet</span>
+</a>
+<!-- Soru Sor -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-surface-variant px-4 py-1 hover:text-primary dark:hover:text-primary-fixed-dim transition-colors" href="#">
+<span class="material-symbols-outlined">add_circle</span>
+<span class="font-label-sm text-[10px] mt-1">Soru Sor</span>
+</a>
+<!-- Profil (Active) -->
+<a class="flex flex-col items-center justify-center bg-primary-container dark:bg-primary-container text-on-primary-container dark:text-on-primary-container rounded-full px-4 py-1 scale-90 duration-150 ease-in-out" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">person</span>
+<span class="font-label-sm text-[10px] mt-1">Profil</span>
+</a>
+</nav>
+<script>
+        // Simple Micro-interaction for feedback
+        document.querySelectorAll('button, a').forEach(el => {
+            el.addEventListener('mousedown', () => {
+                el.style.transform = 'scale(0.95)';
+            });
+            el.addEventListener('mouseup', () => {
+                el.style.transform = '';
+            });
+            el.addEventListener('mouseleave', () => {
+                el.style.transform = '';
+            });
+        });
+
+        // Tonal layer interactivity for cards
+        const cards = document.querySelectorAll('.bg-surface-container-low');
+        cards.forEach(card => {
+            card.addEventListener('mouseenter', () => {
+                card.classList.add('shadow-md');
+                card.style.borderColor = '#008148';
+            });
+            card.addEventListener('mouseleave', () => {
+                card.classList.remove('shadow-md');
+                card.style.borderColor = '';
+            });
+        });
+    </script>
+</body></html>

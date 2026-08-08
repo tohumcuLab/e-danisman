@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+
+<html lang="tr"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-error-container": "#93000a",
+                    "background": "#ffffff",
+                    "secondary-fixed-dim": "#ffb599",
+                    "primary": "#006d3c",
+                    "tertiary-fixed": "#90f8b2",
+                    "on-primary-container": "#00210e",
+                    "outline": "#717971",
+                    "primary-container": "#d7ffde",
+                    "tertiary-container": "#d7ffde",
+                    "outline-variant": "#c1ccc1",
+                    "on-tertiary": "#ffffff",
+                    "surface-bright": "#f9f9f9",
+                    "inverse-surface": "#2e312e",
+                    "on-secondary-fixed-variant": "#7f2b00",
+                    "tertiary-fixed-dim": "#74db98",
+                    "error": "#ba1a1a",
+                    "on-surface": "#191c19",
+                    "surface-container-highest": "#e1e3e0",
+                    "inverse-on-surface": "#f0f1ed",
+                    "on-error": "#ffffff",
+                    "on-primary-fixed-variant": "#00522c",
+                    "on-secondary": "#ffffff",
+                    "on-primary-fixed": "#00210e",
+                    "secondary-container": "#ffdbce",
+                    "error-container": "#ffdad6",
+                    "surface-dim": "#d9dbd7",
+                    "tertiary": "#006d3c",
+                    "secondary": "#a63b00",
+                    "surface-container": "#f0f1ed",
+                    "on-secondary-container": "#370e00",
+                    "surface-container-low": "#f9f9f9",
+                    "on-surface-variant": "#414941",
+                    "on-tertiary-fixed": "#00210e",
+                    "primary-fixed": "#90f8b2",
+                    "on-primary": "#ffffff",
+                    "surface-tint": "#006d3c",
+                    "on-tertiary-container": "#00210e",
+                    "primary-fixed-dim": "#74db98",
+                    "surface-container-lowest": "#ffffff",
+                    "on-background": "#191c19",
+                    "inverse-primary": "#74db98",
+                    "surface": "#ffffff",
+                    "surface-container-high": "#e7e9e5",
+                    "on-secondary-fixed": "#370e00",
+                    "on-tertiary-fixed-variant": "#00522c",
+                    "surface-variant": "#dee5de",
+                    "secondary-fixed": "#ffdbce"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.125rem",
+                    "lg": "0.25rem",
+                    "xl": "0.5rem",
+                    "full": "0.75rem"
+            },
+            "spacing": {
+                    "lg": "24px",
+                    "base": "4px",
+                    "gutter": "20px",
+                    "sm": "8px",
+                    "xs": "4px",
+                    "xl": "40px",
+                    "container-max": "1280px",
+                    "md": "16px"
+            },
+            "fontFamily": {
+                    "headline-lg-mobile": ["Inter"],
+                    "label-sm": ["Inter"],
+                    "headline-lg": ["Inter"],
+                    "display-lg": ["Inter"],
+                    "body-lg": ["Inter"],
+                    "body-md": ["Inter"],
+                    "title-md": ["Inter"]
+            },
+            "fontSize": {
+                    "headline-lg-mobile": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                    "label-sm": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                    "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                    "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                    "title-md": ["20px", {"lineHeight": "28px", "fontWeight": "500"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #ffffff;
+        }
+        .category-card::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.7) 0%, rgba(0, 0, 0, 0.1) 60%, transparent 100%);
+            z-index: 1;
+        }
+    </style>
+<style>
+        body {
+          min-height: max(884px, 100dvh);
+        }
+    </style>
+</head>
+<body class="text-on-surface antialiased pb-24">
+<!-- TopAppBar -->
+<header class="sticky top-0 z-50 w-full bg-white border-b border-outline-variant flex justify-between items-center px-gutter py-sm shadow-sm">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-primary-container flex items-center justify-center overflow-hidden border border-outline-variant">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">eco</span>
+</div>
+<h1 class="font-headline-lg-mobile text-headline-lg-mobile font-bold text-primary">Hobi Tohum</h1>
+</div>
+<button class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-surface-container transition-colors text-on-surface-variant">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+</header>
+<main class="max-w-container-max mx-auto px-gutter py-lg">
+<!-- Section Header -->
+<div class="mb-lg">
+<h2 class="font-headline-lg-mobile text-headline-lg-mobile text-on-surface mb-xs">Kategoriler</h2>
+<p class="font-body-md text-body-md text-on-surface-variant">Türkiye'nin en popüler tarım ürünlerini ve tohum çeşitlerini keşfedin.</p>
+</div>
+<!-- Search Bar -->
+<div class="mb-lg relative">
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline">search</span>
+<input class="w-full bg-surface-container-low border border-outline-variant rounded-xl py-3 pl-12 pr-4 text-on-surface placeholder:text-outline focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all shadow-sm" placeholder="Kategori veya ürün ara..." type="text"/>
+</div>
+<!-- Bento Grid Layout for Categories -->
+<div class="grid grid-cols-2 md:grid-cols-3 gap-md">
+<!-- Category: Domates -->
+<div class="category-card relative group overflow-hidden rounded-xl h-48 md:h-64 border border-outline-variant hover:border-primary/50 transition-all cursor-pointer shadow-sm">
+<div class="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-110" data-alt="Domates" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCPpjtmSXr2XpQQTbo3l4OWVEeCxLESuQgYgUzRjxSUmQWDUgsp1aMLlmFtI1hllILiINAioRJWEiHpIhQkYvebxJ6OA38Pr8ZHuBCLJIKmX9rTMTAdu0Lt0maQKjCBAf10Nfom62Wal51KA7EmZIJ-hKKge4_SAvmdy-CDf4yu9bGTqrVhROjSEezwxQe5LIx0SN56bRce-Su-r0Df1yQQArx2doc93Lov6SIFXoMX2TBd1RT7si-pHo5zjwKVOGJfRoTgmddeR5I')"></div>
+<div class="absolute bottom-0 left-0 p-md z-10 w-full">
+<h3 class="font-title-md text-title-md text-white">Domates</h3>
+<p class="font-label-sm text-label-sm text-primary-fixed">124 Çeşit</p>
+</div>
+</div>
+<!-- Category: Biber -->
+<div class="category-card relative group overflow-hidden rounded-xl h-48 md:h-64 border border-outline-variant hover:border-primary/50 transition-all cursor-pointer shadow-sm">
+<div class="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-110" data-alt="Biber" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCUP7Az-Dk9rkg_P_SdQYvkiYJ4YVdYubWbqTAobixOA8yisesOyAqs6w7l67bzTcpK4bEKLae7JScH7Wab7hb0ZYMBTWPGhqg9Ca9iWMsqXEq2KO941vk5F7biNefg0ggzquRFuhRqN2dluMPQqHMts67rMtcSX_raBbIFrYTD5JVvmnt-XkCnsIKlR53QLJZQCALQ_n7MYiZ_XJZUdLpBU6G4_LY4TNEmk9Bl3avyzmfrLBlO1i89WnpWZyOO6j5q9_M0XHZfYh4')"></div>
+<div class="absolute bottom-0 left-0 p-md z-10 w-full">
+<h3 class="font-title-md text-title-md text-white">Biber</h3>
+<p class="font-label-sm text-label-sm text-primary-fixed">86 Çeşit</p>
+</div>
+</div>
+<!-- Category: Elma -->
+<div class="category-card relative group overflow-hidden rounded-xl h-48 md:h-64 border border-outline-variant hover:border-primary/50 transition-all cursor-pointer shadow-sm">
+<div class="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-110" data-alt="Elma" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDcS1dCd0nTrelROtVTfi86ddsQSBMbqe_xI2kHnCMlZdjZ5eXzcWzwJfesk0fyrZL7bSN6WwSn_6OBh5vZHxUy8JrOG_cHZH76IVWPblvbdArP9vsbj37QxRTxFJRKRctG0pOXqesB5BL4Sxm8tKmdDOumquM6ceX9OrbyUJBdAcmUJlZ9T0HPkE8Y0En3K9WAF_kCBxxQkQVGiDKGYLBKJ5xfvcja1aK8d-G3WJp69mSKrAHhru8SrXT1WHL57pizK1RJW2cNeag')"></div>
+<div class="absolute bottom-0 left-0 p-md z-10 w-full">
+<h3 class="font-title-md text-title-md text-white">Elma</h3>
+<p class="font-label-sm text-label-sm text-primary-fixed">42 Çeşit</p>
+</div>
+</div>
+<!-- Category: Fındık -->
+<div class="category-card relative group overflow-hidden rounded-xl h-48 md:h-64 border border-outline-variant hover:border-primary/50 transition-all cursor-pointer shadow-sm">
+<div class="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-110" data-alt="Fındık" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuC-o7rcV3j4lgCXgYZ86XnVHBGz3TGpYNPofOYsoml7Sh0Tjsj0NBHZwXJrs2boRXSDrQgiTolcnQF-0741x0zAP_G4LV3JU4283rKR2_SrZ-YFuYQd3Z_UnYjoK94KABoymRgMUoo9fFZSdT9-lA_wNk6LEmS_7Sxv0mqmB8UpvOitTD2_yHB7Fa2avbpcsV08YA9hP9wMv7UUcBgyecoSDR7Sc9hw3ToXzBImOZykAS5bwDGkWvwW2zu10UoqWRkgd9iIOTWMTxA')"></div>
+<div class="absolute bottom-0 left-0 p-md z-10 w-full">
+<h3 class="font-title-md text-title-md text-white">Fındık</h3>
+<p class="font-label-sm text-label-sm text-primary-fixed">15 Çeşit</p>
+</div>
+</div>
+<!-- Category: Kayısı -->
+<div class="category-card relative group overflow-hidden rounded-xl h-48 md:h-64 border border-outline-variant hover:border-primary/50 transition-all cursor-pointer shadow-sm">
+<div class="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-110" data-alt="Kayısı" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAgVH16dARsYxljBvl-GZ1uM9voUX74H9WDF5YTd9x3bCmmI-txPpCIG4twUdxGD4QX9b7YCu1HMXC-e1lq0brxDQBk0giz0qBdj1gXqDycoqVvNhK4bO3Mj490tT8tKGvG89xECRP9VwskZc3_ou0maUOJ8VkFNxFAl6FxZXLU0q5gAmPLK2I3vSjOiMSdeUnMCDMZVMbj8-j9hCt0AYRAphKXMShnLAcBa84MZoDuNaLe84UyikGTm9LtNIvRkdyfRCZPvBUWW_I')"></div>
+<div class="absolute bottom-0 left-0 p-md z-10 w-full">
+<h3 class="font-title-md text-title-md text-white">Kayısı</h3>
+<p class="font-label-sm text-label-sm text-primary-fixed">28 Çeşit</p>
+</div>
+</div>
+<!-- Category: Buğday -->
+<div class="category-card relative group overflow-hidden rounded-xl h-48 md:h-64 border border-outline-variant hover:border-primary/50 transition-all cursor-pointer shadow-sm">
+<div class="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-110" data-alt="Buğday" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCgtSIcnAJZc5Zm9y_fyrLQDUplaexbr1Y1IeBeD_isGJzyq3-6kg4BgCOFrO0_VsumDbp5oJVU57vRLYYQNnAOiZH5XBRrMTPBa8u68RI1LknIvOJemkf1NQU29FWpXIuBMrCx-lAu38hALsnGhihZsicnJrhwHYbgHL0sFiUYHEwq-fl3L0Qc9jBkRdUkUaMvyNZbcPXYqiz0A5iTzyTYL8FBMJNC7CBghX3e_lIUgV8WqMKnDUoEtXca1ZlSW2nLjzEtns8AB-U')"></div>
+<div class="absolute bottom-0 left-0 p-md z-10 w-full">
+<h3 class="font-title-md text-title-md text-white">Buğday</h3>
+<p class="font-label-sm text-label-sm text-primary-fixed">210 Çeşit</p>
+</div>
+</div>
+<!-- Featured Category (Seeds) -->
+<div class="col-span-2 md:col-span-3 category-card relative group overflow-hidden rounded-xl h-40 border border-outline-variant hover:border-secondary transition-all cursor-pointer shadow-sm">
+<div class="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-105" data-alt="Sebze Tohumları" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuB54JbN4dd8D07nEtzvT7r5OlTEI_460paAup0-wSfsISHABxTzmABFYzVkK1r9rR5BuoltGHP6eWzhhQG5jBQxvBSvHC5hvbolz-s0PQXQmtUlHrhri4ONr-ArA3vi4TNwKL1KNjKarQ-AOQfyUdN099L4OGHzpWHV5buhLy61r9qaQvFVWsU9oHW4a6YLlLLfxexAA6kefhcNN-6_IYCRc4Thsde4zlSmoQF0OxEJidKUbXsxXyU-JxksN6prQ-LpEzvMGk5sNxc')"></div>
+<div class="absolute bottom-0 left-0 p-md z-10 w-full flex justify-between items-end">
+<div>
+<h3 class="font-headline-lg-mobile text-headline-lg-mobile text-white">Sebze Tohumları</h3>
+<p class="font-body-md text-body-md text-secondary-fixed">Hemen Keşfet</p>
+</div>
+<span class="material-symbols-outlined text-white text-3xl mb-1">arrow_forward</span>
+</div>
+</div>
+</div>
+<!-- Quick Stats / Weather Mini Widget -->
+<div class="mt-lg grid grid-cols-1 md:grid-cols-2 gap-md">
+<div class="bg-surface-container rounded-xl p-md border border-outline-variant flex items-center gap-md shadow-sm">
+<div class="w-12 h-12 rounded-lg bg-primary-container flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-3xl">partly_cloudy_day</span>
+</div>
+<div>
+<p class="font-label-sm text-label-sm text-on-surface-variant">Bugünkü Hava Durumu</p>
+<p class="font-title-md text-title-md text-on-surface">24°C, Parçalı Bulutlu</p>
+</div>
+</div>
+<div class="bg-surface-container rounded-xl p-md border border-outline-variant flex items-center gap-md shadow-sm">
+<div class="w-12 h-12 rounded-lg bg-secondary-container flex items-center justify-center text-secondary">
+<span class="material-symbols-outlined text-3xl">trending_up</span>
+</div>
+<div>
+<p class="font-label-sm text-label-sm text-on-surface-variant">Market Trendi</p>
+<p class="font-title-md text-title-md text-on-surface">Buğday fiyatlarında %2 artış</p>
+</div>
+</div>
+</div>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 w-full z-50 bg-white border-t border-outline-variant shadow-lg flex justify-around items-center h-16 px-md">
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-1 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined">dynamic_feed</span>
+<span class="font-label-sm text-label-sm mt-1">Akış</span>
+</a>
+<a class="flex flex-col items-center justify-center bg-primary-container text-primary rounded-full px-4 py-1 active:scale-90 duration-150 ease-in-out" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">explore</span>
+<span class="font-label-sm text-label-sm mt-1">Keşfet</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-1 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined">add_circle</span>
+<span class="font-label-sm text-label-sm mt-1">Soru Sor</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-1 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined">person</span>
+<span class="font-label-sm text-label-sm mt-1">Profil</span>
+</a>
+</nav>
+<!-- Floating Action Button for Support -->
+<button class="fixed right-6 bottom-24 w-14 h-14 bg-secondary text-on-secondary rounded-full shadow-xl flex items-center justify-center active:scale-95 transition-all z-40">
+<span class="material-symbols-outlined text-3xl">psychiatry</span>
+</button>
+<script>
+    // Micro-interaction for category cards
+    document.querySelectorAll('.category-card').forEach(card => {
+        card.addEventListener('click', () => {
+            card.classList.add('opacity-80', 'scale-95');
+            setTimeout(() => {
+                card.classList.remove('opacity-80', 'scale-95');
+            }, 150);
+        });
+    });
+</script>
+</body></html>

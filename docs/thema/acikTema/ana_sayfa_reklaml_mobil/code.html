@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+
+<html class="light" lang="tr"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Hobi Tohum - Tarımsal Sosyal Ağ</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "inverse-surface": "#2f3133",
+                    "on-secondary-fixed-variant": "#7f2b00",
+                    "surface-container-high": "#e8e8ea",
+                    "surface-variant": "#e2e2e5",
+                    "on-secondary": "#ffffff",
+                    "surface-dim": "#dadadc",
+                    "tertiary-fixed-dim": "#e9c349",
+                    "on-error-container": "#93000a",
+                    "on-surface": "#1a1c1e",
+                    "on-tertiary-fixed": "#241a00",
+                    "on-background": "#1a1c1e",
+                    "on-primary-fixed": "#00210e",
+                    "on-error": "#ffffff",
+                    "primary-fixed": "#90f8b2",
+                    "on-tertiary-container": "#4f3e00",
+                    "on-tertiary": "#ffffff",
+                    "on-secondary-fixed": "#370e00",
+                    "primary-container": "#008148",
+                    "primary": "#006537",
+                    "surface-container-lowest": "#ffffff",
+                    "tertiary-container": "#cca730",
+                    "on-primary-container": "#d7ffde",
+                    "on-secondary-container": "#5a1c00",
+                    "surface-container-low": "#f3f3f6",
+                    "on-surface-variant": "#3e4a40",
+                    "tertiary": "#735c00",
+                    "inverse-primary": "#74db98",
+                    "inverse-on-surface": "#f0f0f3",
+                    "secondary-fixed": "#ffdbce",
+                    "secondary": "#a63b00",
+                    "secondary-fixed-dim": "#ffb599",
+                    "tertiary-fixed": "#ffe088",
+                    "secondary-container": "#fc6c29",
+                    "on-primary": "#ffffff",
+                    "background": "#f9f9fc",
+                    "surface-bright": "#f9f9fc",
+                    "surface-container": "#eeeef0",
+                    "error": "#ba1a1a",
+                    "outline-variant": "#bdcabd",
+                    "error-container": "#ffdad6",
+                    "surface": "#f9f9fc",
+                    "primary-fixed-dim": "#74db98",
+                    "on-tertiary-fixed-variant": "#574500",
+                    "surface-container-highest": "#e2e2e5",
+                    "on-primary-fixed-variant": "#00522c",
+                    "outline": "#6e7a6f",
+                    "surface-tint": "#006d3c"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.125rem",
+                    "lg": "0.25rem",
+                    "xl": "0.5rem",
+                    "full": "0.75rem"
+            },
+            "spacing": {
+                    "margin-mobile": "16px",
+                    "lg": "40px",
+                    "gutter": "16px",
+                    "xs": "4px",
+                    "xl": "64px",
+                    "sm": "12px",
+                    "margin-desktop": "32px",
+                    "md": "24px",
+                    "base": "8px"
+            },
+            "fontFamily": {
+                    "body-md": ["Work Sans"],
+                    "headline-md": ["Work Sans"],
+                    "display-lg": ["Work Sans"],
+                    "label-caps": ["JetBrains Mono"],
+                    "body-lg": ["Work Sans"],
+                    "display-lg-mobile": ["Work Sans"]
+            },
+            "fontSize": {
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                    "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "label-caps": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "500"}],
+                    "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                    "display-lg-mobile": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body {
+            background-color: #f9f9fc;
+            color: #1a1c1e;
+            font-family: 'Work Sans', sans-serif;
+            overflow-x: hidden;
+        }
+        .bento-grid {
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            gap: 24px;
+        }
+        .glass-card {
+            background: #ffffff;
+            border: 1px solid #e2e2e5;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+        }
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: #f9f9fc; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #bdcabd; border-radius: 10px; }
+    </style>
+</head>
+<body class="custom-scrollbar">
+<!-- Top Navigation Shell -->
+<header class="fixed top-0 w-full z-50 bg-white/80 backdrop-blur-md border-b border-outline-variant transition-all duration-300">
+<div class="flex justify-between items-center px-gutter py-sm w-full container mx-auto">
+<div class="flex items-center gap-4">
+<img alt="Hobi Tohum Logo" class="h-10 w-auto" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB38PwjhnUPSZVyH9vSyFx7dWKjYowx2UUdGfW0HEza3kcSNpWXIAyRJFxISyab-AGMj5QQvL1Ys97YfhTOZuPAIygFWsvR5_k4cO2cYN6ma-NyrdCZu8RN0HE6rHayD3_Zq4lBvRg5JAmzlqwwaQkj_HLLOgrJa6DuTLSjEhb6A6d0Z5UmmNPcTKcU5AaH0Zih17KnrHeDHXdQgDtBHlIVEJYtHro59l-t8DFsLGU5oqV4qZxynKJoC5SiLIG0lvk0VQOndCMnesE"/>
+<h1 class="font-headline-md text-headline-md font-bold text-primary md:block hidden">Hobi Tohum</h1>
+</div>
+<div class="flex-1 max-w-xl px-8 hidden md:block">
+<div class="relative group">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant">search</span>
+<input class="w-full bg-surface-container-low border border-outline-variant rounded-full py-2 pl-10 pr-4 text-body-md focus:ring-2 focus:ring-primary focus:border-transparent transition-all outline-none" placeholder="Bitki, hastalık veya uzman ara..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<button class="p-2 rounded-full hover:bg-surface-variant transition-colors flex items-center justify-center text-on-surface-variant">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<div class="w-10 h-10 rounded-full border-2 border-primary overflow-hidden cursor-pointer active:scale-95 transition-all">
+<img class="w-full h-full object-cover" data-alt="A professional portrait of a modern farmer" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA2z6aYk2F0fqC9RmLoyJQJBM1mtvQB1jfXoUihcsoGhKZNwb2sd-IL98MUqphATGYKUjkKUTxIav2cMLcv7pNBoPaznd-jbW2acZoJB0VimMNdeU7Pt_F5nPcpEPX9pnXOR83FzPOsYjKnuWjIoRC4vpHnK8dRpHOkvwVq8MPOcDXxBJJnnbYEVuBnrwDgqLFIgH11w-0beAmnS1Goe1VObr0GgoXDdey1TENPJK3e-Q3g7hlR6D-us6rMMNplFPYBhxiPlmPpesA"/>
+</div>
+</div>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="pt-24 pb-20 container mx-auto px-gutter min-h-screen">
+<div class="bento-grid">
+<!-- Welcome & CTA (Desktop: Left Column) -->
+<section class="col-span-12 md:col-span-3 space-y-6">
+<div class="glass-card rounded-xl p-md">
+<h2 class="font-headline-md text-headline-md text-primary mb-2">Hoş Geldiniz</h2>
+<p class="text-body-md text-on-surface-variant mb-6">Bugün bahçenizde neler yetiştiriyorsunuz? Uzmanlarımız her zaman yanınızda.</p>
+<a class="flex items-center justify-between w-full bg-secondary-container hover:bg-secondary transition-all text-on-secondary px-4 py-3 rounded-xl font-label-caps active:scale-95" href="#">
+<span>TARIMSAL DANIŞMANLIK</span>
+<span class="material-symbols-outlined">arrow_forward</span>
+</a>
+</div>
+<!-- Weather Widget -->
+<div class="glass-card rounded-xl p-md border-l-4 border-primary">
+<div class="flex justify-between items-start mb-4">
+<div>
+<p class="font-label-caps text-on-surface-variant">BUGÜN HAVA</p>
+<h3 class="font-headline-md text-headline-md">24°C</h3>
+</div>
+<span class="material-symbols-outlined text-primary text-4xl">sunny</span>
+</div>
+<p class="text-body-md text-on-surface-variant">Nem: %45 • Rüzgar: 12km/s</p>
+<p class="text-body-md text-primary font-semibold mt-2">Domates ekimi için ideal şartlar!</p>
+</div>
+<!-- Trending Topics -->
+<div class="hidden md:block">
+<h3 class="font-label-caps text-on-surface-variant uppercase tracking-widest mb-3">POPÜLER ETİKETLER</h3>
+<div class="flex flex-wrap gap-2">
+<span class="bg-surface-container-high px-3 py-1 rounded-full text-label-caps text-on-surface-variant border border-outline-variant hover:border-primary transition-colors cursor-pointer">#OrganikGübre</span>
+<span class="bg-surface-container-high px-3 py-1 rounded-full text-label-caps text-on-surface-variant border border-outline-variant hover:border-primary transition-colors cursor-pointer">#SeraTarıma</span>
+<span class="bg-surface-container-high px-3 py-1 rounded-full text-label-caps text-on-surface-variant border border-outline-variant hover:border-primary transition-colors cursor-pointer">#HasatVakti</span>
+<span class="bg-surface-container-high px-3 py-1 rounded-full text-label-caps text-on-surface-variant border border-outline-variant hover:border-primary transition-colors cursor-pointer">#FideBakımı</span>
+</div>
+</div>
+</section>
+<!-- Main Feed (Desktop: Center Column) -->
+<section class="col-span-12 md:col-span-6 space-y-6">
+<!-- Go Premium Banner -->
+<div class="bg-gradient-to-r from-primary to-primary-container rounded-xl p-md flex items-center justify-between text-on-primary shadow-lg overflow-hidden relative">
+<div class="z-10">
+<h3 class="font-headline-md text-xl mb-1">Premium'a Geçin</h3>
+<p class="text-body-md opacity-90">Sınırsız uzman danışmanlığı ve özel rehberler için.</p>
+</div>
+<button class="z-10 bg-white text-primary px-6 py-2 rounded-full font-label-caps shadow-md hover:bg-surface-container-low transition-colors">YÜKSELT</button>
+<!-- Decorative element -->
+<span class="material-symbols-outlined absolute -right-4 -bottom-4 text-white/10 text-8xl rotate-12">workspace_premium</span>
+</div>
+<!-- Create Post -->
+<div class="glass-card rounded-xl p-md flex items-center gap-4">
+<div class="w-10 h-10 rounded-full bg-primary-container shrink-0 overflow-hidden">
+<img class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA2z6aYk2F0fqC9RmLoyJQJBM1mtvQB1jfXoUihcsoGhKZNwb2sd-IL98MUqphATGYKUjkKUTxIav2cMLcv7pNBoPaznd-jbW2acZoJB0VimMNdeU7Pt_F5nPcpEPX9pnXOR83FzPOsYjKnuWjIoRC4vpHnK8dRpHOkvwVq8MPOcDXxBJJnnbYEVuBnrwDgqLFIgH11w-0beAmnS1Goe1VObr0GgoXDdey1TENPJK3e-Q3g7hlR6D-us6rMMNplFPYBhxiPlmPpesA"/>
+</div>
+<div class="flex-1 bg-surface-container-low border border-outline-variant rounded-full px-4 py-2 text-on-surface-variant text-body-md cursor-pointer hover:bg-surface-variant transition-colors">
+                        Soru sor veya fotoğraf paylaş...
+                    </div>
+</div>
+<!-- Feed Card 1: Tomato Disease -->
+<article class="glass-card rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-all">
+<div class="p-md flex items-center justify-between">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full border border-primary overflow-hidden">
+<img class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCZoIfsxHgmGNboVYDwR768LA8qmYpHttxLwvJZLQzwHNOcdOmxBpM7peXCeaK2-yGiHdV-7JT5wdVAwrp_vp0n6tVg_ivGveWL6qKsT_f1T76zOpZ5S96xZLsTfsLdPsMx9Vksj-KXYGGu77ZyDhd1P3mpqBlx_2Jzcw-ofrGMu4Ex3EqbnllWBPEaK6pws_ANhmjb02P4vz8L41VxZlgCThwdK_ChuOgmrEN9id8OJzBtovX5Lzj1LT1xyDTg5ZJsaRsnvlun8a4"/>
+</div>
+<div>
+<h4 class="font-body-md font-semibold text-on-surface">Zeynep Bahçıvan</h4>
+<p class="text-[12px] text-on-surface-variant font-label-caps uppercase">Sertifikalı Uzman • 2sa önce</p>
+</div>
+</div>
+<button class="text-on-surface-variant"><span class="material-symbols-outlined">more_vert</span></button>
+</div>
+<div class="px-md pb-md">
+<h3 class="font-headline-md text-lg mb-2">Domateslerimde lekeler oluşmaya başladı, ne yapmalıyım?</h3>
+<p class="text-body-md text-on-surface-variant leading-relaxed mb-4">
+                            Bu belirtiler genellikle 'Mildiyö' hastalığına işaret eder. Nem oranını düşürmeli ve bakırlı ilaçlama yapmalısınız. Özellikle alt yaprakların havalanması çok önemli.
+                        </p>
+</div>
+<div class="aspect-video w-full bg-surface-container-low overflow-hidden">
+<img alt="Domates bitkisi" class="w-full h-full object-cover hover:scale-105 transition-transform duration-700" src="https://lh3.googleusercontent.com/aida/AP1WRLuuEoN_UXZReBpSkZUWJ0CTK0qeYm_Db-wCIGvkLiCiLUvm0Wj9H9uh5oyVBh2jkAdUsWjy2dSUJ_RRJ8nIFxtqROIPCa3nCG7W6bgrwV37fFYAv2svVq-ovsXbnSA8v4nz8qqoJOPf7eZiGn4AKVSG9ONpAV_ZyIJZXQFok6730de8ppNHp5lV7Okx7A_cUZbRrlU_vq7dMjXEvEJ_G4m2FB6PnNdobxkhDdZWgpLhy_1IXHXLZl7vMw"/>
+</div>
+<div class="p-md flex items-center justify-between border-t border-outline-variant">
+<div class="flex items-center gap-6">
+<button class="flex items-center gap-1.5 text-on-surface-variant hover:text-primary transition-colors active:scale-90">
+<span class="material-symbols-outlined">eco</span>
+<span class="text-label-caps">42 TOHUM</span>
+</button>
+<button class="flex items-center gap-1.5 text-on-surface-variant hover:text-secondary transition-colors active:scale-90">
+<span class="material-symbols-outlined">comment</span>
+<span class="text-label-caps">12 YANIT</span>
+</button>
+</div>
+<button class="flex items-center gap-1.5 text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined">share</span>
+</button>
+</div>
+</article>
+<!-- Sponsored / Ad Card -->
+<article class="glass-card rounded-xl overflow-hidden border-2 border-secondary-fixed shadow-md bg-secondary-fixed/10">
+<div class="p-4 flex items-center justify-between bg-secondary-fixed/20">
+<span class="text-label-caps text-on-secondary-fixed font-bold flex items-center gap-1">
+<span class="material-symbols-outlined text-sm">campaign</span> SPONSORLU
+                        </span>
+<span class="text-[10px] text-on-secondary-fixed-variant bg-white px-2 py-0.5 rounded border border-secondary-fixed">AD</span>
+</div>
+<div class="flex flex-col md:flex-row p-md gap-md">
+<div class="w-full md:w-1/3 aspect-square rounded-lg overflow-hidden bg-surface-container-high shrink-0">
+<img class="w-full h-full object-cover" data-alt="A sleek, modern dark gray bottle of organic liquid fertilizer" src="https://lh3.googleusercontent.com/aida-public/AB6AXuChWq7_6Z6asBxiUBxW_NTJ13HqOU3WVmI8doju5NpXUvYfDGe7-xn2wbMkXyvsk97LdEgGF46P2cnD8i7K09_Iq97AAjwlFqyN4nbMm4nP0K9qkXVtHGM28BTIlN62wX6y1tRXA8OMxXJCIwTqACRQUISBSDInQs6oWqL_LW9mJE6AbssntjD3QWtz87bb6_NL9AuNmkyK67K9ZCH_rHSRprnAmwc86Gl_QfIbuflQFp7vw9BKX8OhLkAw9GCAND3oqeF9JSUxez0"/>
+</div>
+<div class="flex-1">
+<h3 class="font-headline-md text-lg text-secondary mb-2">Hasadınızı İkiye Katlayın!</h3>
+<p class="text-body-md text-on-surface-variant mb-4">Yeni nesil organik sıvı gübrelerimizle bitkileriniz hiç olmadığı kadar canlı ve verimli olsun. Şimdi %20 indirimle.</p>
+<button class="w-full bg-secondary text-on-secondary py-2 rounded-lg font-label-caps hover:bg-on-secondary-fixed-variant transition-colors">MAĞAZADA GÖR</button>
+</div>
+</div>
+</article>
+<!-- Feed Card 2: Soil Health -->
+<article class="glass-card rounded-xl overflow-hidden shadow-sm">
+<div class="p-md flex items-center justify-between">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full border border-primary overflow-hidden">
+<img class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDUQP6V_cjfUwyNiyR8AT-4flgjMZjvzb2mBb3YvymAFJHeMYN2ab52TS9GgLbygmBrYDzcwKODGHJJy82LyBvDFiWapgcF_gYFhBDhiMrSAHpyXjPWGYmS_cKvtcIOYxpaXyoX6NPesSWga192XIlZT3m1Yt7gQJMCj--i2PEDAGGMyyor5b0ccBYWFm2qp8j9Ta4YjfpVLlIoZ9Ms1IpCvBRXFwiRyReg0Gt92z4Pf2vr2KY-PuCf9rNqm-zWv3GqKdw7gFNTZPc"/>
+</div>
+<div>
+<h4 class="font-body-md font-semibold text-on-surface">Mühendis Ahmet</h4>
+<p class="text-[12px] text-on-surface-variant font-label-caps uppercase">Toprak Analizi Uzmanı • 5sa önce</p>
+</div>
+</div>
+<button class="text-on-surface-variant"><span class="material-symbols-outlined">more_vert</span></button>
+</div>
+<div class="px-md pb-md">
+<p class="text-body-md text-on-surface-variant leading-relaxed">
+                            Bahar ekimleri öncesi toprak pH dengesini kontrol etmeyi unutmayın. Kireçleme yapmadan önce mutlaka analiz raporunuzu inceleyin. #ToprakSağlığı #HobiTohum
+                        </p>
+</div>
+<div class="grid grid-cols-2 gap-1 px-md mb-md">
+<div class="aspect-square bg-surface-container-low rounded-l-xl overflow-hidden">
+<img class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuChmahxzPWJu7H2fcOd3IM4rvypLr9tMQCa4RJLnBQXJzzpnvG38_bvsQGbAitvut34aMz4cdU9G2rPHD8fZuznsJyTvY0hF4xN5TXtVe2kIxQRTL9NqTWkgNNYp4ZRi48ioY3gFvzpuhEdfeUbzWVhSXCkE1w9J1PeOi4cPryL3SqkSHoKB5ZL4NXmweTiTZjRWNL5ipTBEABA9HgXMax0cUXJ1L4YCXfcxa7_LAm2mJ8O_ALXEidx3h4Rb7OLvKi9tz9IkJdftZI"/>
+</div>
+<div class="aspect-square bg-surface-container-low rounded-r-xl overflow-hidden">
+<img class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuACPKOq4RZmL4MJgvMywjQXQf22k7sAZbpg2g4poKYOd7zDF5nkM4pIg99J5beczCgedmXX6WARiJ2Oc3zK4p2bCJdMMH9B55jLmNkY4EpNPP-QzOOWI5NQ8ONO1VDGVF5_QZfUyrdFWRz3vs_jmbBeI8nIXi5XN1qJ37181vRcT140vSGY3b42I9L94whP9mJ-z8AXqeZsoIYvxdLp47PK3Fn_sTsD7CJNWlTxq6FBC4uP3GHjEo0bZMlspXkSQ0SOqK22aHty2Y0"/>
+</div>
+</div>
+<div class="p-md flex items-center justify-between border-t border-outline-variant">
+<div class="flex items-center gap-6">
+<button class="flex items-center gap-1.5 text-primary font-bold">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">eco</span>
+<span class="text-label-caps">128 TOHUM</span>
+</button>
+<button class="flex items-center gap-1.5 text-on-surface-variant hover:text-secondary transition-colors">
+<span class="material-symbols-outlined">comment</span>
+<span class="text-label-caps">8 YANIT</span>
+</button>
+</div>
+</div>
+</article>
+</section>
+<!-- Sidebar (Desktop: Right Column) -->
+<section class="col-span-12 md:col-span-3 space-y-6 hidden md:block">
+<!-- Market Widget -->
+<div class="glass-card rounded-xl p-md">
+<h3 class="font-label-caps text-on-surface-variant uppercase tracking-widest mb-4 text-xs font-bold">PAZARYERİ FIRSATLARI</h3>
+<div class="space-y-4">
+<div class="flex items-center gap-3 group cursor-pointer">
+<div class="w-12 h-12 rounded-lg bg-surface-container-high overflow-hidden shrink-0">
+<img class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBX6bN3ylUucz2DAHwUmpQMhrnYaeIIEVrRoCW0mB22QZ_ycJ0q-fLBOycoXM-BfWWogOLvoQjpVL-FwRAxnQk2aTBAmPXez5Cxy0j07oBbPzCmlbUw6z0pzXb9JCrkBzAjuyaqJdzdscwe2cJI9Ifwlg2MEFlhJiznMtqmXQ6ye0R49TcO_9tWn0t_cAALxuJEqqyk1WoJJb1Xn6TySPtFEgT0F_4G6qDteUEt6qFULmfs4rFI1NqVBSwC4WWmGs3dtRvPEyLjHyM"/>
+</div>
+<div class="flex-1 min-w-0">
+<p class="text-body-md text-on-surface font-semibold truncate group-hover:text-primary transition-colors">Ata Tohumu Domates</p>
+<p class="text-label-caps text-secondary font-bold">₺85.00</p>
+</div>
+</div>
+<div class="flex items-center gap-3 group cursor-pointer">
+<div class="w-12 h-12 rounded-lg bg-surface-container-high overflow-hidden shrink-0">
+<img class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuChWq7_6Z6asBxiUBxW_NTJ13HqOU3WVmI8doju5NpXUvYfDGe7-xn2wbMkXyvsk97LdEgGF46P2cnD8i7K09_Iq97AAjwlFqyN4nbMm4nP0K9qkXVtHGM28BTIlN62wX6y1tRXA8OMxXJCIwTqACRQUISBSDInQs6oWqL_LW9mJE6AbssntjD3QWtz87bb6_NL9AuNmkyK67K9ZCH_rHSRprnAmwc86Gl_QfIbuflQFp7vw9BKX8OhLkAw9GCAND3oqeF9JSUxez0"/>
+</div>
+<div class="flex-1 min-w-0">
+<p class="text-body-md text-on-surface font-semibold truncate group-hover:text-primary transition-colors">Organik Sıvı Gübre</p>
+<p class="text-label-caps text-secondary font-bold">₺140.00</p>
+</div>
+</div>
+</div>
+<button class="w-full mt-6 border border-outline-variant text-on-surface-variant py-2 rounded-lg text-label-caps font-bold hover:border-primary hover:text-primary transition-all">TÜM ÜRÜNLERİ GÖR</button>
+</div>
+<!-- Community Leaders -->
+<div class="glass-card rounded-xl p-md">
+<h3 class="font-label-caps text-on-surface-variant uppercase tracking-widest mb-4 text-xs font-bold">TOPLULUK LİDERLERİ</h3>
+<div class="space-y-4">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-primary-container text-on-primary-container flex items-center justify-center font-bold">MB</div>
+<div>
+<p class="text-body-md font-semibold">Mehmet Bahçeci</p>
+<p class="text-[10px] text-primary flex items-center gap-1 font-bold">
+<span class="material-symbols-outlined text-[12px]">verified</span> UZMAN DANIŞMAN
+                                </p>
+</div>
+</div>
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-secondary-container text-on-secondary-container flex items-center justify-center font-bold">AS</div>
+<div>
+<p class="text-body-md font-semibold">Ayşe Sera</p>
+<p class="text-[10px] text-on-surface-variant font-label-caps">TOPLULUK ELÇİSİ</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+</div>
+</main>
+<!-- Bottom Navigation Shell (Mobile) -->
+<nav class="md:hidden fixed bottom-0 w-full z-50 bg-white border-t border-outline-variant shadow-lg h-16 flex justify-around items-center px-md">
+<a class="flex flex-col items-center justify-center text-primary rounded-full px-4 py-1" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">dynamic_feed</span>
+<span class="font-label-caps text-[10px]">AKIŞ</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-1 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined">explore</span>
+<span class="font-label-caps text-[10px]">KEŞFET</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-1 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined">add_circle</span>
+<span class="font-label-caps text-[10px]">SORU SOR</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-1 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined">person</span>
+<span class="font-label-caps text-[10px]">PROFİL</span>
+</a>
+</nav>
+<!-- FAB for Desktop -->
+<button class="hidden md:flex fixed bottom-8 right-8 w-14 h-14 bg-primary text-on-primary rounded-full items-center justify-center shadow-xl hover:scale-110 active:scale-95 transition-all z-40 group">
+<span class="material-symbols-outlined">add</span>
+<span class="absolute right-full mr-4 bg-inverse-surface text-inverse-on-surface px-3 py-1 rounded-lg text-label-caps opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">SORU SOR</span>
+</button>
+<script>
+        // Header scroll effect
+        window.addEventListener('scroll', () => {
+            const header = document.querySelector('header');
+            if (window.scrollY > 10) {
+                header.classList.add('shadow-md');
+            } else {
+                header.classList.remove('shadow-md');
+            }
+        });
+    </script>
+</body></html>

@@ -1,26 +1,174 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+  /* Light Mode (Agro-Vitality System) */
+  --surface: #f9f9fc;
+  --surface-dim: #dadadc;
+  --surface-bright: #f9f9fc;
+  --surface-container-lowest: #ffffff;
+  --surface-container-low: #f3f3f6;
+  --surface-container: #eeeef0;
+  --surface-container-high: #e8e8ea;
+  --surface-container-highest: #e2e2e5;
+  --on-surface: #1a1c1e;
+  --on-surface-variant: #3e4a40;
+  --inverse-surface: #2f3133;
+  --inverse-on-surface: #f0f0f3;
+  --outline: #6e7a6f;
+  --outline-variant: #bdcabd;
+  
+  --primary: #006537;
+  --on-primary: #ffffff;
+  --primary-container: #008148;
+  --on-primary-container: #d7ffde;
+  --inverse-primary: #74db98;
+  
+  --secondary: #a63b00;
+  --on-secondary: #ffffff;
+  --secondary-container: #fc6c29;
+  --on-secondary-container: #5a1c00;
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --background: #f9f9fc;
+  --on-background: #1a1c1e;
+  
+  --radius-sm: 0.125rem;
+  --radius-md: 0.375rem;
+  --radius-lg: 0.5rem;
+  --radius-xl: 0.75rem;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    /* Dark Mode (Agri-Social Core) */
+    --surface: #131313;
+    --surface-dim: #131313;
+    --surface-bright: #393939;
+    --surface-container-lowest: #0e0e0e;
+    --surface-container-low: #1c1b1b;
+    --surface-container: #201f1f;
+    --surface-container-high: #2a2a2a;
+    --surface-container-highest: #353534;
+    --on-surface: #e5e2e1;
+    --on-surface-variant: #bdcabd;
+    --inverse-surface: #e5e2e1;
+    --inverse-on-surface: #313030;
+    --outline: #889489;
+    --outline-variant: #3e4a40;
+    
+    --primary: #74db98;
+    --on-primary: #00391d;
+    --primary-container: #008148;
+    --on-primary-container: #d7ffde;
+    --inverse-primary: #006d3c;
+    
+    --secondary: #ffb599;
+    --on-secondary: #5a1c00;
+    --secondary-container: #cb4a00;
+    --on-secondary-container: #fffbff;
+    
+    --background: #131313;
+    --on-background: #e5e2e1;
   }
 }
 
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--on-background);
+  
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--on-primary);
+  
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--on-secondary);
+  
+  --color-surface: var(--surface);
+  --color-surface-foreground: var(--on-surface);
+  --color-surface-container: var(--surface-container);
+  
+  --color-border: var(--outline-variant);
+  
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  
+  --radius-sm: var(--radius-sm);
+  --radius-md: var(--radius-md);
+  --radius-lg: var(--radius-lg);
+  --radius-xl: var(--radius-xl);
+}
+
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: var(--background);
+  color: var(--on-background);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Base utility classes for Vanilla CSS usage */
+.container {
+  width: 100%;
+  max-width: 1280px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 16px;
+  padding-right: 16px;
+}
+
+@media (min-width: 768px) {
+  .container {
+    padding-left: 24px;
+    padding-right: 24px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .container {
+    padding-left: 32px;
+    padding-right: 32px;
+  }
+}
+
+/* Card and Container Base Styles */
+.card {
+  background-color: var(--surface-container);
+  border: 1px solid var(--outline-variant);
+  border-radius: var(--radius-lg);
+  padding: 16px;
+}
+
+/* Button Base Styles */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-md);
+  font-weight: 500;
+  transition: all 0.2s ease;
+  padding: 8px 16px;
+  cursor: pointer;
+  border: none;
+}
+
+.btn-primary {
+  background-color: var(--primary-container);
+  color: var(--on-primary-container);
+}
+.btn-primary:hover {
+  filter: brightness(1.1);
+}
+
+.btn-secondary {
+  background-color: var(--secondary-container);
+  color: var(--on-secondary-container);
+}
+.btn-secondary:hover {
+  filter: brightness(1.1);
+}
+
+.btn-ghost {
+  background-color: transparent;
+  border: 1px solid var(--primary-container);
+  color: var(--primary-container);
+}
+.btn-ghost:hover {
+  background-color: var(--surface-container-high);
 }

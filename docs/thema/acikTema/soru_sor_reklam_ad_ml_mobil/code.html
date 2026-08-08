@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+
+<html class="light" lang="tr"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Hobi Tohum - Soru Sor</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-error-container": "#410002",
+                        "background": "#f7fbf2",
+                        "secondary-fixed-dim": "#ffb599",
+                        "primary": "#006d3c",
+                        "tertiary-fixed": "#77fca3",
+                        "on-primary-container": "#00210e",
+                        "outline": "#717971",
+                        "primary-container": "#90f8b2",
+                        "tertiary-container": "#77fca3",
+                        "outline-variant": "#c1ccbf",
+                        "on-tertiary": "#ffffff",
+                        "surface-bright": "#f7fbf2",
+                        "inverse-surface": "#2e312e",
+                        "on-secondary-fixed-variant": "#7f2b00",
+                        "tertiary-fixed-dim": "#59df89",
+                        "error": "#ba1a1a",
+                        "on-surface": "#191c1a",
+                        "surface-container-highest": "#e1e4de",
+                        "inverse-on-surface": "#f0f1eb",
+                        "on-error": "#ffffff",
+                        "on-primary-fixed-variant": "#00522c",
+                        "on-secondary": "#ffffff",
+                        "on-primary-fixed": "#00210e",
+                        "secondary-container": "#ffdbce",
+                        "error-container": "#ffdad6",
+                        "surface-dim": "#d8dbd5",
+                        "tertiary": "#006d37",
+                        "secondary": "#994300",
+                        "surface-container": "#ecefec",
+                        "on-secondary-container": "#331200",
+                        "surface-container-low": "#f1f4ef",
+                        "on-surface-variant": "#414942",
+                        "on-tertiary-fixed": "#00210d",
+                        "primary-fixed": "#90f8b2",
+                        "on-primary": "#ffffff",
+                        "surface-tint": "#006d3c",
+                        "on-tertiary-container": "#00210d",
+                        "primary-fixed-dim": "#74db98",
+                        "surface-container-lowest": "#ffffff",
+                        "on-background": "#191c1a",
+                        "inverse-primary": "#74db98",
+                        "surface": "#f7fbf2",
+                        "surface-container-high": "#e7eaee",
+                        "on-secondary-fixed": "#370e00",
+                        "on-tertiary-fixed-variant": "#005228",
+                        "surface-variant": "#dee5db",
+                        "secondary-fixed": "#ffdbce"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "lg": "24px",
+                        "base": "4px",
+                        "gutter": "20px",
+                        "sm": "8px",
+                        "xs": "4px",
+                        "xl": "40px",
+                        "container-max": "1280px",
+                        "md": "16px"
+                    },
+                    "fontFamily": {
+                        "headline-lg-mobile": ["Inter"],
+                        "label-sm": ["Inter"],
+                        "headline-lg": ["Inter"],
+                        "display-lg": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "body-md": ["Inter"],
+                        "title-md": ["Inter"]
+                    },
+                    "fontSize": {
+                        "headline-lg-mobile": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                        "label-sm": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                        "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                        "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                        "title-md": ["20px", {"lineHeight": "28px", "fontWeight": "500"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            display: inline-block;
+            line-height: 1;
+            text-transform: none;
+            letter-spacing: normal;
+            word-wrap: normal;
+            white-space: nowrap;
+            direction: ltr;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f7fbf2;
+            color: #191c1a;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .active-scale:active {
+            transform: scale(0.95);
+            transition: transform 0.1s ease-in-out;
+        }
+    </style>
+</head>
+<body class="bg-background min-h-screen flex flex-col items-center">
+<!-- Top AppBar -->
+<header class="bg-surface-container border-b border-outline-variant fixed top-0 w-full z-50 flex justify-between items-center px-gutter py-sm max-w-container-max">
+<div class="flex items-center gap-sm">
+<div class="w-10 h-10 rounded-full bg-primary-container flex items-center justify-center overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="Hobi Tohum official logo" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAwiNHzhwhSuq3t492EfaEWZftEG4JNVq1LUflhY6uFxhSB1Kf-zc2_NS8vdLwyGgWNdPK7cqSSUidQQinNbpKQdDAQOT1-cwhIhymXH-xXelc6tHJNsFS-hhKRrKFi7RtIfDa5Ba7UAlDpFm8hUeLek7WlHt0wmkTe4AG87pwl3uU_Z7DiUlkOCvfYuu1mDkEJqTbqbyHWMIOSQ7_-Ardj49fpKaBWKsaHZj3--CWoQileiBG54TdlJI83A6QNuR8PwmITFycqoCE"/>
+</div>
+<h1 class="font-headline-lg-mobile text-headline-lg-mobile font-bold text-primary">Hobi Tohum</h1>
+</div>
+<button class="material-symbols-outlined text-on-surface-variant p-2 hover:bg-surface-variant rounded-full transition-colors active-scale">
+            notifications
+        </button>
+</header>
+<!-- Content Canvas -->
+<main class="w-full max-w-md px-gutter pt-24 pb-32 flex-grow overflow-y-auto">
+<div class="mb-lg">
+<h2 class="font-headline-lg-mobile text-headline-lg-mobile text-on-surface mb-xs">Uzmana Sorun</h2>
+<p class="font-body-md text-body-md text-on-surface-variant">Bitkinizdeki sorunu fotoğrafını çekerek uzmanlarımıza danışın.</p>
+</div>
+<form class="space-y-lg">
+<!-- Image Upload Area -->
+<div class="relative group">
+<input class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10" id="photo-upload" type="file"/>
+<div class="border-2 border-dashed border-outline-variant rounded-xl bg-surface-container-lowest h-48 flex flex-col items-center justify-center gap-sm transition-all group-hover:border-primary group-hover:bg-surface-container-low">
+<span class="material-symbols-outlined text-[48px] text-primary" style="font-variation-settings: 'FILL' 1;">add_a_photo</span>
+<span class="font-title-md text-title-md text-on-surface">Fotoğraf Yükle</span>
+<p class="font-label-sm text-label-sm text-on-surface-variant">Max 10MB, JPG veya PNG</p>
+</div>
+</div>
+<!-- Question Input -->
+<div class="space-y-sm">
+<label class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider" for="question">Sorunuz Nedir?</label>
+<textarea class="w-full bg-surface-container-lowest border border-outline-variant rounded-xl p-md font-body-md text-body-md text-on-surface focus:border-primary focus:ring-1 focus:ring-primary transition-all placeholder:text-on-surface-variant/50 outline-none" id="question" placeholder="Bitkinizdeki belirtileri ve ne kadar süredir devam ettiğini açıklayın..." rows="4"></textarea>
+</div>
+<!-- Category Selection -->
+<div class="space-y-sm">
+<label class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Kategori Seçin</label>
+<div class="grid grid-cols-2 gap-sm">
+<button class="flex items-center justify-between px-md py-sm bg-surface-container-lowest rounded-xl border border-outline-variant hover:border-primary transition-all active-scale group" type="button">
+<span class="font-body-md text-body-md text-on-surface">Meyveler</span>
+<span class="material-symbols-outlined text-primary group-hover:scale-110 transition-transform">potted_plant</span>
+</button>
+<button class="flex items-center justify-between px-md py-sm bg-surface-container-lowest rounded-xl border border-outline-variant hover:border-primary transition-all active-scale group" type="button">
+<span class="font-body-md text-body-md text-on-surface">Sebzeler</span>
+<span class="material-symbols-outlined text-primary group-hover:scale-110 transition-transform">eco</span>
+</button>
+</div>
+</div>
+<!-- Tags -->
+<div class="space-y-sm">
+<label class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider" for="tags">Etiketler</label>
+<input class="w-full bg-surface-container-lowest border border-outline-variant rounded-xl px-md py-sm font-body-md text-body-md text-on-surface focus:border-primary focus:ring-1 focus:ring-primary transition-all outline-none" id="tags" placeholder="Örn: Yaprak lekesi, sulama, haşere" type="text"/>
+<div class="flex flex-wrap gap-xs pt-xs">
+<span class="px-sm py-1 bg-primary-container text-on-primary-container rounded-full font-label-sm text-label-sm border border-primary/20">#domates</span>
+<span class="px-sm py-1 bg-primary-container text-on-primary-container rounded-full font-label-sm text-label-sm border border-primary/20">#hastalık</span>
+</div>
+</div>
+<!-- Ad Step Section -->
+<div class="space-y-md bg-surface-container rounded-2xl p-md border border-outline-variant">
+<div class="flex flex-col gap-xs">
+<h3 class="font-title-md text-title-md text-on-surface">Soru Yayınlama Seçenekleri</h3>
+<p class="font-body-md text-body-md text-on-surface-variant">Sorunuzu ücretsiz yayınlamak için bir reklam izleyin veya beklemeyi atlayın.</p>
+</div>
+<div class="space-y-sm">
+<!-- Ad Option -->
+<label class="flex items-center gap-md p-md bg-surface-container-lowest rounded-xl border border-outline-variant cursor-pointer hover:border-primary transition-all group">
+<input checked="" class="w-5 h-5 text-primary focus:ring-primary border-outline-variant" name="publish-method" type="radio" value="ad"/>
+<div class="flex-grow">
+<div class="font-body-lg font-semibold text-on-surface flex items-center gap-xs">
+<span class="material-symbols-outlined text-primary">play_circle</span>
+                                Reklam İzle ve Sor
+                            </div>
+<div class="font-label-sm text-on-surface-variant">Tamamen ücretsiz</div>
+</div>
+</label>
+<!-- Premium Option -->
+<label class="flex items-center gap-md p-md bg-white rounded-xl border-2 border-secondary/30 cursor-pointer hover:border-secondary transition-all group shadow-sm">
+<input class="w-5 h-5 text-secondary focus:ring-secondary border-outline-variant" name="publish-method" type="radio" value="premium"/>
+<div class="flex-grow">
+<div class="font-body-lg font-semibold text-secondary flex items-center gap-xs">
+<span class="material-symbols-outlined text-secondary" style="font-variation-settings: 'FILL' 1;">diamond</span>
+                                Premium'a Geç
+                            </div>
+<div class="font-label-sm text-on-surface-variant">Tüm reklamları sonsuza dek kaldır</div>
+</div>
+<div class="bg-secondary/10 text-secondary px-2 py-1 rounded font-label-sm font-bold uppercase tracking-tighter">Popüler</div>
+</label>
+</div>
+</div>
+<!-- Submit Button -->
+<button class="w-full bg-primary hover:bg-primary-container text-white font-title-md text-title-md py-md rounded-xl shadow-lg transition-all active-scale mt-lg flex items-center justify-center gap-sm" type="submit">
+<span class="material-symbols-outlined">send</span>
+                Soruyu Gönder
+            </button>
+<!-- Marketplace Link -->
+<div class="text-center pt-md pb-lg">
+<a class="inline-flex items-center gap-xs font-body-md text-body-md text-secondary hover:underline transition-all" href="#">
+<span class="material-symbols-outlined text-[20px]">shopping_cart</span>
+                    Tarım Marketi'ne Geri Dön
+                </a>
+</div>
+</form>
+</main>
+<!-- Bottom Navigation -->
+<nav class="bg-surface-container border-t border-outline-variant fixed bottom-0 w-full z-50 shadow-lg flex justify-around items-center h-16 px-md max-w-container-max">
+<button class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-1 hover:text-primary transition-colors active-scale">
+<span class="material-symbols-outlined">dynamic_feed</span>
+<span class="font-label-sm text-label-sm">Akış</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-1 hover:text-primary transition-colors active-scale">
+<span class="material-symbols-outlined">explore</span>
+<span class="font-label-sm text-label-sm">Keşfet</span>
+</button>
+<button class="flex flex-col items-center justify-center bg-primary-container text-on-primary-container rounded-full px-4 py-1 active-scale">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">add_circle</span>
+<span class="font-label-sm text-label-sm">Soru Sor</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-1 hover:text-primary transition-colors active-scale">
+<span class="material-symbols-outlined">person</span>
+<span class="font-label-sm text-label-sm">Profil</span>
+</button>
+</nav>
+<script>
+        // Micro-interaction for category selection
+        document.querySelectorAll('button[type="button"]').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('button[type="button"]').forEach(b => b.classList.remove('border-primary', 'bg-primary-container/10'));
+                btn.classList.add('border-primary', 'bg-primary-container/10');
+            });
+        });
+
+        // Simple form validation demo
+        document.querySelector('form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const method = document.querySelector('input[name="publish-method"]:checked').value;
+            if (method === 'ad') {
+                alert('Reklam yükleniyor... Reklam bittiğinde sorunuz yayınlanacaktır.');
+            } else {
+                alert('Premium avantajıyla sorunuz anında yayınlanıyor!');
+            }
+        });
+    </script>
+</body></html>

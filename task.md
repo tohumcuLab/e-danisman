@@ -1,0 +1,11 @@
+- `[x]` Admin Panelinde Şikayetleri Listeleme (`src/app/(admin)/admin/reports/page.tsx`)
+  - `[x]` Tablo görünümü (Bekleyen, Çözülen, Reddedilen)
+  - `[x]` Hedef İçeriği (Soru/Cevap) "Kalıcı Olarak Sil" (Hard-Delete) butonu ve işlevi
+  - `[x]` API uç noktası (`DELETE /api/reports/target`)
+- `[x]` SEO & OpenGraph Geliştirmeleri
+  - `[x]` `src/app/layout.tsx` genel meta verileri güncelle
+  - `[x]` `src/app/soru/[id]/page.tsx` dinamik `generateMetadata` ekle
+- `[x]` PWA (Progressive Web App) Altyapısı
+  - `[x]` `public/manifest.json` oluştur
+  - `[x]` hobitohum.com favicon'unu indir
+  - `[x]` `layout.tsx` içerisine PWA etiketlerini (manifest, theme-color vs.) ekle

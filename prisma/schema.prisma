@@ -1,0 +1,343 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+model User {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  tcNo         String?
+  phone        String?
+  firstName    String?
+  lastName     String?
+  username     String?
+  isBanned     Boolean  @default(false)
+  bannedUntil  DateTime?
+  banReason    String?
+  emailVerified DateTime?
+  image        String?
+  passwordHash String?
+  name         String?
+  avatarUrl    String?
+  role         String   @default("USER") // USER, EXPERT, ADMIN
+  credits      Int      @default(10)
+  city         String?
+  district     String?
+  village      String?
+  bio          String?
+  website      String?
+  twitter      String?
+  instagram    String?
+  linkedin     String?
+  facebook     String?
+  youtube      String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  premiumUntil DateTime?
+
+  accounts      Account[]
+  sessions      Session[]
+
+  questions     Question[]
+  answers       Answer[]
+  answerLikes   AnswerLike[]
+  creditsLog    Credit[]
+  notifications Notification[]
+  reports       Report[]
+
+  expertScoreLogs ExpertScoreLog[]
+  expertPayments  ExpertPayment[]
+  announcements   Announcement[]
+  transactions    Transaction[]
+}
+
+model Question {
+  id         String   @id @default(cuid())
+  title      String
+  body       String
+  userId     String
+  categoryId String
+  cropType   String?
+  city       String?
+  district   String?
+  village    String?
+  status     String   @default("PENDING_APPROVAL") // PENDING_APPROVAL, OPEN, ANSWERED, CLOSED, REJECTED
+  creditCost Int      @default(4)
+  viewCount  Int      @default(0)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  user     User            @relation(fields: [userId], references: [id])
+  category Category        @relation(fields: [categoryId], references: [id])
+  images   QuestionImage[]
+  answers  Answer[]
+  tags     QuestionTag[]
+}
+
+model QuestionImage {
+  id         String @id @default(cuid())
+  questionId String
+  url        String
+  order      Int    @default(0)
+
+  question Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
+}
+
+model Answer {
+  id            String   @id @default(cuid())
+  body          String
+  questionId    String
+  userId        String
+  parentId      String?
+  status        String   @default("APPROVED") // PENDING_APPROVAL, APPROVED, REJECTED
+  isAccepted    Boolean  @default(false)
+  isHighlighted Boolean  @default(false)
+  likeCount     Int      @default(0)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  question Question     @relation(fields: [questionId], references: [id], onDelete: Cascade)
+  user     User         @relation(fields: [userId], references: [id])
+  parent   Answer?      @relation("AnswerToAnswer", fields: [parentId], references: [id], onDelete: Cascade)
+  replies  Answer[]     @relation("AnswerToAnswer")
+  likes    AnswerLike[]
+}
+
+model AnswerLike {
+  id        String   @id @default(cuid())
+  answerId  String
+  userId    String
+  createdAt DateTime @default(now())
+
+  answer Answer @relation(fields: [answerId], references: [id], onDelete: Cascade)
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([answerId, userId])
+}
+
+model Tag {
+  id   String @id @default(cuid())
+  name String @unique
+  slug String @unique
+
+  questions QuestionTag[]
+}
+
+model QuestionTag {
+  questionId String
+  tagId      String
+
+  question Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
+  tag      Tag      @relation(fields: [tagId], references: [id], onDelete: Cascade)
+
+  @@id([questionId, tagId])
+}
+
+model Category {
+  id          String  @id @default(cuid())
+  name        String
+  slug        String  @unique
+  description String?
+  imageUrl    String?
+  parentId    String?
+  order       Int     @default(0)
+
+  questions Question[]
+}
+
+model Notification {
+  id        String   @id @default(cuid())
+  userId    String
+  type      String // e.g., "NEW_ANSWER", "ANSWER_ACCEPTED", "CREDIT_EARNED"
+  message   String
+  isRead    Boolean  @default(false)
+  relatedId String?
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Credit {
+  id        String   @id @default(cuid())
+  userId    String
+  amount    Int
+  type      String // EARN, SPEND
+  reason    String
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Ad {
+  id               String    @id @default(cuid())
+  type             String // NETWORK, VIDEO, MANUAL
+  placement        String    @default("FEED") // FEED, REWARD, SIDEBAR vs
+  title            String
+  videoUrl         String?
+  networkCode      String?
+  imageUrl         String?
+  destinationUrl   String?
+  clickCount       Int       @default(0)
+  startDate        DateTime?
+  endDate          DateTime?
+  impressionLimit  Int?
+  impressionCount  Int       @default(0)
+  creditReward     Int       @default(0)
+  targetCity       String?
+  targetDistrict   String?
+  targetVillage    String?
+  targetCategoryId String?
+  isActive         Boolean   @default(true)
+  createdAt        DateTime  @default(now())
+}
+
+model SystemSetting {
+  id    String @id @default(cuid())
+  key   String @unique
+  value String
+}
+
+model Report {
+  id         String   @id @default(cuid())
+  reporterId String
+  targetType String // QUESTION, ANSWER, USER
+  targetId   String
+  reason     String
+  status     String   @default("PENDING") // PENDING, RESOLVED, DISMISSED
+  createdAt  DateTime @default(now())
+
+  reporter User @relation(fields: [reporterId], references: [id], onDelete: Cascade)
+}
+
+model ExpertScoreLog {
+  id        String   @id @default(cuid())
+  expertId  String
+  action    String   // ANSWER, LIKE, BEST_ANSWER, ADMIN_HIGHLIGHT, SPAM, WRONG_INFO
+  points    Int
+  relatedId String?  // answerId etc.
+  createdAt DateTime @default(now())
+
+  expert    User     @relation(fields: [expertId], references: [id], onDelete: Cascade)
+}
+
+model ExpertPayment {
+  id            String   @id @default(cuid())
+  expertId      String
+  amountTl      Float
+  totalPoints   Int
+  weekStartDate DateTime
+  weekEndDate   DateTime
+  status        String   @default("PAID")
+  createdAt     DateTime @default(now())
+
+  expert        User     @relation(fields: [expertId], references: [id], onDelete: Cascade)
+}
+
+model Account {
+  id                 String  @id @default(cuid())
+  userId             String
+  type               String
+  provider           String
+  providerAccountId  String
+  refresh_token      String?  
+  access_token       String?  
+  expires_at         Int?
+  token_type         String?
+  scope              String?
+  id_token           String?  
+  session_state      String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+model Announcement {
+  id        String   @id @default(cuid())
+  title     String
+  content   String
+  authorId  String
+  isPinned  Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  author User @relation(fields: [authorId], references: [id], onDelete: Cascade)
+}
+
+model ContactMessage {
+  id        String   @id @default(cuid())
+  name      String
+  email     String
+  phone     String?
+  subject   String?
+  message   String
+  type      String   // GENERAL, CONSULTANT_APP
+  status    String   @default("UNREAD") // UNREAD, READ, RESOLVED
+  createdAt DateTime @default(now())
+}
+
+model AdRequest {
+  id             String   @id @default(cuid())
+  name           String
+  email          String
+  phone          String
+  companyName    String?
+  adTitle        String
+  destinationUrl String
+  imageUrl       String?
+  packageId      String   // e.g., 10K, 50K, 100K
+  price          Int
+  status         String   @default("PENDING_PAYMENT") // PENDING_PAYMENT, APPROVED, REJECTED
+  createdAt      DateTime @default(now())
+}
+
+model Transaction {
+  id        String   @id @default(cuid())
+  userId    String
+  amount    Float
+  type      String   // PREMIUM, CREDITS
+  status    String   @default("PENDING") // PENDING, COMPLETED, FAILED
+  details   String?  
+  createdAt DateTime @default(now())
+
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model AdPackage {
+  id              String   @id @default(cuid())
+  title           String
+  views           String
+  impressionLimit Int      @default(10000)
+  price           Float    @default(0)
+  estimatedTime   String?
+  description     String?
+  imageUrl        String?
+  iyzicoLink      String?
+  isPopular       Boolean  @default(false)
+  order           Int      @default(0)
+  isActive        Boolean  @default(true)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}

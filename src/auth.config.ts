@@ -7,6 +7,12 @@ export const authConfig = {
     signIn: "/giris",
   },
   callbacks: {
+    async redirect({ url, baseUrl }) {
+      const siteUrl = process.env.NEXTAUTH_URL || process.env.AUTH_URL || "https://sor.hobitohum.com";
+      if (url.startsWith("/")) return `${siteUrl}${url}`;
+      if (url.includes("localhost")) return siteUrl;
+      return url;
+    },
     authorized({ auth, request: { nextUrl } }) {
       const isLoggedIn = !!auth?.user;
       const isAuthPage = nextUrl.pathname.startsWith("/giris") || nextUrl.pathname.startsWith("/kayit");
@@ -17,7 +23,8 @@ export const authConfig = {
         return false; // Redirect unauthenticated users to login page
       } else if (isAuthPage) {
         if (isLoggedIn) {
-          return Response.redirect(new URL("/", nextUrl));
+          const siteUrl = process.env.NEXTAUTH_URL || process.env.AUTH_URL || "https://sor.hobitohum.com";
+          return Response.redirect(new URL("/", siteUrl));
         }
         return true;
       }

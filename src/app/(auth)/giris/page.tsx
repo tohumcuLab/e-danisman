@@ -21,7 +21,7 @@ export default function LoginPage() {
       const res = await signIn("credentials", {
         email,
         password,
-        callbackUrl: "/",
+        callbackUrl: "https://sor.hobitohum.com",
         redirect: true,
       });
       if (res?.error) {

@@ -19,21 +19,18 @@ export default function LoginPage() {
 
     try {
       const res = await signIn("credentials", {
+        redirect: false,
         email,
         password,
-        callbackUrl: "https://sor.hobitohum.com",
-        redirect: true,
       });
+
       if (res?.error) {
         setError("Geçersiz e-posta veya şifre.");
+      } else {
+        window.location.href = "https://sor.hobitohum.com";
       }
     } catch (err: any) {
-      // In NextAuth v5, if credentials are wrong, error contains CredentialsSignin
-      if (err?.message?.includes("CredentialsSignin") || err?.type === "CredentialsSignin") {
-        setError("Geçersiz e-posta veya şifre.");
-      } else {
-        window.location.href = "/";
-      }
+      setError("Bir hata oluştu. Lütfen bilgilerinizi kontrol edip tekrar deneyin.");
     } finally {
       setLoading(false);
     }

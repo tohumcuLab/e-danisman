@@ -242,9 +242,9 @@ export function SideMenu({ user }: SideMenuProps) {
 
           {/* Kurallar ve Sözleşme Bağlantıları */}
           <div className="flex flex-wrap items-center justify-center gap-1.5 text-[10px] font-bold text-[var(--on-surface-variant)] pt-1">
-            <Link href="/duyurular" onClick={() => setIsOpen(false)} className="text-[var(--primary)] font-bold underline hover:opacity-80">📢 Duyurular</Link>
+            <Link href="/duyurular" onClick={() => setIsOpen(false)} className="text-[var(--primary)] font-bold underline hover:opacity-80">Duyurular</Link>
             <span>•</span>
-            <Link href="/telif-ve-yasal-uyari" onClick={() => setIsOpen(false)} className="text-amber-700 dark:text-amber-400 font-bold hover:underline">⚖️ Telif</Link>
+            <Link href="/telif-ve-yasal-uyari" onClick={() => setIsOpen(false)} className="text-amber-700 dark:text-amber-400 font-bold hover:underline">Telif</Link>
             <span>•</span>
             <Link href="/topluluk-kurallari" onClick={() => setIsOpen(false)} className="hover:underline">Kurallar</Link>
             <span>•</span>

@@ -11,13 +11,9 @@ const LAZY_LOAD_ROUTES = ["/", "/en-cok-okunanlar", "/cevap-bekleyenler"];
 export function Footer() {
   const pathname = usePathname();
 
-  // Lazy Load olan sayfalarda sabit footer gösterilmez, dinamik StickyFooterBar devreye girer
-  if (LAZY_LOAD_ROUTES.includes(pathname)) {
-    return <StickyFooterBar />;
-  }
-
   return (
-    <footer className="border-t border-[var(--outline-variant)] bg-[var(--surface-container-low)] py-6 mt-auto text-xs text-[var(--on-surface-variant)]">
+    <>
+      <footer className="border-t border-[var(--outline-variant)] bg-[var(--surface-container-low)] py-6 mt-auto text-xs text-[var(--on-surface-variant)]">
       <div className="container max-w-7xl mx-auto px-4 space-y-4">
         <div className="flex flex-col md:flex-row items-center justify-between gap-4">
           <div className="space-y-1 text-center md:text-left">
@@ -65,5 +61,7 @@ export function Footer() {
         </div>
       </div>
     </footer>
+    <StickyFooterBar />
+    </>
   );
 }

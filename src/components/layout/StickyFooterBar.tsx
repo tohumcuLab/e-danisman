@@ -21,16 +21,17 @@ export default function StickyFooterBar() {
   }, []);
 
   useEffect(() => {
-    // Ekranda aşağı inildiğinde (9. içerik / 650px sonrası) footer görünür olsun
+    // Ekranda aşağı inildiğinde (150px sonrası) footer görünür olsun
     const handleScroll = () => {
-      if (window.scrollY > 650) {
+      if (window.scrollY > 150) {
         setIsVisible(true);
       } else {
         setIsVisible(false);
       }
     };
 
-    window.addEventListener("scroll", handleScroll);
+    handleScroll(); // İlk yüklemede de kontrol et
+    window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 

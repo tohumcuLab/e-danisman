@@ -49,8 +49,9 @@ export function SideMenu({ user }: SideMenuProps) {
   return (
     <>
       <button
+        type="button"
         onClick={() => setIsOpen(true)}
-        className="p-1.5 sm:p-2 text-gray-600 hover:text-[var(--primary)] hover:bg-gray-100 dark:hover:bg-gray-800 rounded-md transition-colors shrink-0"
+        className="p-1.5 sm:p-2 text-gray-600 hover:text-[var(--primary)] hover:bg-gray-100 dark:hover:bg-gray-800 rounded-md transition-colors shrink-0 cursor-pointer touch-manipulation z-10"
         aria-label="Menüyü Aç"
       >
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-5 h-5 sm:w-6 sm:h-6">

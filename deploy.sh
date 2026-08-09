@@ -6,8 +6,9 @@ cd /www/wwwroot/danisman || exit 1
 
 # 2. Güvenli git dizinini ayarla ve en son kodları çek
 git config --global --add safe.directory /www/wwwroot/danisman
-echo "📥 1/4 GitHub'dan en güncel kodlar çekiliyor..."
-git pull origin main
+echo "📥 1/4 GitHub'dan en güncel kodlar zorunlu senkronize ediliyor..."
+git fetch origin main
+git reset --hard origin/main
 
 # 3. Eski Next.js derleme önbelleğini sıfırla
 echo "🧹 2/4 Eski derleme önbelleği (.next) temizleniyor..."

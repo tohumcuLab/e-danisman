@@ -10,6 +10,9 @@ echo "📥 1/4 GitHub'dan en güncel kodlar zorunlu senkronize ediliyor..."
 git fetch origin main
 git reset --hard origin/main
 
+echo "📦 Paketlenmiş kütüphaneler yükleniyor (npm install)..."
+npm install
+
 # 3. Eski Next.js derleme önbelleğini sıfırla
 echo "🧹 2/4 Eski derleme önbelleği (.next) temizleniyor..."
 rm -rf .next

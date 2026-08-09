@@ -35,8 +35,8 @@ export function Footer() {
           </div>
 
           <div className="flex flex-wrap items-center justify-center gap-3 text-xs font-semibold">
-            <Link href="/duyurular" className="hover:text-[var(--primary)] text-[var(--primary)] font-bold transition-colors">Duyurular</Link>
-            <Link href="/telif-ve-yasal-uyari" className="hover:text-[var(--primary)] font-bold text-amber-700 dark:text-amber-400 transition-colors">Telif</Link>
+            <Link href="/duyurular" className="hover:text-[var(--primary)] text-[var(--primary)] font-bold transition-colors">📢 Duyurular</Link>
+            <Link href="/telif-ve-yasal-uyari" className="hover:text-[var(--primary)] font-bold text-amber-700 dark:text-amber-400 transition-colors">⚖️ Telif</Link>
             <Link href="/topluluk-kurallari" className="hover:text-[var(--primary)] transition-colors">Topluluk Kuralları</Link>
             <Link href="/kullanici-sozlesmesi" className="hover:text-[var(--primary)] transition-colors">Kullanıcı Sözleşmesi</Link>
             <Link href="/gizlilik-politikasi" className="hover:text-[var(--primary)] transition-colors">Gizlilik Politikası</Link>

@@ -17,10 +17,10 @@ export async function POST(req: Request) {
 
     const userId = session.user.id;
 
-    // Kullanıcı ban kontrolü ve rol çekimi
+    // Kullanıcı ban kontrolü, rol, kredi ve premium çekimi
     const currentUser = await prisma.user.findUnique({
       where: { id: userId },
-      select: { role: true, isBanned: true, bannedUntil: true, banReason: true }
+      select: { role: true, isBanned: true, bannedUntil: true, banReason: true, credits: true, premiumUntil: true }
     });
 
     if (currentUser?.isBanned && (!currentUser.bannedUntil || new Date(currentUser.bannedUntil) > new Date())) {
@@ -38,6 +38,8 @@ export async function POST(req: Request) {
     if (!question) {
       return NextResponse.json({ error: "Soru bulunamadı" }, { status: 404 });
     }
+
+    let updatedCredits: number | undefined;
 
     // 2. Eğer bir cevaba YANIT veriliyorsa (parentId varsa), 1 Kredi kontrolü yap ve düş
     if (parentId) {
@@ -60,20 +62,23 @@ export async function POST(req: Request) {
       }
 
       // 1 Kredi düş
-      await prisma.$transaction([
+      const [updatedUser] = await prisma.$transaction([
         prisma.user.update({
           where: { id: userId },
-          data: { credits: { decrement: 1 } }
+          data: { credits: { decrement: 1 } },
+          select: { credits: true }
         }),
         prisma.credit.create({
           data: {
             userId,
             amount: -1,
-            type: "SPENT",
+            type: "SPEND",
             reason: "Cevaba yanıt verme (-1 Kredi)"
           }
         })
       ]);
+
+      updatedCredits = updatedUser.credits;
 
       // Cevap sahibine bildirim gönder
       if (parentAnswer.userId !== userId) {
@@ -88,7 +93,40 @@ export async function POST(req: Request) {
       }
     }
 
-    const isExpert = currentUser?.role === "EXPERT" || session.user?.role === "EXPERT";
+    const isExpert = currentUser?.role === "EXPERT" || currentUser?.role === "ADMIN" || session.user?.role === "EXPERT" || session.user?.role === "ADMIN";
+
+    // 2.5 Standart kullanıcı ana cevabı için 4 Kredi / Premium kontrolü
+    if (!parentId && !isExpert) {
+      const isPremium = currentUser?.premiumUntil && new Date(currentUser.premiumUntil) > new Date();
+      if (!isPremium) {
+        if ((currentUser?.credits ?? 0) < 4) {
+          return NextResponse.json(
+            { error: "Yetersiz bakiye! Cevap gönderebilmek için en az 4 krediniz olmalıdır.", currentCredits: currentUser?.credits || 0, requiredCredits: 4 },
+            { status: 403 }
+          );
+        }
+
+        // 4 Kredi düş
+        const [updatedUser] = await prisma.$transaction([
+          prisma.user.update({
+            where: { id: userId },
+            data: { credits: { decrement: 4 } },
+            select: { credits: true }
+          }),
+          prisma.credit.create({
+            data: {
+              userId,
+              amount: -4,
+              type: "SPEND",
+              reason: "Soruya cevap gönderme (-4 Kredi)"
+            }
+          })
+        ]);
+
+        updatedCredits = updatedUser.credits;
+      }
+    }
+
     const initialStatus = isExpert ? "PENDING_APPROVAL" : "APPROVED";
 
     // 3. Cevabı / Yanıtı oluştur
@@ -119,11 +157,12 @@ export async function POST(req: Request) {
       return NextResponse.json({
         message: "Cevabınız yönetici onayına gönderilmiştir. Admin onayladıktan sonra yayınlanacak ve puanınız eklenecektir.",
         pendingApproval: true,
-        answer
+        answer,
+        updatedCredits
       }, { status: 201 });
     }
 
-    if (body.length >= 50) {
+    if (body.length >= 50 && isExpert) {
       const { addExpertScore } = await import("@/lib/expertScore");
       await addExpertScore(userId, "ANSWER", answer.id);
     }
@@ -140,7 +179,11 @@ export async function POST(req: Request) {
       });
     }
 
-    return NextResponse.json({ message: parentId ? "Yanıtınız eklendi (-1 Kredi)" : "Cevabınız eklendi", answer }, { status: 201 });
+    return NextResponse.json({
+      message: parentId ? "Yanıtınız eklendi (-1 Kredi)" : "Cevabınız eklendi (-4 Kredi)",
+      answer,
+      updatedCredits
+    }, { status: 201 });
   } catch (error) {
     console.error("Cevap ekleme hatası:", error);
     return NextResponse.json({ error: "Sunucu hatası" }, { status: 500 });

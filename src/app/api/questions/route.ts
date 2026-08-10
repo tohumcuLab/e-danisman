@@ -30,9 +30,8 @@ export async function POST(req: Request) {
     const baseCostSetting = await prisma.systemSetting.findUnique({
       where: { key: "QUESTION_BASE_CREDIT_COST" },
     });
-    const baseCost = baseCostSetting && !isNaN(parseInt(baseCostSetting.value, 10))
-      ? parseInt(baseCostSetting.value, 10)
-      : 4;
+    const parsedCost = baseCostSetting ? parseInt(baseCostSetting.value, 10) : NaN;
+    const baseCost = !isNaN(parsedCost) && parsedCost > 0 ? parsedCost : 4;
 
     const imageCount = images?.length || 0;
     const extraImageCost = Math.max(0, imageCount - 2);
@@ -51,7 +50,7 @@ export async function POST(req: Request) {
         throw new Error(`BANNED:${user.banReason || "Hesabınız kural ihlali sebebiyle kısıtlanmıştır."}`);
       }
       
-      const isPremium = user.premiumUntil && user.premiumUntil > new Date();
+      const isPremium = user.premiumUntil ? new Date(user.premiumUntil) > new Date() : false;
       const actualCreditCost = isPremium ? 0 : totalCreditCost;
 
       if (!isPremium) {
@@ -69,7 +68,7 @@ export async function POST(req: Request) {
         await tx.credit.create({
           data: {
             userId: userId,
-            amount: totalCreditCost,
+            amount: -totalCreditCost,
             type: "SPEND",
             reason: extraImageCost > 0 
               ? `Soru sorma ücreti (${baseCost} Kredi Temel + ${extraImageCost} Ekstra Resim Kredisi)` 

@@ -8,6 +8,7 @@ type InsufficientCreditsModalProps = {
   currentCredits: number;
   onCreditUpdated: (newCredits: number) => void;
   onReadyToSubmit?: () => void;
+  onOpenPremium?: () => void;
 };
 
 export default function InsufficientCreditsModal({
@@ -16,6 +17,7 @@ export default function InsufficientCreditsModal({
   currentCredits,
   onCreditUpdated,
   onReadyToSubmit,
+  onOpenPremium,
 }: InsufficientCreditsModalProps) {
   const [ad, setAd] = useState<any>(null);
   const [loadingAd, setLoadingAd] = useState(false);
@@ -125,7 +127,7 @@ export default function InsufficientCreditsModal({
           <div className="text-4xl mb-2">🪙</div>
           <h2 className="text-2xl font-bold text-[var(--primary)]">Yetersiz Kredi Bakiye Uyarısı</h2>
           <p className="text-sm text-[var(--on-surface-variant)] mt-1">
-            Soru sorabilmek için en az <strong>4 Krediye</strong> ihtiyacınız var.
+            İşlemi tamamlayabilmek için en az <strong>4 Krediye</strong> ihtiyacınız var.
           </p>
           <div className="mt-3 inline-flex items-center gap-2 bg-[var(--surface-variant)] px-4 py-2 rounded-full font-semibold text-sm">
             <span>Mevcut Bakiyeniz:</span>
@@ -136,7 +138,7 @@ export default function InsufficientCreditsModal({
         {hasEnoughCredits ? (
           <div className="bg-green-100 text-green-800 p-4 rounded-md text-center my-4 space-y-3">
             <p className="font-bold text-lg">🎉 Tebrikler! Yeterli krediye ulaştınız!</p>
-            <p className="text-sm">Artık sorunuzu gönderebilirsiniz.</p>
+            <p className="text-sm">Artık işleminizi gerçekleştirebilirsiniz.</p>
             <button
               onClick={() => {
                 onClose();
@@ -144,7 +146,7 @@ export default function InsufficientCreditsModal({
               }}
               className="btn btn-primary w-full py-3 text-lg font-bold"
             >
-              Soruyu Şimdi Gönder (-4 Kredi)
+              Şimdi Gönder (-4 Kredi)
             </button>
           </div>
         ) : (
@@ -154,8 +156,20 @@ export default function InsufficientCreditsModal({
             </h3>
 
             {dailyLimitReached ? (
-              <div className="bg-amber-50 dark:bg-amber-900/20 text-amber-800 dark:text-amber-200 p-4 rounded-md text-center text-sm">
-                🛑 Bugünkü reklam izleme limitinize ulaştınız. Yarın tekrar deneyebilirsiniz.
+              <div className="bg-amber-50 dark:bg-amber-950/50 text-amber-900 dark:text-amber-200 border border-amber-300 dark:border-amber-700/60 p-4 rounded-2xl text-center text-xs space-y-3 shadow-sm">
+                <p className="font-bold text-sm">🛑 Bugünkü reklam izleme limitinize ulaştınız.</p>
+                <p className="text-amber-800 dark:text-amber-300">
+                  Beklemeden devam etmek için Premium üye olabilir veya yarın tekrar deneyebilirsiniz.
+                </p>
+                <button
+                  onClick={() => {
+                    onClose();
+                    if (onOpenPremium) onOpenPremium();
+                  }}
+                  className="w-full bg-gradient-to-r from-amber-500 to-emerald-600 hover:from-amber-600 hover:to-emerald-700 text-white font-extrabold py-3 px-4 rounded-xl shadow-md transition-all text-sm flex items-center justify-center gap-2 cursor-pointer"
+                >
+                  <span>👑 Premium Üye Ol (Sınırsız Kredi)</span>
+                </button>
               </div>
             ) : loadingAd ? (
               <div className="text-center py-8 text-[var(--on-surface-variant)] text-sm">

@@ -44,14 +44,17 @@ export async function GET() {
             ]
           }
         ]
-      }
+      },
+      orderBy: [
+        { order: "asc" },
+        { createdAt: "desc" }
+      ]
     });
 
     const filtered = ads.filter(ad => ad.impressionLimit === null || ad.impressionCount < ad.impressionLimit);
-    const sortedAds = sortAndShuffleAds(filtered);
-    const activeAd = sortedAds.length > 0 ? sortedAds[0] : null;
+    const activeAd = filtered.length > 0 ? filtered[0] : null;
 
-    return NextResponse.json({ ad: activeAd, ads: sortedAds, dailyLimitReached: false });
+    return NextResponse.json({ ad: activeAd, ads: filtered, dailyLimitReached: false });
   } catch (error) {
     console.error("Aktif reklam alma hatası:", error);
     return NextResponse.json({ error: "Sunucu hatası" }, { status: 500 });

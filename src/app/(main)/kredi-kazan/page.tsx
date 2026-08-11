@@ -48,11 +48,14 @@ export default async function KrediKazanPage() {
             ]
           }
         ]
-      }
+      },
+      orderBy: [
+        { order: "asc" },
+        { createdAt: "desc" }
+      ]
     });
 
-    const filtered = ads.filter((ad: any) => ad.impressionLimit === null || ad.impressionCount < ad.impressionLimit);
-    validAds = sortAndShuffleAds(filtered);
+    validAds = ads.filter((ad: any) => ad.impressionLimit === null || ad.impressionCount < ad.impressionLimit);
   }
 
   return (

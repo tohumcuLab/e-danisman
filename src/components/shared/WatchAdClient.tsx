@@ -3,7 +3,10 @@
 import { useState, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
 
+import { sortAndShuffleAds } from "@/lib/adUtils";
+
 export default function WatchAdClient({ ads, dailyLimitReached }: { ads: any[], dailyLimitReached: boolean }) {
+  const [rotationAds, setRotationAds] = useState<any[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
   const [isCompleted, setIsCompleted] = useState(false);
@@ -13,15 +16,32 @@ export default function WatchAdClient({ ads, dailyLimitReached }: { ads: any[], 
   const videoRef = useRef<HTMLVideoElement>(null);
   const router = useRouter();
 
-  const ad = ads && ads.length > 0 ? ads[currentIndex % ads.length] : null;
+  useEffect(() => {
+    if (ads && ads.length > 0) {
+      setRotationAds((prev) => {
+        // Eğer mevcut rotasyon listesindeki tüm reklamlar hala bu listede varsa mevcut rotasyonu koru
+        if (
+          prev.length === ads.length &&
+          prev.every((p) => ads.some((a) => a.id === p.id))
+        ) {
+          return prev;
+        }
+        return sortAndShuffleAds(ads);
+      });
+    } else {
+      setRotationAds([]);
+    }
+  }, [ads]);
+
+  const ad = rotationAds.length > 0 ? rotationAds[currentIndex % rotationAds.length] : null;
 
   const loadNextAd = () => {
     setIsPlaying(false);
     setIsCompleted(false);
     setRewardClaimed(false);
     setMessage("");
-    if (ads && ads.length > 0) {
-      setCurrentIndex((prev) => (prev + 1) % ads.length);
+    if (rotationAds.length > 0) {
+      setCurrentIndex((prev) => (prev + 1) % rotationAds.length);
     }
     router.refresh();
   };

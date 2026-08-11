@@ -20,6 +20,8 @@ export default function InsufficientCreditsModal({
   onOpenPremium,
 }: InsufficientCreditsModalProps) {
   const [ad, setAd] = useState<any>(null);
+  const [adsList, setAdsList] = useState<any[]>([]);
+  const [adIndex, setAdIndex] = useState(0);
   const [loadingAd, setLoadingAd] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
   const [isCompleted, setIsCompleted] = useState(false);
@@ -33,6 +35,8 @@ export default function InsufficientCreditsModal({
       fetchAd();
     } else {
       resetState();
+      setAdsList([]);
+      setAdIndex(0);
     }
   }, [isOpen]);
 
@@ -48,13 +52,28 @@ export default function InsufficientCreditsModal({
       const res = await fetch("/api/ads/active-reward");
       if (res.ok) {
         const data = await res.json();
-        setAd(data.ad);
+        const rawAds = data.ads || (data.ad ? [data.ad] : []);
+        const sorted = sortAndShuffleAds(rawAds);
+        setAdsList(sorted);
+        setAdIndex(0);
+        setAd(sorted[0] || null);
         setDailyLimitReached(data.dailyLimitReached || false);
       }
     } catch (err) {
       console.error("Reklam çekme hatası:", err);
     } finally {
       setLoadingAd(false);
+    }
+  };
+
+  const loadNextModalAd = () => {
+    resetState();
+    if (adsList.length > 0) {
+      const nextIndex = (adIndex + 1) % adsList.length;
+      setAdIndex(nextIndex);
+      setAd(adsList[nextIndex]);
+    } else {
+      fetchAd();
     }
   };
 
@@ -98,9 +117,10 @@ export default function InsufficientCreditsModal({
           const newCredits = userData.user.credits;
           onCreditUpdated(newCredits);
         }
-        resetState();
-        // Bir sonraki reklamı yükle
-        fetchAd();
+        // Bir sonraki reklama geç
+        setTimeout(() => {
+          loadNextModalAd();
+        }, 1200);
       } else {
         setMessage(`Hata: ${data.error}`);
       }

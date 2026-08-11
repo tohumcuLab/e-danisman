@@ -19,7 +19,7 @@ rm -rf .next
 
 # 4. Projeyi canlı ortam için temiz derle
 echo "⚙️ 3/4 Uygulama canlı ortam için derleniyor..."
-DATABASE_URL="file:./dev.db" npm run build
+DATABASE_URL="file:./prisma/dev.db" npm run build
 
 # 5. PM2 sürecini zorla yenile
 echo "🔄 4/4 Sunucu süreçleri yeniden başlatılıyor..."

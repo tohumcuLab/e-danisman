@@ -8,7 +8,8 @@ let prisma: PrismaClient;
 if (globalForPrisma.prisma) {
   prisma = globalForPrisma.prisma;
 } else {
-  const adapter = new PrismaBetterSqlite3({ url: "file:./dev.db" });
+  const dbUrl = process.env.DATABASE_URL || "file:./prisma/dev.db";
+  const adapter = new PrismaBetterSqlite3({ url: dbUrl });
   prisma = new PrismaClient({ adapter });
 }
 

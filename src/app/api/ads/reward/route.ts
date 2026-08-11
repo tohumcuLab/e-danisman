@@ -58,18 +58,24 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: `Günlük reklam izleme limitinize (${dailyLimit}) ulaştınız. Lütfen yarın tekrar deneyin.` }, { status: 400 });
     }
 
-    // Dynamically fetch ad reward setting
-    const adRewardSetting = await prisma.systemSetting.findUnique({
-      where: { key: "USER_AD_REWARD_CREDIT" },
-    });
-    const customAdReward = adRewardSetting && !isNaN(parseInt(adRewardSetting.value, 10))
-      ? parseInt(adRewardSetting.value, 10)
-      : (ad.creditReward > 0 ? ad.creditReward : 5);
+    // Ödül miktarını belirle:
+    // 1. Öncelik: İzlenen reklama özel admin tarafından girilen creditReward değeri (ad.creditReward > 0).
+    // 2. Yedek: Eğer reklama özel bir değer tanımlanmamışsa sistem genel ayarındaki (USER_AD_REWARD_CREDIT) değer.
+    let baseReward = ad.creditReward && ad.creditReward > 0 ? ad.creditReward : 0;
 
-    // Kredi miktarını hesapla (100'ü geçmeyecek şekilde)
-    let rewardToGive = customAdReward;
+    if (baseReward <= 0) {
+      const adRewardSetting = await prisma.systemSetting.findUnique({
+        where: { key: "USER_AD_REWARD_CREDIT" },
+      });
+      baseReward = adRewardSetting && !isNaN(parseInt(adRewardSetting.value, 10))
+        ? parseInt(adRewardSetting.value, 10)
+        : 1;
+    }
+
+    // Kredi miktarını hesapla (100 bakiye sınırı aşılmayacak şekilde)
+    let rewardToGive = baseReward;
     if (user.credits + rewardToGive > 100) {
-      rewardToGive = 100 - user.credits;
+      rewardToGive = Math.max(0, 100 - user.credits);
     }
 
     // İşlemi gerçekleştir

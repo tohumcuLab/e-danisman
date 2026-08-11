@@ -17,7 +17,11 @@ npm install
 echo "🧹 2/4 Eski derleme önbelleği (.next) temizleniyor..."
 rm -rf .next
 
-# 4. Projeyi canlı ortam için temiz derle
+# 4. Veritabanı şemasını senkronize et
+echo "🗄️ Veritabanı şeması güncelleniyor (prisma db push)..."
+npx prisma db push --accept-data-loss
+
+# 5. Projeyi canlı ortam için temiz derle
 echo "⚙️ 3/4 Uygulama canlı ortam için derleniyor..."
 DATABASE_URL="file:./prisma/dev.db" npm run build
 

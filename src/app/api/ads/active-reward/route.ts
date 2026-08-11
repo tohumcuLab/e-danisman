@@ -29,27 +29,50 @@ export async function GET() {
       return NextResponse.json({ ad: null, dailyLimitReached: true });
     }
 
-    const ads = await prisma.ad.findMany({
-      where: {
-        isActive: true,
-        OR: [
-          { placement: "REWARD" },
-          { type: "REWARD_VIDEO" }
-        ],
-        AND: [
-          {
-            OR: [
-              { endDate: null },
-              { endDate: { gte: new Date() } }
-            ]
-          }
+    let ads: any[] = [];
+    try {
+      ads = await prisma.ad.findMany({
+        where: {
+          isActive: true,
+          OR: [
+            { placement: "REWARD" },
+            { type: "REWARD_VIDEO" }
+          ],
+          AND: [
+            {
+              OR: [
+                { endDate: null },
+                { endDate: { gte: new Date() } }
+              ]
+            }
+          ]
+        },
+        orderBy: [
+          { order: "asc" },
+          { createdAt: "desc" }
         ]
-      },
-      orderBy: [
-        { order: "asc" },
-        { createdAt: "desc" }
-      ]
-    });
+      });
+    } catch (dbErr) {
+      console.warn("Order li sorgu başarısız, varsayılan sorguya dönülüyor:", dbErr);
+      ads = await prisma.ad.findMany({
+        where: {
+          isActive: true,
+          OR: [
+            { placement: "REWARD" },
+            { type: "REWARD_VIDEO" }
+          ],
+          AND: [
+            {
+              OR: [
+                { endDate: null },
+                { endDate: { gte: new Date() } }
+              ]
+            }
+          ]
+        },
+        orderBy: { createdAt: "desc" }
+      }).catch(() => []);
+    }
 
     const filtered = ads.filter(ad => ad.impressionLimit === null || ad.impressionCount < ad.impressionLimit);
     const activeAd = filtered.length > 0 ? filtered[0] : null;

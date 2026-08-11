@@ -20,8 +20,8 @@ export function SideMenu({ user }: SideMenuProps) {
   }, [pathname]);
 
   // Giriş yapmış kullanıcının gerçek zamanlı bakiye ve istatistik verilerini çek
-  useEffect(() => {
-    if (user && isOpen) {
+  const fetchProfileData = () => {
+    if (user) {
       fetch("/api/user/me")
         .then((res) => res.ok ? res.json() : null)
         .then((data) => {
@@ -31,7 +31,18 @@ export function SideMenu({ user }: SideMenuProps) {
         })
         .catch((err) => console.error("Profil bilgisi yüklenemedi:", err));
     }
+  };
+
+  useEffect(() => {
+    if (isOpen) {
+      fetchProfileData();
+    }
   }, [user, isOpen]);
+
+  useEffect(() => {
+    window.addEventListener("user:credits-updated", fetchProfileData);
+    return () => window.removeEventListener("user:credits-updated", fetchProfileData);
+  }, [user]);
 
   // Menü açıkken arka plan kaydırmasını engelle ve dinamik footer'ı bilgilendir
   useEffect(() => {

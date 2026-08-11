@@ -17,175 +17,189 @@ export async function POST(req: Request) {
 
     const userId = session.user.id;
 
-    // Kullanıcı ban kontrolü, rol, kredi ve premium çekimi
-    const currentUser = await prisma.user.findUnique({
-      where: { id: userId },
-      select: { role: true, isBanned: true, bannedUntil: true, banReason: true, credits: true, premiumUntil: true }
-    });
-
-    if (currentUser?.isBanned && (!currentUser.bannedUntil || new Date(currentUser.bannedUntil) > new Date())) {
-      return NextResponse.json(
-        { error: `Hesabınız kısıtlanmıştır: ${currentUser.banReason || 'Topluluk kuralları ihlali.'}` },
-        { status: 403 }
-      );
-    }
-
-    // 1. Sorunun var olup olmadığını kontrol et
-    const question = await prisma.question.findUnique({
-      where: { id: questionId }
-    });
-
-    if (!question) {
-      return NextResponse.json({ error: "Soru bulunamadı" }, { status: 404 });
-    }
-
-    let updatedCredits: number | undefined;
-
-    // 2. Eğer bir cevaba YANIT veriliyorsa (parentId varsa), 1 Kredi kontrolü yap ve düş
-    if (parentId) {
-      const parentAnswer = await prisma.answer.findUnique({
-        where: { id: parentId },
-        include: { user: true }
-      });
-
-      if (!parentAnswer) {
-        return NextResponse.json({ error: "Yanıtlanmak istenen cevap bulunamadı" }, { status: 404 });
-      }
-
-      const user = await prisma.user.findUnique({
+    // Kredi kontrolü, cevap oluşturma ve bildirim gönderimini atomik transaction içinde yapıyoruz
+    const result = await prisma.$transaction(async (tx) => {
+      // 1. Kullanıcıyı, kredisini, ban durumunu ve rolünü kontrol et
+      const user = await tx.user.findUnique({
         where: { id: userId },
-        select: { credits: true }
+        select: { id: true, role: true, isBanned: true, bannedUntil: true, banReason: true, credits: true, premiumUntil: true }
       });
 
-      if (!user || user.credits < 1) {
-        return NextResponse.json({ error: "Yetersiz kredi! Bir cevaba yanıt vermek için en az 1 krediniz olmalıdır." }, { status: 403 });
+      if (!user) {
+        throw new Error("USER_NOT_FOUND");
       }
 
-      // 1 Kredi düş
-      const [updatedUser] = await prisma.$transaction([
-        prisma.user.update({
+      if (user.isBanned && (!user.bannedUntil || new Date(user.bannedUntil) > new Date())) {
+        throw new Error(`BANNED:${user.banReason || 'Topluluk kuralları ihlali.'}`);
+      }
+
+      // 2. Sorunun var olup olmadığını kontrol et
+      const question = await tx.question.findUnique({
+        where: { id: questionId }
+      });
+
+      if (!question) {
+        throw new Error("QUESTION_NOT_FOUND");
+      }
+
+      const isExpert = user.role === "EXPERT" || user.role === "ADMIN" || session.user?.role === "EXPERT" || session.user?.role === "ADMIN";
+      const isPremium = user.premiumUntil ? new Date(user.premiumUntil) > new Date() : false;
+
+      let remainingCredits = user.credits;
+
+      // 3. Kredi Düşme Mantığı
+      if (parentId) {
+        // Yanıta yanıt verme (-1 Kredi)
+        const parentAnswer = await tx.answer.findUnique({
+          where: { id: parentId },
+          include: { user: true }
+        });
+
+        if (!parentAnswer) {
+          throw new Error("PARENT_NOT_FOUND");
+        }
+
+        if (user.credits < 1) {
+          throw new Error("INSUFFICIENT_CREDITS:1");
+        }
+
+        const updatedUser = await tx.user.update({
           where: { id: userId },
           data: { credits: { decrement: 1 } },
           select: { credits: true }
-        }),
-        prisma.credit.create({
+        });
+
+        await tx.credit.create({
           data: {
             userId,
             amount: -1,
             type: "SPEND",
             reason: "Cevaba yanıt verme (-1 Kredi)"
           }
-        })
-      ]);
+        });
 
-      updatedCredits = updatedUser.credits;
+        remainingCredits = updatedUser.credits;
 
-      // Cevap sahibine bildirim gönder
-      if (parentAnswer.userId !== userId) {
-        await prisma.notification.create({
+        if (parentAnswer.userId !== userId) {
+          await tx.notification.create({
+            data: {
+              userId: parentAnswer.userId,
+              type: "NEW_ANSWER",
+              message: `Yazdığınız cevaba yeni bir yanıt geldi: "${body.substring(0, 30)}..."`,
+              relatedId: question.id,
+            }
+          });
+        }
+      } else if (!isExpert && !isPremium) {
+        // Ana soruya cevap verme (-1 Kredi)
+        if (user.credits < 1) {
+          throw new Error("INSUFFICIENT_CREDITS:1");
+        }
+
+        const updatedUser = await tx.user.update({
+          where: { id: userId },
+          data: { credits: { decrement: 1 } },
+          select: { credits: true }
+        });
+
+        await tx.credit.create({
           data: {
-            userId: parentAnswer.userId,
+            userId,
+            amount: -1,
+            type: "SPEND",
+            reason: "Soruya cevap gönderme (-1 Kredi)"
+          }
+        });
+
+        remainingCredits = updatedUser.credits;
+      }
+
+      const initialStatus = isExpert ? "PENDING_APPROVAL" : "APPROVED";
+
+      // 4. Cevabı / Yanıtı oluştur
+      const answer = await tx.answer.create({
+        data: {
+          body,
+          questionId,
+          userId,
+          parentId: parentId || null,
+          status: initialStatus,
+        },
+        include: {
+          user: { select: { id: true, name: true, image: true, avatarUrl: true, role: true } }
+        }
+      });
+
+      if (initialStatus === "PENDING_APPROVAL") {
+        await tx.notification.create({
+          data: {
+            userId,
+            type: "ANSWER_PENDING",
+            message: `Cevabınız yönetici onayına gönderilmiştir. Admin onayladıktan sonra yayına alınacaktır.`,
+            relatedId: question.id,
+          }
+        });
+      } else if (question.userId !== userId && !parentId) {
+        await tx.notification.create({
+          data: {
+            userId: question.userId,
             type: "NEW_ANSWER",
-            message: `Yazdığınız cevaba yeni bir yanıt geldi: "${body.substring(0, 30)}..."`,
+            message: `"${question.title.substring(0, 35)}..." sorunuza yeni bir cevap verildi.`,
             relatedId: question.id,
           }
         });
       }
-    }
 
-    const isExpert = currentUser?.role === "EXPERT" || currentUser?.role === "ADMIN" || session.user?.role === "EXPERT" || session.user?.role === "ADMIN";
-
-    // 2.5 Standart kullanıcı ana cevabı için 1 Kredi / Premium kontrolü
-    if (!parentId && !isExpert) {
-      const isPremium = currentUser?.premiumUntil && new Date(currentUser.premiumUntil) > new Date();
-      if (!isPremium) {
-        if ((currentUser?.credits ?? 0) < 1) {
-          return NextResponse.json(
-            { error: "Yetersiz bakiye! Cevap gönderebilmek için en az 1 krediniz olmalıdır.", currentCredits: currentUser?.credits || 0, requiredCredits: 1 },
-            { status: 403 }
-          );
-        }
-
-        // 1 Kredi düş
-        const [updatedUser] = await prisma.$transaction([
-          prisma.user.update({
-            where: { id: userId },
-            data: { credits: { decrement: 1 } },
-            select: { credits: true }
-          }),
-          prisma.credit.create({
-            data: {
-              userId,
-              amount: -1,
-              type: "SPEND",
-              reason: "Soruya cevap gönderme (-1 Kredi)"
-            }
-          })
-        ]);
-
-        updatedCredits = updatedUser.credits;
-      }
-    }
-
-    const initialStatus = isExpert ? "PENDING_APPROVAL" : "APPROVED";
-
-    // 3. Cevabı / Yanıtı oluştur
-    const answer = await prisma.answer.create({
-      data: {
-        body,
-        questionId,
-        userId,
-        parentId: parentId || null,
-        status: initialStatus,
-      },
-      include: {
-        user: { select: { id: true, name: true, image: true, avatarUrl: true, role: true } }
-      }
+      return {
+        answer,
+        initialStatus,
+        remainingCredits,
+        isExpert
+      };
     });
 
-    if (initialStatus === "PENDING_APPROVAL") {
-      // Uzmana bildirim gönder
-      await prisma.notification.create({
-        data: {
-          userId,
-          type: "ANSWER_PENDING",
-          message: `Cevabınız yönetici onayına gönderilmiştir. Admin onayladıktan sonra yayına alınacaktır.`,
-          relatedId: question.id,
-        }
-      });
+    if (body.length >= 50 && result.isExpert) {
+      const { addExpertScore } = await import("@/lib/expertScore");
+      await addExpertScore(userId, "ANSWER", result.answer.id);
+    }
 
+    if (result.initialStatus === "PENDING_APPROVAL") {
       return NextResponse.json({
         message: "Cevabınız yönetici onayına gönderilmiştir. Admin onayladıktan sonra yayınlanacak ve puanınız eklenecektir.",
         pendingApproval: true,
-        answer,
-        updatedCredits
+        answer: result.answer,
+        updatedCredits: result.remainingCredits
       }, { status: 201 });
-    }
-
-    if (body.length >= 50 && isExpert) {
-      const { addExpertScore } = await import("@/lib/expertScore");
-      await addExpertScore(userId, "ANSWER", answer.id);
-    }
-
-    // Soruyu soran kullanıcıya bildirim gönder (Kendi cevabı değilse)
-    if (question.userId !== userId && !parentId) {
-      await prisma.notification.create({
-        data: {
-          userId: question.userId,
-          type: "NEW_ANSWER",
-          message: `"${question.title.substring(0, 35)}..." sorunuza yeni bir cevap verildi.`,
-          relatedId: question.id,
-        }
-      });
     }
 
     return NextResponse.json({
       message: parentId ? "Yanıtınız eklendi (-1 Kredi)" : "Cevabınız eklendi (-1 Kredi)",
-      answer,
-      updatedCredits
+      answer: result.answer,
+      updatedCredits: result.remainingCredits
     }, { status: 201 });
-  } catch (error) {
+
+  } catch (error: any) {
     console.error("Cevap ekleme hatası:", error);
+
+    if (error.message === "USER_NOT_FOUND") {
+      return NextResponse.json({ error: "Kullanıcı bulunamadı" }, { status: 404 });
+    }
+    if (error.message === "QUESTION_NOT_FOUND") {
+      return NextResponse.json({ error: "Soru bulunamadı" }, { status: 404 });
+    }
+    if (error.message === "PARENT_NOT_FOUND") {
+      return NextResponse.json({ error: "Yanıtlanmak istenen cevap bulunamadı" }, { status: 404 });
+    }
+    if (error.message?.startsWith("BANNED:")) {
+      const reason = error.message.split(":")[1] || "Hesabınız kısıtlanmıştır.";
+      return NextResponse.json({ error: `Hesabınız kısıtlanmıştır: ${reason}` }, { status: 403 });
+    }
+    if (error.message?.startsWith("INSUFFICIENT_CREDITS")) {
+      const reqVal = error.message.split(":")[1] || "1";
+      return NextResponse.json({ error: `Yetersiz bakiye! Cevap gönderebilmek için en az ${reqVal} krediniz olmalıdır.`, requiredCredits: parseInt(reqVal, 10) }, { status: 403 });
+    }
+
     return NextResponse.json({ error: "Sunucu hatası" }, { status: 500 });
   }
 }
+

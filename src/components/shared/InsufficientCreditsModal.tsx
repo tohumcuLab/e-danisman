@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
+import { sortAndShuffleAds } from "@/lib/adUtils";
 
 type InsufficientCreditsModalProps = {
   isOpen: boolean;
@@ -80,8 +81,10 @@ export default function InsufficientCreditsModal({
   if (!isOpen) return null;
 
   const isVideo = ad?.videoUrl && !ad.videoUrl.match(/\.(jpeg|jpg|gif|png)$/i);
+  const targetUrl = ad?.destinationUrl ? `/api/ads/${ad.id}/click` : null;
 
-  const handleStart = () => {
+  const handleStart = (e: React.MouseEvent) => {
+    e.stopPropagation();
     setIsPlaying(true);
     if (isVideo && videoRef.current) {
       videoRef.current.play();
@@ -89,6 +92,12 @@ export default function InsufficientCreditsModal({
       setTimeout(() => {
         setIsCompleted(true);
       }, 5000);
+    }
+  };
+
+  const handleMediaClick = () => {
+    if (targetUrl) {
+      window.open(targetUrl, "_blank", "noopener,noreferrer");
     }
   };
 
@@ -201,15 +210,28 @@ export default function InsufficientCreditsModal({
               </div>
             ) : (
               <div className="space-y-3">
-                <div className="text-xs text-center text-[var(--on-surface-variant)]">
-                  İzlenecek Reklam: <strong>{ad.title}</strong> (+{ad.creditReward} Kredi)
+                <div className="text-xs text-center text-[var(--on-surface-variant)] flex items-center justify-between gap-2">
+                  <span>İzlenecek Reklam: <strong>{ad.title}</strong> (+{ad.creditReward} Kredi)</span>
+                  {targetUrl && (
+                    <a
+                      href={targetUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="btn bg-[var(--secondary)] text-white text-[11px] px-2.5 py-1 rounded-md font-bold hover:opacity-90 transition-all shrink-0 flex items-center gap-1"
+                    >
+                      İncele ➔
+                    </a>
+                  )}
                 </div>
 
-                <div className="relative bg-black rounded-lg overflow-hidden w-full aspect-video flex items-center justify-center">
+                <div 
+                  onClick={targetUrl ? handleMediaClick : undefined}
+                  className={`relative bg-black rounded-lg overflow-hidden w-full aspect-video flex items-center justify-center ${targetUrl ? "cursor-pointer group/media" : ""}`}
+                >
                   {!isPlaying && (
                     <button
                       onClick={handleStart}
-                      className="absolute z-10 bg-white/30 hover:bg-white/40 text-white rounded-full p-4 transition-all"
+                      className="absolute z-10 bg-white/30 hover:bg-white/40 text-white rounded-full p-4 transition-all shadow-lg"
                     >
                       ▶️ Reklamı Başlat
                     </button>
@@ -229,7 +251,7 @@ export default function InsufficientCreditsModal({
                       <img
                         src={ad.videoUrl}
                         alt={ad.title}
-                        className={`w-full h-full object-contain ${!isPlaying ? "opacity-50" : "opacity-100"}`}
+                        className={`w-full h-full object-contain ${!isPlaying ? "opacity-50" : "opacity-100"} ${targetUrl ? "group-hover/media:scale-105 transition-transform duration-500" : ""}`}
                       />
                       {isPlaying && !isCompleted && (
                         <div className="absolute top-2 right-2 bg-black/70 text-white text-xs px-2 py-1 rounded">

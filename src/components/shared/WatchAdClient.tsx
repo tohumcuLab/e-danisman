@@ -73,7 +73,12 @@ export default function WatchAdClient({ ads, dailyLimitReached }: { ads: any[], 
   const mediaUrl = ad.imageUrl || ad.videoUrl || "";
   const isVideo = Boolean(mediaUrl && (mediaUrl.match(/\.(mp4|webm|ogg)$/i) || mediaUrl.includes("video")));
 
-  const handleStart = () => {
+  const targetUrl = ad.destinationUrl
+    ? `/api/ads/${ad.id}/click`
+    : null;
+
+  const handleStart = (e: React.MouseEvent) => {
+    e.stopPropagation();
     setIsPlaying(true);
     if (isVideo && videoRef.current) {
       videoRef.current.play();
@@ -81,6 +86,12 @@ export default function WatchAdClient({ ads, dailyLimitReached }: { ads: any[], 
       setTimeout(() => {
         setIsCompleted(true);
       }, 5000);
+    }
+  };
+
+  const handleMediaClick = () => {
+    if (targetUrl) {
+      window.open(targetUrl, "_blank", "noopener,noreferrer");
     }
   };
 
@@ -114,18 +125,31 @@ export default function WatchAdClient({ ads, dailyLimitReached }: { ads: any[], 
 
   return (
     <div className="card overflow-hidden">
-      <div className="p-4 bg-[var(--surface-variant)] border-b border-[var(--outline-variant)] flex justify-between items-center">
+      <div className="p-4 bg-[var(--surface-variant)] border-b border-[var(--outline-variant)] flex justify-between items-center gap-3">
         <div>
           <h2 className="font-bold">{ad.title}</h2>
           <p className="text-sm text-[var(--on-surface-variant)]">Bu reklamı izleyerek +{ad.creditReward} Kredi kazanın</p>
         </div>
+        {targetUrl && (
+          <a
+            href={targetUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="btn bg-[var(--secondary)] text-white text-xs px-3.5 py-1.5 rounded-lg font-bold hover:opacity-90 transition-all shrink-0 flex items-center gap-1"
+          >
+            İncele ➔
+          </a>
+        )}
       </div>
       
-      <div className="relative bg-black w-full aspect-video flex items-center justify-center">
+      <div 
+        onClick={targetUrl ? handleMediaClick : undefined}
+        className={`relative bg-black w-full aspect-video flex items-center justify-center ${targetUrl ? "cursor-pointer group/media" : ""}`}
+      >
         {!isPlaying && !rewardClaimed ? (
           <button 
             onClick={handleStart}
-            className="absolute z-10 bg-white/20 hover:bg-white/30 backdrop-blur-sm text-white rounded-full w-20 h-20 flex items-center justify-center transition-all"
+            className="absolute z-10 bg-white/20 hover:bg-white/30 backdrop-blur-sm text-white rounded-full w-20 h-20 flex items-center justify-center transition-all shadow-lg"
           >
             <div className="w-0 h-0 border-t-[12px] border-t-transparent border-l-[20px] border-l-white border-b-[12px] border-b-transparent ml-2" />
           </button>
@@ -145,7 +169,7 @@ export default function WatchAdClient({ ads, dailyLimitReached }: { ads: any[], 
             <img 
               src={mediaUrl} 
               alt={ad.title} 
-              className={`w-full h-full object-contain ${!isPlaying || rewardClaimed ? 'opacity-50' : 'opacity-100'}`} 
+              className={`w-full h-full object-contain ${!isPlaying || rewardClaimed ? 'opacity-50' : 'opacity-100'} ${targetUrl ? 'group-hover/media:scale-105 transition-transform duration-500' : ''}`} 
             />
             {isPlaying && !isCompleted && !rewardClaimed && (
               <div className="absolute top-4 right-4 bg-black/60 text-white px-3 py-1 rounded text-sm">

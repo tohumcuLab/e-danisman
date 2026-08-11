@@ -195,8 +195,9 @@ export default function IletisimForm({
       setSuccessMsg("Reklam talebiniz oluşturuldu! Ödeme sayfasına yeni sekmede yönlendiriliyorsunuz...");
       setPaymentLink(pkg.iyzicoLink);
       if (pkg.iyzicoLink && pkg.iyzicoLink !== "#") {
+        const link = pkg.iyzicoLink;
         setTimeout(() => {
-          window.open(pkg.iyzicoLink, "_blank");
+          window.open(link, "_blank");
         }, 1500);
       }
     } else {

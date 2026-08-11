@@ -37,8 +37,8 @@ export default function FeedAdCard({ ad }: { ad: Ad }) {
     ? `/api/ads/${ad.id}/click`
     : null;
 
-  return (
-    <article className="card p-5 border-2 border-[var(--secondary)]/40 bg-[var(--secondary)]/5 relative overflow-hidden rounded-xl shadow-sm my-4">
+  const cardContent = (
+    <article className={`card p-5 border-2 border-[var(--secondary)]/40 bg-[var(--secondary)]/5 relative overflow-hidden rounded-xl shadow-sm my-4 transition-all ${targetUrl ? "cursor-pointer hover:border-[var(--secondary)] hover:shadow-md group/ad" : ""}`}>
       {/* Header Badge */}
       <div className="flex items-center justify-between mb-3">
         <span className="bg-[var(--secondary)] text-white text-[10px] font-extrabold px-2.5 py-1 rounded-md tracking-wider uppercase flex items-center gap-1">
@@ -56,31 +56,7 @@ export default function FeedAdCard({ ad }: { ad: Ad }) {
         <div className="space-y-3">
           {mediaUrl && (
             <div className="w-full max-h-80 rounded-xl overflow-hidden bg-black/5 border border-gray-200 flex items-center justify-center">
-              {targetUrl ? (
-                <a
-                  href={targetUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="w-full h-full block group/ad overflow-hidden"
-                >
-                  {isVideo ? (
-                    <video
-                      src={mediaUrl}
-                      autoPlay
-                      muted
-                      loop
-                      playsInline
-                      className="w-full max-h-80 object-contain mx-auto"
-                    />
-                  ) : (
-                    <img
-                      src={mediaUrl}
-                      alt={ad.title}
-                      className="w-full max-h-80 object-contain mx-auto group-hover/ad:scale-105 transition-transform duration-500"
-                    />
-                  )}
-                </a>
-              ) : isVideo ? (
+              {isVideo ? (
                 <video
                   src={mediaUrl}
                   autoPlay
@@ -93,29 +69,39 @@ export default function FeedAdCard({ ad }: { ad: Ad }) {
                 <img
                   src={mediaUrl}
                   alt={ad.title}
-                  className="w-full max-h-80 object-contain mx-auto"
+                  className="w-full max-h-80 object-contain mx-auto group-hover/ad:scale-105 transition-transform duration-500"
                 />
               )}
             </div>
           )}
 
           <div className="flex items-center justify-between gap-3">
-            <h3 className="font-bold text-base text-[var(--on-surface)] leading-snug">
+            <h3 className="font-bold text-base text-[var(--on-surface)] leading-snug group-hover/ad:text-[var(--secondary)] transition-colors">
               {ad.title}
             </h3>
             {targetUrl && (
-              <a
-                href={targetUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="btn bg-[var(--secondary)] hover:opacity-90 text-white font-bold text-xs px-3.5 py-1.5 rounded-lg shrink-0 shadow-sm transition-all"
-              >
+              <span className="btn bg-[var(--secondary)] group-hover/ad:opacity-90 text-white font-bold text-xs px-3.5 py-1.5 rounded-lg shrink-0 shadow-sm transition-all flex items-center gap-1">
                 İncele ➔
-              </a>
+              </span>
             )}
           </div>
         </div>
       )}
     </article>
   );
+
+  if (targetUrl) {
+    return (
+      <a
+        href={targetUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="block no-underline text-inherit"
+      >
+        {cardContent}
+      </a>
+    );
+  }
+
+  return cardContent;
 }

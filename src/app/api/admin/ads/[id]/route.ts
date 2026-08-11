@@ -3,6 +3,18 @@ import { prisma } from "@/lib/prisma";
 import { auth } from "@/auth";
 import { storageService } from "@/lib/storage";
 
+function parseSafeDate(val: any): Date | null {
+  if (!val) return null;
+  const d = new Date(val);
+  return isNaN(d.getTime()) ? null : d;
+}
+
+function parseSafeInt(val: any, fallback: number | null = null): number | null {
+  if (val === null || val === undefined || val === "") return fallback;
+  const parsed = parseInt(val.toString(), 10);
+  return isNaN(parsed) ? fallback : parsed;
+}
+
 export async function PUT(
   req: Request,
   { params }: { params: Promise<{ id: string }> }
@@ -37,39 +49,45 @@ export async function PUT(
       return NextResponse.json({ error: "Reklam bulunamadı" }, { status: 404 });
     }
 
+    const updateData: Record<string, any> = {};
+
+    if (title !== undefined) updateData.title = title;
+    if (type !== undefined) updateData.type = type;
+    if (placement !== undefined) updateData.placement = placement;
+    if (networkCode !== undefined) updateData.networkCode = networkCode;
+    if (imageUrl !== undefined) updateData.imageUrl = imageUrl;
+    if (destinationUrl !== undefined) updateData.destinationUrl = destinationUrl;
+    if (videoUrl !== undefined) updateData.videoUrl = videoUrl;
+    if (isActive !== undefined) updateData.isActive = isActive;
+
+    if (impressionLimit !== undefined) {
+      updateData.impressionLimit = parseSafeInt(impressionLimit, null);
+    }
+    if (creditReward !== undefined) {
+      updateData.creditReward = parseSafeInt(creditReward, 0) ?? 0;
+    }
+    if (order !== undefined) {
+      updateData.order = parseSafeInt(order, 0) ?? 0;
+    }
+    if (startDate !== undefined) {
+      updateData.startDate = parseSafeDate(startDate);
+    }
+    if (endDate !== undefined) {
+      updateData.endDate = parseSafeDate(endDate);
+    }
+
     const updatedAd = await prisma.ad.update({
       where: { id },
-      data: {
-        ...(title !== undefined && { title }),
-        ...(type !== undefined && { type }),
-        ...(placement !== undefined && { placement }),
-        ...(networkCode !== undefined && { networkCode }),
-        ...(imageUrl !== undefined && { imageUrl }),
-        ...(destinationUrl !== undefined && { destinationUrl }),
-        ...(videoUrl !== undefined && { videoUrl }),
-        ...(impressionLimit !== undefined && {
-          impressionLimit: impressionLimit ? parseInt(impressionLimit.toString()) : null
-        }),
-        ...(creditReward !== undefined && {
-          creditReward: creditReward ? parseInt(creditReward.toString()) : 0
-        }),
-        ...(order !== undefined && {
-          order: order ? parseInt(order.toString()) : 0
-        }),
-        ...(startDate !== undefined && {
-          startDate: startDate ? new Date(startDate) : null
-        }),
-        ...(endDate !== undefined && {
-          endDate: endDate ? new Date(endDate) : null
-        }),
-        ...(isActive !== undefined && { isActive })
-      }
+      data: updateData
     });
 
     return NextResponse.json({ message: "Reklam güncellendi", ad: updatedAd }, { status: 200 });
-  } catch (error) {
+  } catch (error: any) {
     console.error("Reklam güncelleme hatası:", error);
-    return NextResponse.json({ error: "Sunucu hatası" }, { status: 500 });
+    return NextResponse.json(
+      { error: error?.message || "Sunucu hatası" },
+      { status: 500 }
+    );
   }
 }
 

@@ -47,6 +47,8 @@ export default function AdManagerContainer({ initialAds }: AdManagerContainerPro
       startDate: ad.startDate,
       endDate: ad.endDate,
       impressionLimit: ad.impressionLimit,
+      creditReward: ad.creditReward,
+      order: ad.order,
       isActive: ad.isActive,
     });
     setIsModalOpen(true);

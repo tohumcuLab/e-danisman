@@ -23,6 +23,18 @@ export async function GET(req: Request) {
   }
 }
 
+function parseSafeDate(val: any): Date | null {
+  if (!val) return null;
+  const d = new Date(val);
+  return isNaN(d.getTime()) ? null : d;
+}
+
+function parseSafeInt(val: any, fallback: number | null = null): number | null {
+  if (val === null || val === undefined || val === "") return fallback;
+  const parsed = parseInt(val.toString(), 10);
+  return isNaN(parsed) ? fallback : parsed;
+}
+
 export async function POST(req: Request) {
   try {
     const session = await auth();
@@ -67,17 +79,17 @@ export async function POST(req: Request) {
         imageUrl: imageUrl || null,
         destinationUrl: destinationUrl || null,
         videoUrl: videoUrl || null,
-        impressionLimit: impressionLimit ? parseInt(impressionLimit.toString()) : null,
-        creditReward: creditReward ? parseInt(creditReward.toString()) : 0,
-        order: order ? parseInt(order.toString()) : 0,
-        startDate: startDate ? new Date(startDate) : null,
-        endDate: endDate ? new Date(endDate) : null,
+        impressionLimit: parseSafeInt(impressionLimit, null),
+        creditReward: parseSafeInt(creditReward, 0) ?? 0,
+        order: parseSafeInt(order, 0) ?? 0,
+        startDate: parseSafeDate(startDate),
+        endDate: parseSafeDate(endDate),
       }
     });
 
     return NextResponse.json({ message: "Reklam oluşturuldu", ad }, { status: 201 });
-  } catch (error) {
+  } catch (error: any) {
     console.error("Reklam oluşturma hatası:", error);
-    return NextResponse.json({ error: "Sunucu hatası" }, { status: 500 });
+    return NextResponse.json({ error: error?.message || "Sunucu hatası" }, { status: 500 });
   }
 }

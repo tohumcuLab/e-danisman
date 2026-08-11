@@ -32,6 +32,7 @@ type AnswerType = {
   userId: string;
   isAccepted: boolean;
   isHighlighted: boolean;
+  status?: string;
   createdAt: Date | string;
   user: UserType;
   likes?: any[];

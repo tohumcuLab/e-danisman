@@ -23,6 +23,6 @@ DATABASE_URL="file:./prisma/dev.db" npm run build
 
 # 5. PM2 sürecini zorla yenile
 echo "🔄 4/4 Sunucu süreçleri yeniden başlatılıyor..."
-npx pm2 restart all --force 2>/dev/null || true
+npx pm2 restart danisman --force 2>/dev/null || npx pm2 start npm --name "danisman" -- start
 
 echo "✅ TEBRİKLER! Yayınlama başarıyla tamamlandı!"

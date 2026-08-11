@@ -44,3 +44,8 @@ next-env.d.ts
 prisma/dev.db
 *.db
 *.db-journal
+
+# uploads
+/public/uploads/*
+!/public/uploads/.gitkeep
+

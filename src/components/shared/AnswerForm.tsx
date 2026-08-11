@@ -115,7 +115,7 @@ export default function AnswerForm({
       if (data.updatedCredits !== undefined) {
         setUserCredits(data.updatedCredits);
       } else if (!isExpert && !isPremium && userCredits !== null) {
-        setUserCredits((prev) => (prev !== null ? Math.max(0, prev - 4) : prev));
+        setUserCredits((prev) => (prev !== null ? Math.max(0, prev - 1) : prev));
       }
 
       if (typeof window !== "undefined") {
@@ -144,7 +144,7 @@ export default function AnswerForm({
     }
 
     // 2. Giriş yapmış fakat yeterli bakiyesi olmayan standart kullanıcı için: kredi/reklam modalını aç
-    if (!isExpert && !isPremium && userCredits !== null && userCredits < 4) {
+    if (!isExpert && !isPremium && userCredits !== null && userCredits < 1) {
       setIsCreditModalOpen(true);
       return;
     }
@@ -158,7 +158,7 @@ export default function AnswerForm({
     if (status === "unauthenticated" || !session?.user) return "Cevabı Gönder (Giriş Yap)";
     if (isExpert) return "Cevabı Gönder";
     if (isPremium) return "Cevabı Gönder (👑 Premium)";
-    return "Cevabı Gönder (-4 Kredi)";
+    return "Cevabı Gönder (-1 Kredi)";
   };
 
   return (
@@ -167,7 +167,7 @@ export default function AnswerForm({
         <span>Cevap Yaz</span>
         {status === "authenticated" && !isExpert && !isPremium && userCredits !== null && (
           <span className="text-xs font-semibold bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 px-3 py-1 rounded-full border border-emerald-500/20">
-            Mevcut Bakiyeniz: <strong>{userCredits} 🪙</strong> (Ücret: 4 Kredi)
+            Mevcut Bakiyeniz: <strong>{userCredits} 🪙</strong> (Ücret: 1 Kredi)
           </span>
         )}
       </h3>

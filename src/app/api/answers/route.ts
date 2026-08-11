@@ -95,30 +95,30 @@ export async function POST(req: Request) {
 
     const isExpert = currentUser?.role === "EXPERT" || currentUser?.role === "ADMIN" || session.user?.role === "EXPERT" || session.user?.role === "ADMIN";
 
-    // 2.5 Standart kullanıcı ana cevabı için 4 Kredi / Premium kontrolü
+    // 2.5 Standart kullanıcı ana cevabı için 1 Kredi / Premium kontrolü
     if (!parentId && !isExpert) {
       const isPremium = currentUser?.premiumUntil && new Date(currentUser.premiumUntil) > new Date();
       if (!isPremium) {
-        if ((currentUser?.credits ?? 0) < 4) {
+        if ((currentUser?.credits ?? 0) < 1) {
           return NextResponse.json(
-            { error: "Yetersiz bakiye! Cevap gönderebilmek için en az 4 krediniz olmalıdır.", currentCredits: currentUser?.credits || 0, requiredCredits: 4 },
+            { error: "Yetersiz bakiye! Cevap gönderebilmek için en az 1 krediniz olmalıdır.", currentCredits: currentUser?.credits || 0, requiredCredits: 1 },
             { status: 403 }
           );
         }
 
-        // 4 Kredi düş
+        // 1 Kredi düş
         const [updatedUser] = await prisma.$transaction([
           prisma.user.update({
             where: { id: userId },
-            data: { credits: { decrement: 4 } },
+            data: { credits: { decrement: 1 } },
             select: { credits: true }
           }),
           prisma.credit.create({
             data: {
               userId,
-              amount: -4,
+              amount: -1,
               type: "SPEND",
-              reason: "Soruya cevap gönderme (-4 Kredi)"
+              reason: "Soruya cevap gönderme (-1 Kredi)"
             }
           })
         ]);
@@ -180,7 +180,7 @@ export async function POST(req: Request) {
     }
 
     return NextResponse.json({
-      message: parentId ? "Yanıtınız eklendi (-1 Kredi)" : "Cevabınız eklendi (-4 Kredi)",
+      message: parentId ? "Yanıtınız eklendi (-1 Kredi)" : "Cevabınız eklendi (-1 Kredi)",
       answer,
       updatedCredits
     }, { status: 201 });

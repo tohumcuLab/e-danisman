@@ -3,6 +3,8 @@ import { auth } from "@/auth";
 import { redirect } from "next/navigation";
 import WatchAdClient from "@/components/shared/WatchAdClient";
 
+import { sortAndShuffleAds } from "@/lib/adUtils";
+
 export const dynamic = "force-dynamic";
 
 export default async function KrediKazanPage() {
@@ -49,7 +51,8 @@ export default async function KrediKazanPage() {
       }
     });
 
-    validAds = ads.filter((ad: any) => ad.impressionLimit === null || ad.impressionCount < ad.impressionLimit);
+    const filtered = ads.filter((ad: any) => ad.impressionLimit === null || ad.impressionCount < ad.impressionLimit);
+    validAds = sortAndShuffleAds(filtered);
   }
 
   return (

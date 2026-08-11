@@ -19,6 +19,8 @@ export interface AdItem {
   impressionLimit?: number | null;
   impressionCount: number;
   clickCount: number;
+  creditReward?: number | null;
+  order?: number | null;
   isActive: boolean;
   createdAt: Date | string;
 }
@@ -127,6 +129,10 @@ export default function AdList({ ads, onEdit }: AdListProps) {
                   
                   <span className="text-xs px-2 py-1 rounded border border-gray-300 bg-gray-50 text-gray-700 font-medium tracking-wide">
                     {ad.placement === "REWARD" ? "🏆 Kredi Sayfası" : "📰 Akış İçi"}
+                  </span>
+
+                  <span className="text-xs px-2 py-1 rounded border border-blue-200 bg-blue-50 text-blue-700 dark:bg-blue-950 dark:text-blue-300 font-bold tracking-wide">
+                    📌 Sıra No: {ad.order && ad.order > 0 ? ad.order : "Karışık (0)"}
                   </span>
 
                   <button

@@ -4,7 +4,7 @@ import { useState, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
 
 export default function WatchAdClient({ ads, dailyLimitReached }: { ads: any[], dailyLimitReached: boolean }) {
-  const [ad, setAd] = useState<any>(null);
+  const [currentIndex, setCurrentIndex] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
   const [isCompleted, setIsCompleted] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -13,27 +13,16 @@ export default function WatchAdClient({ ads, dailyLimitReached }: { ads: any[], 
   const videoRef = useRef<HTMLVideoElement>(null);
   const router = useRouter();
 
-  const pickRandomAd = (currentAdId?: string) => {
-    if (!ads || ads.length === 0) return;
-    const available = ads.length > 1 && currentAdId 
-      ? ads.filter(a => a.id !== currentAdId)
-      : ads;
-    const randomAd = available[Math.floor(Math.random() * available.length)];
-    setAd(randomAd);
-  };
-
-  useEffect(() => {
-    if (ads && ads.length > 0 && !ad) {
-      pickRandomAd();
-    }
-  }, [ads]);
+  const ad = ads && ads.length > 0 ? ads[currentIndex % ads.length] : null;
 
   const loadNextAd = () => {
     setIsPlaying(false);
     setIsCompleted(false);
     setRewardClaimed(false);
     setMessage("");
-    pickRandomAd(ad?.id);
+    if (ads && ads.length > 0) {
+      setCurrentIndex((prev) => (prev + 1) % ads.length);
+    }
     router.refresh();
   };
 

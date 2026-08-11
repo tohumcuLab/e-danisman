@@ -16,6 +16,7 @@ export interface AdData {
   endDate?: string | Date | null;
   impressionLimit?: number | null;
   creditReward?: number | null;
+  order?: number | null;
   isActive?: boolean;
 }
 
@@ -43,6 +44,7 @@ export default function AdFormModal({ isOpen, onClose, initialData }: AdFormModa
   const [endDate, setEndDate] = useState("");
   const [impressionLimit, setImpressionLimit] = useState("");
   const [creditReward, setCreditReward] = useState("2");
+  const [order, setOrder] = useState("0");
 
   // Preview dimension state
   const [imgDimensions, setImgDimensions] = useState<{ width: number; height: number } | null>(null);
@@ -99,6 +101,11 @@ export default function AdFormModal({ isOpen, onClose, initialData }: AdFormModa
           ? initialData.creditReward.toString()
           : "2"
       );
+      setOrder(
+        initialData.order !== null && initialData.order !== undefined
+          ? initialData.order.toString()
+          : "0"
+      );
     } else if (isOpen) {
       setType("MANUAL");
       setPlacement("FEED");
@@ -110,6 +117,7 @@ export default function AdFormModal({ isOpen, onClose, initialData }: AdFormModa
       setEndDate("");
       setImpressionLimit("");
       setCreditReward("2"); // Varsayılan olarak 2 kredi
+      setOrder("0"); // Varsayılan olarak 0 (Karışık)
     }
     setError("");
     setDimensionWarning("");
@@ -189,6 +197,7 @@ export default function AdFormModal({ isOpen, onClose, initialData }: AdFormModa
         endDate: endDate || null,
         impressionLimit: impressionLimit ? parseInt(impressionLimit) : null,
         creditReward: creditReward !== "" ? parseInt(creditReward) : 2,
+        order: order !== "" ? parseInt(order) : 0,
       };
 
       const url = initialData?.id
@@ -362,8 +371,8 @@ export default function AdFormModal({ isOpen, onClose, initialData }: AdFormModa
             </div>
           )}
 
-          {/* Date, Limits & Credit Reward */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3">
+          {/* Date, Limits, Order & Credit Reward */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-3">
             <div>
               <label className="block text-xs font-medium mb-1">Başlangıç Tarihi</label>
               <input
@@ -383,14 +392,26 @@ export default function AdFormModal({ isOpen, onClose, initialData }: AdFormModa
               />
             </div>
             <div>
-              <label className="block text-xs font-medium mb-1">Max Gösterim Limiti</label>
+              <label className="block text-xs font-medium mb-1">Max Gösterim</label>
               <input
                 type="number"
                 min="1"
-                placeholder="Sınırsız (boş)"
+                placeholder="Sınırsız"
                 value={impressionLimit}
                 onChange={(e) => setImpressionLimit(e.target.value)}
                 className="w-full p-2 rounded-lg border border-[var(--outline-variant)] bg-[var(--surface)] text-xs"
+              />
+            </div>
+            <div>
+              <label className="block text-xs font-medium mb-1">Sıra No (Öncelik)</label>
+              <input
+                type="number"
+                min="0"
+                placeholder="0 (Karışık)"
+                value={order}
+                onChange={(e) => setOrder(e.target.value)}
+                title="1 = İlk Sırada Çıkar, 2 = İkinci Sırada... 0 ise Karışık Rastgele Çıkar"
+                className="w-full p-2 rounded-lg border border-blue-300 dark:border-blue-700 bg-[var(--surface)] text-xs font-bold text-blue-600 dark:text-blue-400"
               />
             </div>
             <div>

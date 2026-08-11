@@ -2,6 +2,8 @@ import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { auth } from "@/auth";
 
+import { sortAndShuffleAds } from "@/lib/adUtils";
+
 export async function GET() {
   try {
     const session = await auth();
@@ -45,11 +47,11 @@ export async function GET() {
       }
     });
 
-    const validAds = ads.filter(ad => ad.impressionLimit === null || ad.impressionCount < ad.impressionLimit);
-    
-    const randomAd = validAds.length > 0 ? validAds[Math.floor(Math.random() * validAds.length)] : null;
+    const filtered = ads.filter(ad => ad.impressionLimit === null || ad.impressionCount < ad.impressionLimit);
+    const sortedAds = sortAndShuffleAds(filtered);
+    const activeAd = sortedAds.length > 0 ? sortedAds[0] : null;
 
-    return NextResponse.json({ ad: randomAd, dailyLimitReached: false });
+    return NextResponse.json({ ad: activeAd, ads: sortedAds, dailyLimitReached: false });
   } catch (error) {
     console.error("Aktif reklam alma hatası:", error);
     return NextResponse.json({ error: "Sunucu hatası" }, { status: 500 });

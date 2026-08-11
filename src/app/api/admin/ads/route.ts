@@ -10,7 +10,10 @@ export async function GET(req: Request) {
     }
 
     const ads = await prisma.ad.findMany({
-      orderBy: { createdAt: "desc" }
+      orderBy: [
+        { order: "asc" },
+        { createdAt: "desc" }
+      ]
     });
 
     return NextResponse.json({ ads }, { status: 200 });
@@ -38,6 +41,7 @@ export async function POST(req: Request) {
       videoUrl,
       impressionLimit,
       creditReward,
+      order,
       startDate,
       endDate,
     } = body;
@@ -65,6 +69,7 @@ export async function POST(req: Request) {
         videoUrl: videoUrl || null,
         impressionLimit: impressionLimit ? parseInt(impressionLimit.toString()) : null,
         creditReward: creditReward ? parseInt(creditReward.toString()) : 0,
+        order: order ? parseInt(order.toString()) : 0,
         startDate: startDate ? new Date(startDate) : null,
         endDate: endDate ? new Date(endDate) : null,
       }

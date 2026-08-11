@@ -26,6 +26,7 @@ export async function PUT(
       videoUrl,
       impressionLimit,
       creditReward,
+      order,
       startDate,
       endDate,
       isActive
@@ -51,6 +52,9 @@ export async function PUT(
         }),
         ...(creditReward !== undefined && {
           creditReward: creditReward ? parseInt(creditReward.toString()) : 0
+        }),
+        ...(order !== undefined && {
+          order: order ? parseInt(order.toString()) : 0
         }),
         ...(startDate !== undefined && {
           startDate: startDate ? new Date(startDate) : null

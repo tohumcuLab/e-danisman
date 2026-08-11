@@ -189,6 +189,7 @@ model Ad {
   impressionLimit  Int?
   impressionCount  Int       @default(0)
   creditReward     Int       @default(0)
+  order            Int       @default(0)
   targetCity       String?
   targetDistrict   String?
   targetVillage    String?

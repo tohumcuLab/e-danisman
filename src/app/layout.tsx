@@ -15,6 +15,14 @@ export const metadata: Metadata = {
   title: "Tarımsal e-Danışman",
   description: "Bitki yetiştiricileri ve çiftçiler için soru-cevap topluluk platformu.",
   manifest: "/manifest.json",
+  icons: {
+    icon: [
+      { url: "/icon.svg?v=2", type: "image/svg+xml" },
+      { url: "/favicon.ico?v=2", sizes: "any" },
+    ],
+    shortcut: "/favicon.ico?v=2",
+    apple: "/apple-icon.png?v=2",
+  },
   openGraph: {
     title: "Tarımsal e-Danışman",
     description: "Bitki yetiştiricileri ve çiftçiler için soru-cevap topluluk platformu.",

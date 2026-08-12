@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import { ArrowUp } from "lucide-react";
 
 const FULL_DISCLAIMER_TEXT = "Tarımsal e-Danışman, Hobitohum.com tarafından geliştirilen topluluk platformudur. Sitede yer alan tüm metin, uzman yanıtları, fotoğraf, video ve görseller 5846 Sayılı Fikir ve Sanat Eserleri Kanunu (FSEK) uyarınca koruma altındadır. İzinsiz kopyalanamaz, çoğaltılamaz veya başka mecralarda yayınlanamaz.";
 
@@ -100,9 +101,10 @@ export default function StickyFooterBar() {
 
             <button
               onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-              className="bg-[var(--primary)] text-white px-2.5 py-0.5 rounded-full font-bold hover:bg-[var(--primary-container)] transition-all shadow shrink-0 cursor-pointer text-[10px]"
+              aria-label="Yukarı Çık"
+              className="bg-[var(--primary)] text-white w-7 h-7 rounded-full hover:bg-[var(--primary-container)] transition-all shadow shrink-0 cursor-pointer flex items-center justify-center"
             >
-              ↑ Yukarı Çık
+              <ArrowUp className="w-4 h-4" />
             </button>
           </div>
 

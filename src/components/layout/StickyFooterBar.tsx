@@ -88,9 +88,9 @@ export default function StickyFooterBar() {
           {/* Sağ Taraftaki Hızlı Linkler ve Yukarı Çık Butonu */}
           <div className="flex items-center justify-between md:justify-end gap-3 text-[11px] shrink-0 pt-1 md:pt-0 border-t md:border-t-0 border-[var(--outline-variant)]/30">
             <div className="flex items-center gap-1.5 font-semibold">
-              <Link href="/duyurular" className="text-[var(--primary)] font-bold underline hover:opacity-80">📢 Duyurular</Link>
+              <Link href="/duyurular" className="text-[var(--primary)] font-bold underline hover:opacity-80">Duyurular</Link>
               <span>•</span>
-              <Link href="/telif-ve-yasal-uyari" className="text-amber-700 dark:text-amber-400 font-bold hover:underline">⚖️ Telif</Link>
+              <Link href="/telif-ve-yasal-uyari" className="text-amber-700 dark:text-amber-400 font-bold hover:underline">Telif</Link>
               <span>•</span>
               <Link href="/topluluk-kurallari" className="hover:underline">Kurallar</Link>
               <span>•</span>

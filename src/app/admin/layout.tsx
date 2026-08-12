@@ -41,6 +41,9 @@ export default async function AdminLayout({ children }: { children: React.ReactN
             <Link href="/admin/reklam-basvurulari" className="px-3 py-2 rounded-md hover:bg-[var(--surface-variant)] transition-colors font-semibold text-amber-600">
               Reklam Başvuruları
             </Link>
+            <Link href="/admin/duyurular" className="px-3 py-2 rounded-md hover:bg-[var(--surface-variant)] transition-colors font-bold text-emerald-700 dark:text-emerald-400">
+              📢 Duyuru Yönetimi
+            </Link>
             <Link href="/admin/iletisim" className="px-3 py-2 rounded-md hover:bg-[var(--surface-variant)] transition-colors">
               İletişim & Başvurular
             </Link>

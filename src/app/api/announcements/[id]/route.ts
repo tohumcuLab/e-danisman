@@ -29,6 +29,17 @@ export async function PUT(
         content: content !== undefined ? content : existing.content,
         isPinned: isPinned !== undefined ? !!isPinned : existing.isPinned,
       },
+      include: {
+        author: {
+          select: {
+            id: true,
+            name: true,
+            image: true,
+            avatarUrl: true,
+            role: true,
+          },
+        },
+      },
     });
 
     return NextResponse.json({ message: "Duyuru güncellendi", announcement: updated });

@@ -17,11 +17,12 @@ export const metadata: Metadata = {
   manifest: "/manifest.json",
   icons: {
     icon: [
-      { url: "/icon.svg?v=2", type: "image/svg+xml" },
-      { url: "/favicon.ico?v=2", sizes: "any" },
+      { url: "/icon.svg?v=100", type: "image/svg+xml" },
+      { url: "/icon.png?v=100", type: "image/png" },
+      { url: "/favicon.ico?v=100", sizes: "any" },
     ],
-    shortcut: "/favicon.ico?v=2",
-    apple: "/apple-icon.png?v=2",
+    shortcut: "/favicon.ico?v=100",
+    apple: "/apple-icon.png?v=100",
   },
   openGraph: {
     title: "Tarımsal e-Danışman",

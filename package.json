@@ -9,8 +9,8 @@
     "lint": "eslint",
     "git-aktar": "git add . && git commit -m 'update: auto commit' && git push origin main",
     "git-cek": "ssh -i ~/.ssh/id_ed25519_sunucu -o IdentitiesOnly=yes -p 2297 tohumcu09@194.62.52.55 'cd /www/wwwroot/danisman && git fetch origin main && git reset --hard origin/main'",
-    "canliya-al": "ssh -i ~/.ssh/id_ed25519_sunucu -o IdentitiesOnly=yes -p 2297 tohumcu09@194.62.52.55 'cd /www/wwwroot/danisman && nohup bash deploy.sh > deploy.log 2>&1 & sleep 1 && tail -f deploy.log'",
-    "sunucu-log": "ssh -i ~/.ssh/id_ed25519_sunucu -o IdentitiesOnly=yes -p 2297 tohumcu09@194.62.52.55 'tail -f /www/wwwroot/danisman/deploy.log'",
+    "canliya-al": "ssh -i ~/.ssh/id_ed25519_sunucu -o IdentitiesOnly=yes -p 2297 tohumcu09@194.62.52.55 'touch /www/wwwroot/danisman/deploy.log && cd /www/wwwroot/danisman && (nohup bash deploy.sh > /www/wwwroot/danisman/deploy.log 2>&1 &) && sleep 1 && tail -f /www/wwwroot/danisman/deploy.log'",
+    "sunucu-log": "ssh -i ~/.ssh/id_ed25519_sunucu -o IdentitiesOnly=yes -p 2297 tohumcu09@194.62.52.55 'touch /www/wwwroot/danisman/deploy.log && tail -f /www/wwwroot/danisman/deploy.log'",
     "pm2-restart": "ssh -i ~/.ssh/id_ed25519_sunucu -o IdentitiesOnly=yes -p 2297 tohumcu09@194.62.52.55 'npx pm2 restart danisman && npx pm2 logs danisman'",
     "sunucuya-baglan": "ssh -i ~/.ssh/id_ed25519_sunucu -o IdentitiesOnly=yes -p 2297 tohumcu09@194.62.52.55"
   },

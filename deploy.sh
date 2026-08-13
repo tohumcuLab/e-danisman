@@ -23,7 +23,8 @@ npx prisma db push --accept-data-loss
 
 # 5. Projeyi canlı ortam için temiz derle
 echo "⚙️ 3/4 Uygulama canlı ortam için derleniyor..."
-DATABASE_URL="file:./prisma/dev.db" npm run build
+NODE_OPTIONS="--max-old-space-size=1536" DATABASE_URL="file:./prisma/dev.db" npm run build
+
 
 # 5. PM2 sürecini zorla yenile
 echo "🔄 4/4 Sunucu süreçleri yeniden başlatılıyor..."

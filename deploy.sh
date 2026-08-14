@@ -26,8 +26,9 @@ echo "⚙️ 3/4 Uygulama canlı ortam için derleniyor..."
 NODE_OPTIONS="--max-old-space-size=1536" DATABASE_URL="file:./prisma/dev.db" npm run build
 
 
-# 5. PM2 sürecini zorla yenile
+# 5. PM2 sürecini zorla yenile (Tek süreç olarak)
 echo "🔄 4/4 Sunucu süreçleri yeniden başlatılıyor..."
-npx pm2 restart danisman --force 2>/dev/null || npx pm2 start npm --name "danisman" -- start
+npx pm2 restart danisman 2>/dev/null || npx pm2 start npm --name "danisman" -- start
+
 
 echo "✅ TEBRİKLER! Yayınlama başarıyla tamamlandı!"

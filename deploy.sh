@@ -13,9 +13,10 @@ git reset --hard origin/main
 echo "📦 Paketlenmiş kütüphaneler yükleniyor (npm install)..."
 npm install
 
-# 3. Eski Next.js derleme önbelleğini sıfırla
-echo "🧹 2/4 Eski derleme önbelleği (.next) temizleniyor..."
-rm -rf .next
+# 3. Eski Next.js ve Prisma derleme önbelleğini sıfırla
+echo "🧹 2/4 Eski derleme önbelleği (.next ve .prisma) temizleniyor..."
+rm -rf .next node_modules/.prisma
+
 
 # 4. Veritabanı şemasını senkronize et
 echo "🗄️ Veritabanı şeması güncelleniyor (prisma db push)..."

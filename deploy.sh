@@ -33,7 +33,8 @@ NODE_OPTIONS="--max-old-space-size=1536" DATABASE_URL="file:./prisma/dev.db" npm
 
 # 5. PM2 sürecini zorla yenile (Önce 3000 portunu serbest bırak)
 echo "🔄 4/4 Sunucu süreçleri yeniden başlatılıyor..."
-npx kill-port 3000 2>/dev/null || fuser -k 3000/tcp 2>/dev/null || true
+sudo fuser -k -9 3000/tcp 2>/dev/null || true
+npx kill-port 3000 2>/dev/null || true
 npx pm2 restart danisman 2>/dev/null || npx pm2 start npm --name "danisman" -- start
 
 

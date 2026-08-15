@@ -11,7 +11,7 @@ git fetch origin main
 git reset --hard origin/main
 
 echo "📦 Paketlenmiş kütüphaneler yükleniyor (npm install)..."
-npm install
+npm install --cache /tmp/.npm-cache
 
 # 3. Eski Next.js ve Prisma derleme önbelleğini sıfırla
 echo "🧹 2/4 Eski derleme önbelleği (.next ve .prisma) temizleniyor..."

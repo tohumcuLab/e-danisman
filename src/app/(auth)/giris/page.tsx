@@ -48,8 +48,13 @@ export default function LoginPage() {
         </div>
 
         {error && (
-          <div className="bg-[var(--error-container)] text-[var(--on-error-container)] p-4 rounded-xl text-xs font-semibold">
-            {error}
+          <div className="bg-[var(--error-container)] text-[var(--on-error-container)] p-4 rounded-xl text-xs font-semibold space-y-2">
+            <div>{error}</div>
+            <div className="pt-1 border-t border-red-200/40">
+              <Link href={`/sifremi-unuttum${email ? `?email=${encodeURIComponent(email)}` : ""}`} className="text-[var(--primary)] font-bold hover:underline underline-offset-2 flex items-center gap-1">
+                🔑 Şifrenizi mi unuttunuz? Şifrenizi Sıfırlayın ➔
+              </Link>
+            </div>
           </div>
         )}
 
@@ -68,7 +73,12 @@ export default function LoginPage() {
           </div>
 
           <div className="space-y-1.5">
-            <label htmlFor="password" className="text-xs font-bold text-[var(--on-surface-variant)] uppercase tracking-wider block">Şifre</label>
+            <div className="flex items-center justify-between">
+              <label htmlFor="password" className="text-xs font-bold text-[var(--on-surface-variant)] uppercase tracking-wider block">Şifre</label>
+              <Link href={`/sifremi-unuttum${email ? `?email=${encodeURIComponent(email)}` : ""}`} className="text-xs font-medium text-[var(--primary)] hover:underline">
+                Şifremi Unuttum?
+              </Link>
+            </div>
             <input
               id="password"
               type="password"

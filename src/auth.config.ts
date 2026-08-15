@@ -5,6 +5,7 @@ export const authConfig = {
   secret: process.env.AUTH_SECRET || process.env.NEXTAUTH_SECRET || "hobitohum_tarimsal_secret_key_2026",
   pages: {
     signIn: "/giris",
+    error: "/giris",
   },
   callbacks: {
     async redirect({ url, baseUrl }) {

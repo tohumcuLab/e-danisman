@@ -1,16 +1,23 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { signIn } from "next-auth/react";
-import { useRouter } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 
-export default function LoginPage() {
+function LoginContent() {
+  const searchParams = useSearchParams();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-  const router = useRouter();
+
+  useEffect(() => {
+    const errorParam = searchParams.get("error");
+    if (errorParam) {
+      setError("Geçersiz e-posta adresi veya şifre.");
+    }
+  }, [searchParams]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -25,12 +32,13 @@ export default function LoginPage() {
       });
 
       if (res?.error) {
-        setError("Geçersiz e-posta veya şifre.");
+        setError("Geçersiz e-posta adresi veya şifre.");
       } else {
         window.location.href = "https://sor.hobitohum.com";
       }
     } catch (err: any) {
-      setError("Bir hata oluştu. Lütfen bilgilerinizi kontrol edip tekrar deneyin.");
+      console.error("Giriş denemesi hatası:", err);
+      setError("Geçersiz e-posta adresi veya şifre.");
     } finally {
       setLoading(false);
     }
@@ -48,11 +56,16 @@ export default function LoginPage() {
         </div>
 
         {error && (
-          <div className="bg-[var(--error-container)] text-[var(--on-error-container)] p-4 rounded-xl text-xs font-semibold space-y-2">
-            <div>{error}</div>
-            <div className="pt-1 border-t border-red-200/40">
-              <Link href={`/sifremi-unuttum${email ? `?email=${encodeURIComponent(email)}` : ""}`} className="text-[var(--primary)] font-bold hover:underline underline-offset-2 flex items-center gap-1">
-                🔑 Şifrenizi mi unuttunuz? Şifrenizi Sıfırlayın ➔
+          <div className="bg-[var(--error-container)] text-[var(--on-error-container)] p-4 rounded-xl text-xs font-semibold space-y-2.5 border border-red-200">
+            <div className="flex items-center gap-1.5 text-sm font-bold">
+              <span>⚠️</span> {error}
+            </div>
+            <div className="pt-2 border-t border-red-200/60">
+              <Link
+                href={`/sifremi-unuttum${email ? `?email=${encodeURIComponent(email)}` : ""}`}
+                className="text-[var(--primary)] font-extrabold hover:underline underline-offset-2 flex items-center gap-1 text-xs"
+              >
+                🔑 Şifrenizi mi unuttunuz? Tıklayarak Şifrenizi Sıfırlayın ➔
               </Link>
             </div>
           </div>
@@ -60,7 +73,9 @@ export default function LoginPage() {
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-1.5">
-            <label htmlFor="email" className="text-xs font-bold text-[var(--on-surface-variant)] uppercase tracking-wider block">E-posta Adresi</label>
+            <label htmlFor="email" className="text-xs font-bold text-[var(--on-surface-variant)] uppercase tracking-wider block">
+              E-posta Adresi
+            </label>
             <input
               id="email"
               type="email"
@@ -74,8 +89,13 @@ export default function LoginPage() {
 
           <div className="space-y-1.5">
             <div className="flex items-center justify-between">
-              <label htmlFor="password" className="text-xs font-bold text-[var(--on-surface-variant)] uppercase tracking-wider block">Şifre</label>
-              <Link href={`/sifremi-unuttum${email ? `?email=${encodeURIComponent(email)}` : ""}`} className="text-xs font-medium text-[var(--primary)] hover:underline">
+              <label htmlFor="password" className="text-xs font-bold text-[var(--on-surface-variant)] uppercase tracking-wider block">
+                Şifre
+              </label>
+              <Link
+                href={`/sifremi-unuttum${email ? `?email=${encodeURIComponent(email)}` : ""}`}
+                className="text-xs font-semibold text-[var(--primary)] hover:underline"
+              >
                 Şifremi Unuttum?
               </Link>
             </div>
@@ -107,5 +127,13 @@ export default function LoginPage() {
         </p>
       </div>
     </div>
+  );
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense fallback={<div className="container flex items-center justify-center min-h-[70vh] py-12"><div className="text-sm font-semibold">Yükleniyor...</div></div>}>
+      <LoginContent />
+    </Suspense>
   );
 }

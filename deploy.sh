@@ -1,6 +1,10 @@
 #!/bin/bash
 echo "🚀 Tarımsal e-Danışman Otomatik Canlıya Alma Başlatılıyor..."
 
+# 0. Sahiplik ve İzin Kilitlerini Otomatik Sıfırla (aaPanel Root Çakışmalarını Önler)
+sudo chown -R tohumcu09:www /www/wwwroot/danisman /www/server/nodejs/cache 2>/dev/null || true
+sudo chmod -R 777 /www/wwwroot/danisman /www/server/nodejs/cache 2>/dev/null || true
+
 # 1. Klasöre git
 cd /www/wwwroot/danisman || exit 1
 

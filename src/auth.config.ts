@@ -18,24 +18,25 @@ export const authConfig = {
       return url.startsWith("http") ? url : siteUrl;
     },
     authorized({ auth, request: { nextUrl } }) {
-      const isLoggedIn = !!auth?.user;
-      const isAuthPage = nextUrl.pathname.startsWith("/giris") || nextUrl.pathname.startsWith("/kayit");
-      const isProtected = nextUrl.pathname.startsWith("/profil") || nextUrl.pathname.startsWith("/soru/sor") || nextUrl.pathname.startsWith("/admin");
+      try {
+        const isLoggedIn = !!auth?.user;
+        const isAuthPage = nextUrl.pathname.startsWith("/giris") || nextUrl.pathname.startsWith("/kayit");
+        const isProtected = nextUrl.pathname.startsWith("/profil") || nextUrl.pathname.startsWith("/soru/sor") || nextUrl.pathname.startsWith("/admin");
 
-      const siteUrl = process.env.NEXTAUTH_URL || process.env.AUTH_URL || "https://sor.hobitohum.com";
-
-      if (isProtected) {
-        if (isLoggedIn) return true;
-        const loginUrl = new URL("/giris", siteUrl);
-        loginUrl.searchParams.set("callbackUrl", `${siteUrl}${nextUrl.pathname}${nextUrl.search}`);
-        return Response.redirect(loginUrl);
-      } else if (isAuthPage) {
-        if (isLoggedIn) {
-          return Response.redirect(new URL("/", siteUrl));
+        if (isProtected) {
+          if (isLoggedIn) return true;
+          return false; // NextAuth handles redirecting to /giris safely
+        } else if (isAuthPage) {
+          if (isLoggedIn) {
+            return Response.redirect(new URL("/", nextUrl.origin));
+          }
+          return true;
         }
         return true;
+      } catch (error) {
+        console.error("Middleware authorized error:", error);
+        return true;
       }
-      return true;
     },
     async session({ session, token }) {
       if (token.sub && session.user) {

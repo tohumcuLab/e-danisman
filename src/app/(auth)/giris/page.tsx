@@ -25,6 +25,22 @@ function LoginContent() {
     setError("");
 
     try {
+      // 1. Önce e-posta ve şifreyi güvenli API üzerinden doğrula (NextAuth 500 çökmesini engeller)
+      const verifyRes = await fetch("/api/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+      });
+
+      const verifyData = await verifyRes.json();
+
+      if (!verifyRes.ok) {
+        setError(verifyData.error || "Geçersiz e-posta adresi veya şifre.");
+        setLoading(false);
+        return;
+      }
+
+      // 2. Doğrulama başarılıysa NextAuth oturumunu başlat
       const res = await signIn("credentials", {
         redirect: false,
         email,
@@ -37,7 +53,7 @@ function LoginContent() {
         window.location.href = "https://sor.hobitohum.com";
       }
     } catch (err: any) {
-      console.error("Giriş denemesi hatası:", err);
+      console.error("Giriş işlemi hatası:", err);
       setError("Geçersiz e-posta adresi veya şifre.");
     } finally {
       setLoading(false);
@@ -56,7 +72,7 @@ function LoginContent() {
         </div>
 
         {error && (
-          <div className="bg-[var(--error-container)] text-[var(--on-error-container)] p-4 rounded-xl text-xs font-semibold space-y-2.5 border border-red-200">
+          <div className="bg-[var(--error-container)] text-[var(--on-error-container)] p-4 rounded-xl text-xs font-semibold space-y-2.5 border border-red-200 shadow-sm">
             <div className="flex items-center gap-1.5 text-sm font-bold">
               <span>⚠️</span> {error}
             </div>

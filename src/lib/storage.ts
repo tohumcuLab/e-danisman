@@ -22,12 +22,26 @@ export class LocalStorageService implements IStorageService {
 
   async uploadFile(file: File, folder: string = ""): Promise<string> {
     const bytes = await file.arrayBuffer();
-    const buffer = Buffer.from(bytes);
+    let buffer = Buffer.from(bytes);
 
     // Create a unique filename
     const uniqueSuffix = `${Date.now()}-${Math.round(Math.random() * 1e9)}`;
     const originalName = file.name.replace(/[^a-zA-Z0-9.\-_]/g, ""); // sanitize
-    const filename = `${uniqueSuffix}-${originalName}`;
+    const nameWithoutExt = originalName.substring(0, originalName.lastIndexOf(".")) || originalName;
+
+    let filename = `${uniqueSuffix}-${nameWithoutExt}.webp`;
+
+    // Process image with Sharp: resize max 1600px, compress to 80% WebP
+    try {
+      const sharp = (await import("sharp")).default;
+      buffer = await sharp(buffer)
+        .resize(1600, 1600, { fit: "inside", withoutEnlargement: true })
+        .webp({ quality: 80 })
+        .toBuffer();
+    } catch (error) {
+      console.error("WebP dönüştürme hatası, ham dosya kaydediliyor:", error);
+      filename = `${uniqueSuffix}-${originalName}`;
+    }
 
     // Ensure target folder exists
     const targetDir = path.join(this.baseUploadDir, folder);

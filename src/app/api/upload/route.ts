@@ -32,6 +32,10 @@ export async function POST(req: Request) {
     const uploadedUrls: string[] = [];
 
     for (const file of files) {
+      if (!file.type || !file.type.startsWith("image/")) {
+        return NextResponse.json({ error: "Sisteme yalnızca resim dosyaları (JPG, PNG, WebP vb.) yüklenebilir. PDF veya diğer dosya formatları kabul edilmemektedir." }, { status: 400 });
+      }
+
       if (file.size > MAX_SIZE) {
         const limitMb = isAdUpload ? 4 : (isAdmin ? 100 : 7);
         return NextResponse.json({ error: `${file.name} boyutu ${limitMb} MB'tan büyüktür.` }, { status: 400 });

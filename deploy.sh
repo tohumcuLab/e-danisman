@@ -37,6 +37,9 @@ sudo fuser -k -9 3000/tcp 2>/dev/null || true
 pm2 restart danisman 2>/dev/null || pm2 start node_modules/next/dist/bin/next --name "danisman" -- start
 pm2 save 2>/dev/null || true
 
+# aaPanel'in arayüzünde "Durduruldu" hatasını önlemek için PM2 PID'sini aaPanel'e bildir
+pm2 pid danisman | sudo tee /www/server/nodejs/vhost/pids/danisman.pid > /dev/null
+
 
 
 echo "✅ TEBRİKLER! Yayınlama başarıyla tamamlandı!"

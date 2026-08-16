@@ -1,0 +1,3 @@
+# Google AdSense yetkili dijital satıcı doğrulaması
+# AdSense hesabınız onaylandığında pub-XXXXXXXXXXXXXXXX kodunuz otomatik olarak buradaki satırla eşleşir.
+google.com, pub-XXXXXXXXXXXXXXXX, DIRECT, f08c47fec0942fa0

@@ -5,11 +5,14 @@ import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { Providers } from "@/components/providers/Providers";
 import GuestAuthPromptModal from "@/components/shared/GuestAuthPromptModal";
+import CookieConsentBanner from "@/components/shared/CookieConsentBanner";
 
 const inter = Inter({
   variable: "--font-inter",
   subsets: ["latin"],
 });
+
+import { prisma } from "@/lib/prisma";
 
 export const metadata: Metadata = {
   title: "Tarımsal e-Danışman",
@@ -38,17 +41,40 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  let adsenseClientId = process.env.NEXT_PUBLIC_ADSENSE_CLIENT_ID || null;
+  if (!adsenseClientId) {
+    try {
+      const setting = await prisma.systemSetting.findUnique({
+        where: { key: "ADSENSE_CLIENT_ID" },
+      });
+      if (setting?.value?.trim()) {
+        adsenseClientId = setting.value.trim();
+      }
+    } catch {
+      // Hata durumunda yoksay
+    }
+  }
+
   return (
     <html lang="tr" className={`${inter.variable} h-full antialiased`}>
       <head>
         <link rel="icon" href="/favicon.ico?v=9999" sizes="any" />
         <link rel="icon" href="/icon.svg?v=9999" type="image/svg+xml" />
         <link rel="apple-touch-icon" href="/apple-icon.png?v=9999" />
+        
+        {/* Google AdSense Yayıncı / Doğrulama Kodu */}
+        {adsenseClientId && (
+          <script
+            async
+            src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${adsenseClientId}`}
+            crossOrigin="anonymous"
+          />
+        )}
       </head>
       <body className="min-h-full flex flex-col">
         <Providers>
@@ -58,6 +84,7 @@ export default function RootLayout({
           </main>
           <Footer />
           <GuestAuthPromptModal />
+          <CookieConsentBanner />
         </Providers>
       </body>
     </html>

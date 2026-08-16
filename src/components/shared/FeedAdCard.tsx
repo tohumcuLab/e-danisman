@@ -1,7 +1,7 @@
 "use client";
 
-import Link from "next/link";
 import { useEffect, useRef } from "react";
+import GoogleAdSenseUnit from "@/components/shared/GoogleAdSenseUnit";
 
 interface Ad {
   id: string;
@@ -17,6 +17,7 @@ interface Ad {
 
 export default function FeedAdCard({ ad }: { ad: Ad }) {
   const hasTracked = useRef(false);
+  const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (!ad || hasTracked.current) return;
@@ -24,6 +25,34 @@ export default function FeedAdCard({ ad }: { ad: Ad }) {
     // Yalnızca bir kez görüntüleme sayısını artır
     hasTracked.current = true;
     fetch(`/api/ads/${ad.id}/impression`, { method: "POST" }).catch(() => {});
+  }, [ad]);
+
+  // Google AdSense veya özel HTML / Script kodlarını dinamik çalıştır
+  useEffect(() => {
+    if (!ad || !ad.networkCode || !containerRef.current) return;
+
+    const isGoogleAd = ad.type === "GOOGLE" || Boolean(ad.networkCode.trim());
+    if (!isGoogleAd) return;
+
+    // Eğer networkCode içerisinde inline <script> etiketleri varsa çalıştır
+    const scripts = containerRef.current.querySelectorAll("script");
+    scripts.forEach((oldScript) => {
+      const newScript = document.createElement("script");
+      Array.from(oldScript.attributes).forEach((attr) => {
+        newScript.setAttribute(attr.name, attr.value);
+      });
+      newScript.textContent = oldScript.textContent;
+      oldScript.parentNode?.replaceChild(newScript, oldScript);
+    });
+
+    // Eğer Google AdSense push çağrısı gerekiyorsa
+    try {
+      if (typeof window !== "undefined" && (window as any).adsbygoogle) {
+        ((window as any).adsbygoogle = (window as any).adsbygoogle || []).push({});
+      }
+    } catch (e) {
+      // ignore
+    }
   }, [ad]);
 
   if (!ad) return null;
@@ -37,21 +66,38 @@ export default function FeedAdCard({ ad }: { ad: Ad }) {
     ? `/api/ads/${ad.id}/click`
     : null;
 
+  // Google AdSense data-ad-slot ve data-ad-client ayrıştırma
+  const googleSlotMatch = ad.networkCode?.match(/data-ad-slot=["'](\d+)["']/);
+  const googleClientMatch = ad.networkCode?.match(/data-ad-client=["'](ca-pub-[\d]+)["']/);
+  const googleFormatMatch = ad.networkCode?.match(/data-ad-format=["']([^"']+)["']/);
+
   const cardContent = (
-    <article className={`card p-5 border-2 border-[var(--secondary)]/40 bg-[var(--secondary)]/5 relative overflow-hidden rounded-xl shadow-sm my-4 transition-all ${targetUrl ? "cursor-pointer hover:border-[var(--secondary)] hover:shadow-md group/ad" : ""}`}>
+    <article className={`card p-4 sm:p-5 border-2 border-[var(--secondary)]/40 bg-[var(--secondary)]/5 relative overflow-hidden rounded-2xl shadow-sm my-4 transition-all ${targetUrl ? "cursor-pointer hover:border-[var(--secondary)] hover:shadow-md group/ad" : ""}`}>
       {/* Header Badge */}
       <div className="flex items-center justify-between mb-3">
         <span className="bg-[var(--secondary)] text-white text-[10px] font-extrabold px-2.5 py-1 rounded-md tracking-wider uppercase flex items-center gap-1">
           📢 SPONSORLU REKLAM
         </span>
-        <span className="text-[10px] text-gray-500 font-medium">Reklam</span>
+        <span className="text-[10px] text-[var(--on-surface-variant)] font-medium">Sponsor</span>
       </div>
 
       {isGoogle ? (
-        <div className="w-full p-4 bg-slate-900 text-green-400 font-mono text-xs rounded-xl overflow-x-auto min-h-[100px] flex flex-col justify-center">
-          <div className="text-[10px] text-gray-400 mb-1">// Google AdSense Reklam Alanı</div>
-          <div dangerouslySetInnerHTML={{ __html: ad.networkCode || "" }} />
-        </div>
+        googleSlotMatch ? (
+          <div className="w-full flex justify-center items-center my-2">
+            <GoogleAdSenseUnit
+              client={googleClientMatch ? googleClientMatch[1] : undefined}
+              slot={googleSlotMatch[1]}
+              format={googleFormatMatch ? googleFormatMatch[1] : "auto"}
+              className="w-full max-w-full"
+            />
+          </div>
+        ) : (
+          <div 
+            ref={containerRef}
+            className="w-full overflow-hidden flex justify-center items-center my-2"
+            dangerouslySetInnerHTML={{ __html: ad.networkCode || "" }} 
+          />
+        )
       ) : (
         <div className="space-y-3">
           {mediaUrl && (

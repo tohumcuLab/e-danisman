@@ -41,6 +41,35 @@ export default async function AdminSettingsPage() {
             label="Uzman Puan / TL Çarpanı"
             description="1 uzman puanının kaç TL'ye denk geldiğini belirler. Değiştiğinde tüm uzmanlara bildirim gönderilir."
           />
+
+          {/* Google AdSense Ayarları */}
+          <div className="bg-emerald-50/50 dark:bg-emerald-950/20 p-4 rounded-xl border border-emerald-200 dark:border-emerald-800 space-y-4">
+            <div className="flex items-center gap-2">
+              <span className="text-xl">💰</span>
+              <div>
+                <h3 className="font-extrabold text-sm text-emerald-900 dark:text-emerald-300">
+                  Google AdSense Entegrasyonu
+                </h3>
+                <p className="text-xs text-[var(--on-surface-variant)]">
+                  Google AdSense yayıncı kimliğinizi buradan tanımlayabilirsiniz.
+                </p>
+              </div>
+            </div>
+
+            <SettingsForm 
+              settingKey="ADSENSE_CLIENT_ID"
+              initialValue={settingsMap["ADSENSE_CLIENT_ID"] || ""}
+              label="Google AdSense Client ID (ca-pub-XXXXXXXXXXXX)"
+              description="AdSense hesabınızdaki 'Yayıncı Kimliği' (Örn: ca-pub-1234567890123456)."
+            />
+
+            <SettingsForm 
+              settingKey="ADSENSE_AUTO_ADS"
+              initialValue={settingsMap["ADSENSE_AUTO_ADS"] || "true"}
+              label="Otomatik Reklamlar (Auto Ads)"
+              description="Google'ın sayfa içerisinde en uygun yerlere otomatik reklam yerleştirmesini aktif etmek için 'true' bırakın."
+            />
+          </div>
         </div>
 
         <div className="space-y-6">

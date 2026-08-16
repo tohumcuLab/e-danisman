@@ -34,7 +34,7 @@ NODE_OPTIONS="--max-old-space-size=1536" DATABASE_URL="file:./prisma/dev.db" npm
 # 5. PM2 sürecini yenile (tohumcu09 kullanıcısı altında çalışan PM2 kullanılır)
 echo "🔄 4/4 Sunucu süreçleri yeniden başlatılıyor..."
 sudo fuser -k -9 3000/tcp 2>/dev/null || true
-pm2 restart danisman 2>/dev/null || pm2 start npm --name "danisman" -- start
+pm2 restart danisman 2>/dev/null || pm2 start node_modules/next/dist/bin/next --name "danisman" -- start
 pm2 save 2>/dev/null || true
 
 

@@ -23,6 +23,9 @@ export async function sendEmail({ to, subject, html }: SendMailParams): Promise<
           user: smtpUser,
           pass: smtpPass,
         },
+        tls: {
+          rejectUnauthorized: false,
+        },
       });
 
       await transporter.sendMail({

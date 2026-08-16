@@ -172,3 +172,12 @@ body {
 .btn-ghost:hover {
   background-color: var(--surface-container-high);
 }
+
+/* Scrollbar Gizleme Yardımcısı */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}

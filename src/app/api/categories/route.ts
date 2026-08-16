@@ -10,12 +10,12 @@ export async function GET() {
     // Varsayılan kategoriler yoksa oluştur
     if (categories.length === 0) {
       const defaultCategories = [
-        { name: "Hastalıklar", slug: "hastaliklar", description: "Bitkilerdeki mantar, bakteri ve virüs hastalıkları", order: 1 },
-        { name: "Zararlılar", slug: "zararlilar", description: "Böcek, akar ve diğer zararlılar", order: 2 },
-        { name: "Beslenme Eksikliği", slug: "beslenme-eksikligi", description: "Makro ve mikro besin elementi eksiklikleri", order: 3 },
-        { name: "Yabancı Otlar", slug: "yabanci-otlar", description: "İstenmeyen otlar ve mücadele yöntemleri", order: 4 },
-        { name: "Emin Değilim", slug: "emin-degilim", description: "Hastalık veya zararlı türünden emin olamadığınız durumlar", order: 5 },
-        { name: "Diğer", slug: "diger", description: "Diğer tarımsal sorunlar", order: 99 }
+        { name: "Hastalıklar", slug: "hastaliklar", description: "Bitkilerdeki mantar, bakteri ve virüs hastalıkları", icon: "🍂", order: 1 },
+        { name: "Zararlılar", slug: "zararlilar", description: "Böcek, akar ve diğer zararlılar", icon: "🐛", order: 2 },
+        { name: "Beslenme Eksikliği", slug: "beslenme-eksikligi", description: "Makro ve mikro besin elementi eksiklikleri", icon: "🌾", order: 3 },
+        { name: "Yabancı Otlar", slug: "yabanci-otlar", description: "İstenmeyen otlar ve mücadele yöntemleri", icon: "🌿", order: 4 },
+        { name: "Emin Değilim", slug: "emin-degilim", description: "Hastalık veya zararlı türünden emin olamadığınız durumlar", icon: "❓", order: 5 },
+        { name: "Diğer", slug: "diger", description: "Diğer tarımsal sorunlar", icon: "📁", order: 99 }
       ];
 
       await prisma.category.createMany({

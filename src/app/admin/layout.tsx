@@ -22,6 +22,10 @@ export default async function AdminLayout({ children }: { children: React.ReactN
             <Link href="/admin" className="px-3 py-2 rounded-md hover:bg-[var(--surface-variant)] transition-colors">
               Dashboard
             </Link>
+            <Link href="/admin/kategoriler" className="px-3 py-2 rounded-md hover:bg-[var(--surface-variant)] transition-colors font-bold text-[var(--primary)] flex items-center justify-between">
+              <span>📁 Kategori Yönetimi</span>
+              <span className="text-[10px] bg-[var(--primary)]/20 text-[var(--primary)] px-2 py-0.5 rounded-full">Yeni</span>
+            </Link>
             <Link href="/admin/soru-onaylari" className="px-3 py-2 rounded-md hover:bg-[var(--surface-variant)] transition-colors font-bold text-amber-600 dark:text-amber-400 flex items-center justify-between">
               <span>❓ Soru Onayları</span>
               <span className="text-[10px] bg-amber-500/20 text-amber-700 dark:text-amber-300 px-2 py-0.5 rounded-full">Yeni</span>

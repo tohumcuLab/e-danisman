@@ -127,7 +127,7 @@ export default async function QuestionDetailPage({ params }: { params: Promise<{
   });
 
   const categories = await prisma.category.findMany({
-    select: { id: true, name: true },
+    select: { id: true, name: true, icon: true },
     orderBy: { order: "asc" }
   });
 

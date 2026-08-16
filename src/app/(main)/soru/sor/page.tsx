@@ -7,6 +7,7 @@ import InsufficientCreditsModal from "@/components/shared/InsufficientCreditsMod
 type Category = {
   id: string;
   name: string;
+  icon?: string | null;
 };
 
 const CROPS_LIST = [
@@ -441,7 +442,9 @@ export default function AskQuestionPage() {
               >
                 <option value="">Kategori Seçiniz</option>
                 {categories.map(cat => (
-                  <option key={cat.id} value={cat.id}>{cat.name}</option>
+                  <option key={cat.id} value={cat.id}>
+                    {cat.icon ? `${cat.icon} ` : ""}{cat.name}
+                  </option>
                 ))}
               </select>
             </div>

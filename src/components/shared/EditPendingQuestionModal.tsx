@@ -68,7 +68,7 @@ interface EditPendingQuestionModalProps {
     cropType?: string | null;
     images?: { url: string }[];
   };
-  categories: { id: string; name: string }[];
+  categories: { id: string; name: string; icon?: string | null }[];
   isOpen: boolean;
   onClose: () => void;
 }
@@ -230,7 +230,9 @@ export default function EditPendingQuestionModal({
               className="select w-full font-semibold text-xs"
             >
               {categories.map((cat) => (
-                <option key={cat.id} value={cat.id}>{cat.name}</option>
+                <option key={cat.id} value={cat.id}>
+                  {cat.icon ? `${cat.icon} ` : ""}{cat.name}
+                </option>
               ))}
             </select>
           </div>

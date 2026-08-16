@@ -144,6 +144,7 @@ model Category {
   name        String
   slug        String  @unique
   description String?
+  icon        String?
   imageUrl    String?
   parentId    String?
   order       Int     @default(0)

@@ -24,6 +24,7 @@ export interface CategoryItem {
   id: string;
   name: string;
   slug?: string;
+  icon?: string | null;
   order?: number | null;
   description?: string | null;
   imageUrl?: string | null;
@@ -55,6 +56,7 @@ export interface QuestionItem {
     id?: string;
     name: string;
     slug?: string;
+    icon?: string | null;
   };
   tags?: Array<{
     tag?: { name: string };
@@ -279,7 +281,7 @@ export default function CategoryQuestionFeed({ categories, initialQuestions, ads
             {/* Dinamik Kategoriler */}
             {categories.map((cat) => {
               const isSelected = selectedCategoryId === cat.id;
-              const emoji = getCategoryEmoji(cat.name, cat.slug);
+              const emoji = cat.icon || getCategoryEmoji(cat.name, cat.slug);
               
               // Bu kategorideki toplam soru sayısı
               const catQuestionCount = initialQuestions.filter(
@@ -329,7 +331,7 @@ export default function CategoryQuestionFeed({ categories, initialQuestions, ads
       {selectedCategory && (
         <div className="bg-[#006537]/10 dark:bg-[#006537]/20 border border-[#006537]/30 rounded-xl p-3 flex items-center justify-between text-xs animate-in fade-in duration-300">
           <div className="flex items-center gap-2">
-            <span className="text-lg">{getCategoryEmoji(selectedCategory.name, selectedCategory.slug)}</span>
+            <span className="text-lg">{selectedCategory.icon || getCategoryEmoji(selectedCategory.name, selectedCategory.slug)}</span>
             <div>
               <span className="font-extrabold text-[var(--primary)]">
                 {selectedCategory.name}
@@ -478,7 +480,7 @@ export default function CategoryQuestionFeed({ categories, initialQuestions, ads
                     {/* Satır 1: Kategori */}
                     <div className="flex items-center gap-2">
                       <span className="bg-[var(--primary)]/10 text-[var(--primary)] text-xs font-bold px-2.5 py-1 rounded-md flex items-center gap-1">
-                        <span>{getCategoryEmoji(q.category.name, q.category.slug)}</span>
+                        <span>{q.category.icon || getCategoryEmoji(q.category.name, q.category.slug)}</span>
                         <span>{q.category.name}</span>
                       </span>
                     </div>

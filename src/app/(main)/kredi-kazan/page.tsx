@@ -10,26 +10,27 @@ export const dynamic = "force-dynamic";
 export default async function KrediKazanPage() {
   try {
     const session = await auth();
-    if (!session?.user) {
-      redirect("/giris?callbackUrl=/kredi-kazan");
-    }
+    const isLoggedIn = Boolean(session?.user?.id);
 
-    // Kullanıcının bugün kaç reklam izlediğini bul
-    const startOfDay = new Date();
-    startOfDay.setHours(0, 0, 0, 0);
-
-    const todayRewardsCount = await prisma.credit.count({
-      where: {
-        userId: session.user.id,
-        reason: "AD_REWARD",
-        createdAt: { gte: startOfDay }
-      }
-    }).catch(() => 0);
-
+    let todayRewardsCount = 0;
     const setting = await prisma.systemSetting.findUnique({ where: { key: "DAILY_AD_LIMIT" } }).catch(() => null);
     const dailyLimit = setting && !isNaN(parseInt(setting.value, 10)) ? parseInt(setting.value, 10) : 5;
 
-    const dailyLimitReached = todayRewardsCount >= dailyLimit;
+    // Eğer kullanıcı giriş yapmışsa bugün kaç reklam izlediğini hesapla
+    if (isLoggedIn && session?.user?.id) {
+      const startOfDay = new Date();
+      startOfDay.setHours(0, 0, 0, 0);
+
+      todayRewardsCount = await prisma.credit.count({
+        where: {
+          userId: session.user.id,
+          reason: "AD_REWARD",
+          createdAt: { gte: startOfDay }
+        }
+      }).catch(() => 0);
+    }
+
+    const dailyLimitReached = isLoggedIn && todayRewardsCount >= dailyLimit;
 
     let validAds: any[] = [];
 
@@ -83,20 +84,25 @@ export default async function KrediKazanPage() {
     }
 
     return (
-      <div className="container max-w-2xl py-8">
-        <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold mb-2 text-[var(--primary)]">Kredi Kazan</h1>
-          <p className="text-[var(--on-surface-variant)]">
-            Reklam izleyerek kredi kazanabilir ve sormak istediğiniz sorular için bu kredileri kullanabilirsiniz.
+      <div className="container max-w-2xl py-8 space-y-6">
+        <div className="text-center space-y-2">
+          <h1 className="text-3xl font-bold text-[var(--primary)]">Kredi Kazan</h1>
+          <p className="text-sm text-[var(--on-surface-variant)] max-w-lg mx-auto leading-relaxed">
+            Reklam izleyerek kredi kazanabilir ve uzmanlarımıza sormak istediğiniz sorular için bu kredileri kullanabilirsiniz.
           </p>
-          {!dailyLimitReached && (
-            <div className="mt-2 text-sm font-semibold text-[var(--secondary)]">
-              Bugünkü Hakkınız: {dailyLimit - todayRewardsCount} / {dailyLimit}
+          {isLoggedIn && !dailyLimitReached && (
+            <div className="text-xs font-bold text-[var(--secondary)] bg-[var(--secondary)]/10 px-3 py-1 rounded-full inline-block">
+              Bugünkü Kalan Hakkınız: {dailyLimit - todayRewardsCount} / {dailyLimit}
             </div>
           )}
         </div>
 
-        <WatchAdClient ads={validAds} dailyLimitReached={dailyLimitReached} />
+        <WatchAdClient 
+          ads={validAds} 
+          dailyLimitReached={dailyLimitReached}
+          isLoggedIn={isLoggedIn}
+          user={session?.user || null}
+        />
       </div>
     );
   } catch (error) {

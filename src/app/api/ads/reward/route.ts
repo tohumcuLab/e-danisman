@@ -5,10 +5,6 @@ import { auth } from "@/auth";
 export async function POST(req: Request) {
   try {
     const session = await auth();
-    if (!session?.user) {
-      return NextResponse.json({ error: "Yetkisiz erişim" }, { status: 401 });
-    }
-
     const { adId } = await req.json();
     if (!adId) {
       return NextResponse.json({ error: "Reklam ID zorunludur" }, { status: 400 });
@@ -28,7 +24,44 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Reklam gösterim limitine ulaştı" }, { status: 400 });
     }
 
-    // Kullanıcının mevcut kredisi
+    // Ödül miktarını belirle
+    let baseReward = ad.creditReward && ad.creditReward > 0 ? ad.creditReward : 0;
+    if (baseReward <= 0) {
+      const adRewardSetting = await prisma.systemSetting.findUnique({
+        where: { key: "USER_AD_REWARD_CREDIT" },
+      });
+      baseReward = adRewardSetting && !isNaN(parseInt(adRewardSetting.value, 10))
+        ? parseInt(adRewardSetting.value, 10)
+        : 1;
+    }
+
+    // 1. DURUM: MİSAFİR KULLANICI (Oturum Açmamış)
+    if (!session?.user?.id) {
+      // Reklam gösterimini artır
+      await prisma.$transaction(async (tx) => {
+        await tx.ad.update({
+          where: { id: ad.id },
+          data: { impressionCount: { increment: 1 } }
+        });
+
+        if (ad.impressionLimit && ad.impressionCount + 1 >= ad.impressionLimit) {
+          await tx.ad.update({
+            where: { id: ad.id },
+            data: { isActive: false }
+          });
+        }
+      });
+
+      return NextResponse.json({
+        success: true,
+        isGuest: true,
+        reward: baseReward,
+        message: `Tebrikler! +${baseReward} Kredi kazandınız.`,
+        adId: ad.id,
+      }, { status: 200 });
+    }
+
+    // 2. DURUM: GİRİŞ YAPMIŞ KULLANICI
     const user = await prisma.user.findUnique({ where: { id: session.user.id } });
     if (!user) {
       return NextResponse.json({ error: "Kullanıcı bulunamadı" }, { status: 404 });
@@ -58,20 +91,6 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: `Günlük reklam izleme limitinize (${dailyLimit}) ulaştınız. Lütfen yarın tekrar deneyin.` }, { status: 400 });
     }
 
-    // Ödül miktarını belirle:
-    // 1. Öncelik: İzlenen reklama özel admin tarafından girilen creditReward değeri (ad.creditReward > 0).
-    // 2. Yedek: Eğer reklama özel bir değer tanımlanmamışsa sistem genel ayarındaki (USER_AD_REWARD_CREDIT) değer.
-    let baseReward = ad.creditReward && ad.creditReward > 0 ? ad.creditReward : 0;
-
-    if (baseReward <= 0) {
-      const adRewardSetting = await prisma.systemSetting.findUnique({
-        where: { key: "USER_AD_REWARD_CREDIT" },
-      });
-      baseReward = adRewardSetting && !isNaN(parseInt(adRewardSetting.value, 10))
-        ? parseInt(adRewardSetting.value, 10)
-        : 1;
-    }
-
     // Kredi miktarını hesapla (100 bakiye sınırı aşılmayacak şekilde)
     let rewardToGive = baseReward;
     if (user.credits + rewardToGive > 100) {
@@ -94,7 +113,7 @@ export async function POST(req: Request) {
         });
       }
 
-      // Kullanıcıya kredi ver (Sadece verilecek ödül > 0 ise, ama 0 olsa bile gösterim sayılır)
+      // Kullanıcıya kredi ver
       if (rewardToGive > 0) {
         await tx.user.update({
           where: { id: user.id },
@@ -113,7 +132,9 @@ export async function POST(req: Request) {
     });
 
     return NextResponse.json({ 
-      message: `Tebrikler! ${rewardToGive} kredi kazandınız.`,
+      success: true,
+      isGuest: false,
+      message: `Tebrikler! ${rewardToGive} kredi hesabınıza yüklendi.`,
       reward: rewardToGive
     }, { status: 200 });
 

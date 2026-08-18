@@ -35,15 +35,24 @@ export default async function BuyCreditPage() {
           <Coins className="w-8 h-8" />
         </div>
 
-        <div className="text-center mt-6 mb-8 border-b border-[var(--outline-variant)] pb-8">
-          <h3 className="text-2xl font-black text-[var(--on-surface)] mb-4">{creditAmount} Kredi Paketi</h3>
+        {/* Kredi Paketi 1:1 Kare Kapak Görseli */}
+        <div className="w-full aspect-square mb-6 rounded-2xl overflow-hidden bg-black/5 dark:bg-black/20 border border-[var(--outline-variant)] shadow-sm">
+          <img
+            src="/iyzico/kredi-10.jpg"
+            alt="10 Kredi Paketi"
+            className="w-full h-full object-cover rounded-2xl"
+          />
+        </div>
+
+        <div className="text-center mb-6 border-b border-[var(--outline-variant)] pb-6">
+          <h3 className="text-2xl font-black text-[var(--on-surface)] mb-3">{creditAmount} Kredi Paketi</h3>
           <div className="flex items-end justify-center gap-1">
-            <span className="text-6xl font-black text-[var(--primary)]">{creditPrice}</span>
-            <span className="text-xl text-[var(--on-surface-variant)] font-bold mb-2">TL</span>
+            <span className="text-5xl font-black text-[var(--primary)]">{creditPrice}</span>
+            <span className="text-xl text-[var(--on-surface-variant)] font-bold mb-1.5">TL</span>
           </div>
         </div>
 
-        <ul className="space-y-4 mb-8 flex-grow">
+        <ul className="space-y-3.5 mb-8 flex-grow">
           <li className="flex items-start gap-3 text-[var(--on-surface)]">
             <CheckCircle2 className="w-5 h-5 text-emerald-500 shrink-0 mt-0.5" />
             <span className="font-medium text-sm">Hesaba Anında Yükleme (Onay Sonrası)</span>
@@ -65,14 +74,14 @@ export default async function BuyCreditPage() {
               target="_blank"
               className="block w-full text-center py-4 rounded-xl font-bold text-[15px] bg-[var(--primary)] text-white shadow-md hover:bg-[var(--primary-container)] hover:text-[var(--on-primary-container)] transition-all"
             >
-              Hemen Satın Al
+              Hemen Satın Al ➔
             </Link>
           ) : (
             <Link
-              href="/login"
-              className="block w-full text-center py-4 rounded-xl font-bold text-[15px] bg-[var(--surface-variant)] text-[var(--on-surface-variant)] hover:bg-[var(--primary)] hover:text-white transition-all"
+              href="/giris"
+              className="block w-full text-center py-4 rounded-xl font-bold text-[15px] bg-[var(--surface-variant)] text-[var(--on-surface-variant)] hover:bg-[var(--primary)] hover:text-white transition-all shadow-sm"
             >
-              Giriş Yapmanız Gerekiyor
+              Satın Almak İçin Giriş Yapın ➔
             </Link>
           )}
         </div>

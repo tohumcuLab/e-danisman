@@ -36,6 +36,7 @@ export default async function PremiumPage() {
       id: "1_MONTH",
       title: "1 Aylık Premium",
       price: settingsMap["PREMIUM_1_MONTH_PRICE"] || "379",
+      imageUrl: "/iyzico/premium-1ay.jpg",
       link: settingsMap["PREMIUM_1_MONTH_LINK"] || "#",
       features: ["Sınırsız Reklamsız Deneyim", "Kesintisiz Soru & Cevap", "Tüm Alanlarda Öncelik"],
       recommended: false,
@@ -44,6 +45,7 @@ export default async function PremiumPage() {
       id: "6_MONTHS",
       title: "6 Aylık Premium",
       price: settingsMap["PREMIUM_6_MONTHS_PRICE"] || "1000",
+      imageUrl: "/iyzico/premium-6ay.jpg",
       link: settingsMap["PREMIUM_6_MONTHS_LINK"] || "#",
       features: ["Sınırsız Reklamsız Deneyim", "Kesintisiz Soru & Cevap", "Tüm Alanlarda Öncelik", "Uzun Süreli Avantaj"],
       recommended: true,
@@ -53,6 +55,7 @@ export default async function PremiumPage() {
       id: "12_MONTHS",
       title: "1 Yıllık Premium",
       price: settingsMap["PREMIUM_12_MONTHS_PRICE"] || "1500",
+      imageUrl: "/iyzico/premium-12ay.jpg",
       link: settingsMap["PREMIUM_12_MONTHS_LINK"] || "#",
       features: ["Sınırsız Reklamsız Deneyim", "Kesintisiz Soru & Cevap", "Tüm Alanlarda Öncelik", "En Uygun Fiyat Garantisi"],
       recommended: false,
@@ -84,27 +87,38 @@ export default async function PremiumPage() {
         {packages.map((pkg) => (
           <div
             key={pkg.id}
-            className={`relative flex flex-col bg-[var(--surface-container)] rounded-3xl p-8 transition-all duration-300 hover:shadow-xl hover:-translate-y-1 ${
+            className={`relative flex flex-col bg-[var(--surface-container)] rounded-3xl p-6 sm:p-7 transition-all duration-300 hover:shadow-xl hover:-translate-y-1 group ${
               pkg.recommended
                 ? "border-2 border-[var(--primary)] shadow-lg shadow-[var(--primary)]/20 scale-105 z-10 md:-mt-4 md:mb-4"
                 : "border border-[var(--outline-variant)]"
             }`}
           >
             {pkg.badge && (
-              <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-[var(--primary)] text-white text-xs font-black uppercase tracking-wider px-4 py-1.5 rounded-full shadow-md">
+              <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-[var(--primary)] text-white text-xs font-black uppercase tracking-wider px-4 py-1.5 rounded-full shadow-md z-20">
                 {pkg.badge}
               </div>
             )}
 
-            <div className="text-center mb-8">
-              <h3 className="text-xl font-bold text-[var(--on-surface)] mb-4">{pkg.title}</h3>
+            {/* Paketin 1:1 Kare Kapak Görseli (Boşluksuz Tam Kaplama) */}
+            {pkg.imageUrl && (
+              <div className="w-full aspect-square mb-6 rounded-2xl overflow-hidden bg-black/5 dark:bg-black/20 border border-[var(--outline-variant)] shadow-sm">
+                <img
+                  src={pkg.imageUrl}
+                  alt={pkg.title}
+                  className="w-full h-full object-cover rounded-2xl group-hover:scale-105 transition-transform duration-300"
+                />
+              </div>
+            )}
+
+            <div className="text-center mb-6">
+              <h3 className="text-xl font-bold text-[var(--on-surface)] mb-3">{pkg.title}</h3>
               <div className="flex items-end justify-center gap-1">
                 <span className="text-5xl font-black text-[var(--primary)]">{pkg.price}</span>
                 <span className="text-lg text-[var(--on-surface-variant)] font-medium mb-1.5">TL</span>
               </div>
             </div>
 
-            <ul className="space-y-4 mb-8 flex-grow">
+            <ul className="space-y-3.5 mb-8 flex-grow">
               {pkg.features.map((feature, idx) => (
                 <li key={idx} className="flex items-start gap-3 text-[var(--on-surface)]">
                   <CheckCircle2 className="w-5 h-5 text-[var(--primary)] shrink-0 mt-0.5" />
@@ -118,20 +132,20 @@ export default async function PremiumPage() {
                 <Link
                   href={pkg.link}
                   target="_blank"
-                  className={`block w-full text-center py-4 rounded-xl font-bold text-sm transition-all ${
+                  className={`block w-full text-center py-4 rounded-xl font-bold text-sm transition-all shadow-md ${
                     pkg.recommended
-                      ? "bg-[var(--primary)] text-white shadow-md hover:bg-[var(--primary-container)] hover:text-[var(--on-primary-container)] hover:shadow-lg"
+                      ? "bg-[var(--primary)] text-white hover:bg-[var(--primary-container)] hover:text-[var(--on-primary-container)] hover:shadow-lg"
                       : "bg-[var(--surface-variant)] text-[var(--on-surface-variant)] hover:bg-[var(--primary)] hover:text-white"
                   }`}
                 >
-                  Hemen Satın Al
+                  Hemen Satın Al ➔
                 </Link>
               ) : (
                 <Link
-                  href="/login"
-                  className="block w-full text-center py-4 rounded-xl font-bold text-sm bg-[var(--surface-variant)] text-[var(--on-surface-variant)] hover:bg-[var(--primary)] hover:text-white transition-all"
+                  href="/giris"
+                  className="block w-full text-center py-4 rounded-xl font-bold text-sm bg-[var(--surface-variant)] text-[var(--on-surface-variant)] hover:bg-[var(--primary)] hover:text-white transition-all shadow-sm"
                 >
-                  Satın Almak İçin Giriş Yapın
+                  Satın Almak İçin Giriş Yapın ➔
                 </Link>
               )}
             </div>

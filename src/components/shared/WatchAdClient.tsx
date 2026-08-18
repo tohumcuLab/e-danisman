@@ -28,8 +28,9 @@ export default function WatchAdClient({
   const [rewardClaimed, setRewardClaimed] = useState(false);
   const [message, setMessage] = useState("");
   
-  // Misafir Kredi State'i
+  // Misafir Kredi ve İzlenen Reklam Sayacı State'i
   const [guestCredits, setGuestCredits] = useState<number>(0);
+  const [guestWatchedCount, setGuestWatchedCount] = useState<number>(0);
   const [currentUser, setCurrentUser] = useState<any | null>(user);
   const [authTab, setAuthTab] = useState<"LOGIN" | "REGISTER">("LOGIN");
   const [authLoading, setAuthLoading] = useState(false);
@@ -49,14 +50,22 @@ export default function WatchAdClient({
   const videoRef = useRef<HTMLVideoElement>(null);
   const router = useRouter();
 
-  // İlk yüklemede localStorage'daki misafir kredilerini oku
+  // İlk yüklemede localStorage'daki misafir kredilerini ve izleme sayısını oku
   useEffect(() => {
     try {
-      const saved = localStorage.getItem("guest_pending_credits");
-      if (saved) {
-        const val = parseInt(saved, 10);
+      const savedCredits = localStorage.getItem("guest_pending_credits");
+      if (savedCredits) {
+        const val = parseInt(savedCredits, 10);
         if (!isNaN(val) && val > 0) {
           setGuestCredits(val);
+        }
+      }
+
+      const savedCount = localStorage.getItem("guest_rewarded_ad_count");
+      if (savedCount) {
+        const count = parseInt(savedCount, 10);
+        if (!isNaN(count)) {
+          setGuestWatchedCount(count);
         }
       }
     } catch (e) {
@@ -115,7 +124,9 @@ export default function WatchAdClient({
       const data = await res.json();
       if (res.ok && data.success) {
         localStorage.removeItem("guest_pending_credits");
+        localStorage.removeItem("guest_rewarded_ad_count");
         setGuestCredits(0);
+        setGuestWatchedCount(0);
         setMessage(data.message || `🎉 ${amountToClaim} kredi hesabınıza aktarıldı.`);
         window.dispatchEvent(new CustomEvent("user:credits-updated"));
         router.refresh();
@@ -147,7 +158,7 @@ export default function WatchAdClient({
     setIsCompleted(true);
   };
 
-  // Ödül Talep Etme
+  // Ödül Talep Etme (Misafir için ilk 2 reklam kuralı)
   const claimReward = async () => {
     setLoading(true);
     setMessage("");
@@ -163,14 +174,26 @@ export default function WatchAdClient({
         const rewardAmount = data.reward || 1;
 
         if (data.isGuest || !currentUser) {
-          // Misafir kullanıcı: Krediyi yerel state ve storage'da biriktir
-          const newTotal = guestCredits + rewardAmount;
-          setGuestCredits(newTotal);
-          try {
-            localStorage.setItem("guest_pending_credits", newTotal.toString());
-          } catch (e) {}
+          // Misafir kullanıcı kontrolü: İlk 2 reklam için ödül kazanabilir
+          if (guestWatchedCount < 2) {
+            const newCount = guestWatchedCount + 1;
+            const newTotal = guestCredits + rewardAmount;
+            
+            setGuestWatchedCount(newCount);
+            setGuestCredits(newTotal);
 
-          setMessage(`🎉 Tebrikler! +${rewardAmount} Kredi kazandınız.`);
+            try {
+              localStorage.setItem("guest_rewarded_ad_count", newCount.toString());
+              localStorage.setItem("guest_pending_credits", newTotal.toString());
+            } catch (e) {}
+
+            setMessage(`🎉 Tebrikler! +${rewardAmount} Kredi kazandınız. (Misafir Ödülü: ${newCount}/2)`);
+          } else {
+            // 2 reklam hakkı dolmuş: Kredi verilmez, bilgilendirme yapılır
+            setMessage(
+              "ℹ️ Misafir olarak ilk 2 reklamlık kredi kazanma limitinizi tamamladınız. Dilediğiniz kadar reklam izleyebilirsiniz; ancak sonraki izlemelerden kredi kazanmak için lütfen aşağıdan giriş yapın veya üye olun."
+            );
+          }
         } else {
           // Giriş yapmış kullanıcı
           setMessage(data.message || `🎉 Tebrikler! ${rewardAmount} kredi hesabınıza yüklendi.`);
@@ -446,12 +469,12 @@ export default function WatchAdClient({
               </div>
               {guestCredits > 0 && (
                 <span className="self-start sm:self-center bg-gradient-to-r from-amber-500 to-amber-600 text-white font-black px-3 py-1 rounded-full text-xs shrink-0 shadow-md">
-                  🪙 Bekleyen: {guestCredits} Kredi
+                  🪙 Bekleyen: {guestCredits} Kredi ({guestWatchedCount}/2 Hak)
                 </span>
               )}
             </div>
             <p className="text-xs text-[var(--on-surface-variant)] leading-relaxed font-medium">
-              Misafir olarak dilediğiniz kadar reklam izleyebilirsiniz. İzlediğiniz reklamlardan kazandığınız kredileri kaybetmeden anında hesabınıza aktarmak için <strong>bu sayfadan hiç ayrılmadan</strong> hemen aşağıdan giriş yapabilir veya kayıt olabilirsiniz!
+              Misafir olarak dilediğiniz kadar reklam izleyebilirsiniz; ancak <strong>yalnızca ilk 2 reklamdan</strong> kredi kazanabilirsiniz. Kazandığınız kredileri hemen hesabınıza aktarmak ve sınırsız günlük kredi kazanmaya devam etmek için <strong>bu sayfadan hiç ayrılmadan</strong> hemen aşağıdan giriş yapabilir veya kayıt olabilirsiniz!
             </p>
           </div>
 

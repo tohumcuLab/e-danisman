@@ -330,13 +330,17 @@ export default function IletisimForm({
                   <div 
                     key={pkg.id} 
                     onClick={() => setSelectedPackage(pkg.id)}
-                    className={`card p-5 cursor-pointer transition-all border-2 flex flex-col h-full hover:-translate-y-1 hover:shadow-lg ${pkg.isPopular ? 'border-amber-500 bg-amber-500/5' : 'border-transparent hover:border-[var(--primary)]/50'}`}
+                    className={`card p-4 sm:p-5 cursor-pointer transition-all border-2 flex flex-col h-full hover:-translate-y-1 hover:shadow-lg group ${pkg.isPopular ? 'border-amber-500 bg-amber-500/5' : 'border-transparent hover:border-[var(--primary)]/50'}`}
                   >
                     {pkg.isPopular && <div className="text-xs font-extrabold text-amber-600 mb-2 uppercase">Popüler Tercih</div>}
                     
                     {pkg.imageUrl && (
-                      <div className="w-full h-32 mb-3 rounded-xl overflow-hidden bg-[var(--surface-container-high)] border border-[var(--outline-variant)]">
-                        <img src={pkg.imageUrl} alt={pkg.title} className="w-full h-full object-cover" />
+                      <div className="w-full aspect-[16/9] mb-3 rounded-xl overflow-hidden bg-black/5 dark:bg-black/30 border border-[var(--outline-variant)] flex items-center justify-center p-1.5 shadow-inner">
+                        <img 
+                          src={pkg.imageUrl} 
+                          alt={pkg.title} 
+                          className="w-full h-full object-contain rounded-lg group-hover:scale-105 transition-transform duration-300" 
+                        />
                       </div>
                     )}
 
@@ -345,8 +349,8 @@ export default function IletisimForm({
                     <div className="text-sm font-semibold text-[var(--on-surface)] mb-1">{pkg.views}</div>
                     {pkg.estimatedTime && <div className="text-[11px] text-[var(--on-surface-variant)] italic mb-3">*{pkg.estimatedTime}</div>}
                     {pkg.description && <p className="text-xs text-[var(--on-surface-variant)] flex-1">{pkg.description}</p>}
-                    <button className={`mt-4 w-full py-2 rounded-lg text-xs font-bold transition-colors ${pkg.isPopular ? 'bg-amber-600 text-white' : 'bg-[var(--surface-variant)] text-[var(--on-surface)] hover:bg-[var(--outline-variant)]'}`}>
-                      Bu Paketi Seç
+                    <button className={`mt-4 w-full py-2.5 rounded-xl text-xs font-bold transition-all shadow-sm ${pkg.isPopular ? 'bg-amber-600 hover:bg-amber-700 text-white' : 'bg-[var(--surface-variant)] text-[var(--on-surface)] hover:bg-[var(--primary)] hover:text-white'}`}>
+                      Bu Paketi Satın Al ➔
                     </button>
                   </div>
                 ))}
@@ -355,13 +359,71 @@ export default function IletisimForm({
           ) : (
             <form onSubmit={handleAdSubmit} className="space-y-5 animate-in slide-in-from-right-4">
               
-              <div className="flex items-center justify-between bg-[var(--surface-container-low)] p-4 rounded-xl border border-[var(--outline-variant)]">
-                <div>
-                  <div className="text-xs font-medium text-[var(--on-surface-variant)]">Seçili Paket</div>
-                  <div className="font-bold text-[var(--primary)]">{AD_PACKAGES.find(p=>p.id === selectedPackage)?.title} - {AD_PACKAGES.find(p=>p.id === selectedPackage)?.views}</div>
-                </div>
-                <button type="button" onClick={() => setSelectedPackage(null)} className="text-xs text-red-500 hover:underline font-semibold">Değiştir</button>
-              </div>
+              {/* Formun En Üstünde Seçili Paketin Büyük Görseli ve Detay Kartı */}
+              {(() => {
+                const currentPkg = AD_PACKAGES.find((p) => p.id === selectedPackage);
+                if (!currentPkg) return null;
+
+                return (
+                  <div className="bg-gradient-to-br from-amber-500/10 via-[var(--surface-container-low)] to-emerald-500/10 p-4 sm:p-5 rounded-2xl border-2 border-amber-500/30 space-y-4 shadow-sm">
+                    {/* Paketin Tam Görseli (Kesilmeden) */}
+                    {currentPkg.imageUrl && (
+                      <div className="w-full aspect-[16/9] sm:aspect-[21/9] max-h-64 rounded-xl overflow-hidden bg-black/10 dark:bg-black/40 border border-amber-500/20 flex items-center justify-center p-2 shadow-inner">
+                        <img
+                          src={currentPkg.imageUrl}
+                          alt={currentPkg.title}
+                          className="w-full h-full object-contain drop-shadow-md"
+                        />
+                      </div>
+                    )}
+
+                    {/* Seçili Paket Bilgileri & Değiştir Butonu */}
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-1 border-t border-[var(--outline-variant)]/60">
+                      <div>
+                        <div className="flex items-center gap-2">
+                          <span className="text-[10px] bg-amber-500 text-white font-black px-2.5 py-0.5 rounded-full uppercase tracking-wider shadow-sm">
+                            Seçilen Reklam Paketi
+                          </span>
+                          {currentPkg.isPopular && (
+                            <span className="text-[10px] bg-emerald-600 text-white font-bold px-2 py-0.5 rounded-full">
+                              Popüler Tercih
+                            </span>
+                          )}
+                        </div>
+                        <h3 className="text-lg sm:text-xl font-black text-[var(--on-surface)] mt-1.5">
+                          {currentPkg.title}
+                        </h3>
+                        <div className="flex flex-wrap items-center gap-2.5 text-xs mt-1">
+                          <span className="text-xl sm:text-2xl font-black text-[var(--primary)]">
+                            {currentPkg.price.toLocaleString("tr-TR")} ₺
+                          </span>
+                          <span className="font-extrabold text-[var(--on-surface)] bg-[var(--surface-container-high)] px-2.5 py-1 rounded-lg border border-[var(--outline-variant)]">
+                            👁️ {currentPkg.views}
+                          </span>
+                          {currentPkg.estimatedTime && (
+                            <span className="text-[11px] text-[var(--on-surface-variant)] italic">
+                              *{currentPkg.estimatedTime}
+                            </span>
+                          )}
+                        </div>
+                        {currentPkg.description && (
+                          <p className="text-xs text-[var(--on-surface-variant)] mt-2 font-medium">
+                            {currentPkg.description}
+                          </p>
+                        )}
+                      </div>
+
+                      <button
+                        type="button"
+                        onClick={() => setSelectedPackage(null)}
+                        className="self-start sm:self-center shrink-0 px-3.5 py-2 bg-[var(--surface-container-high)] hover:bg-red-500/10 text-red-600 hover:text-red-700 dark:hover:text-red-400 font-bold text-xs rounded-xl border border-[var(--outline-variant)] hover:border-red-300 transition-all flex items-center gap-1.5 cursor-pointer shadow-sm"
+                      >
+                        <span>🔄 Paketi Değiştir</span>
+                      </button>
+                    </div>
+                  </div>
+                );
+              })()}
 
               <div className="space-y-4">
                 <h4 className="font-bold text-sm border-b border-[var(--outline-variant)] pb-2">İletişim & Fatura Bilgileri</h4>

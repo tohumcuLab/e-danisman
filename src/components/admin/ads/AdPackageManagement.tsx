@@ -235,11 +235,11 @@ export default function AdPackageManagement() {
 
               <div className="space-y-3">
                 {pkg.imageUrl ? (
-                  <div className="w-full h-36 rounded-xl overflow-hidden bg-[var(--surface-container-high)] border border-[var(--outline-variant)] mb-2">
+                  <div className="w-full aspect-[16/9] rounded-xl overflow-hidden bg-black/5 dark:bg-black/30 border border-[var(--outline-variant)] flex items-center justify-center p-1.5 shadow-inner mb-2">
                     <img
                       src={pkg.imageUrl}
                       alt={pkg.title}
-                      className="w-full h-full object-cover"
+                      className="w-full h-full object-contain rounded-lg"
                     />
                   </div>
                 ) : (

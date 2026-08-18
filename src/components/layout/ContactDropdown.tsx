@@ -23,8 +23,8 @@ export function ContactDropdown() {
       <button
         onClick={() => setIsOpen(!isOpen)}
         className="flex items-center justify-center w-9 h-9 sm:w-10 sm:h-10 rounded-full hover:bg-[var(--surface-variant)] text-[var(--on-surface-variant)] transition-colors relative"
-        title="İletişim & Reklam"
-        aria-label="İletişim ve Reklam Menüsü"
+        title="Üyelik & İletişim ve Reklam"
+        aria-label="Üyelik, İletişim ve Reklam Menüsü"
       >
         {/* İletişim / Hoparlör İkonu */}
         <svg
@@ -45,14 +45,34 @@ export function ContactDropdown() {
 
       {/* Menü İçeriği */}
       {isOpen && (
-        <div className="absolute right-0 mt-2 w-64 bg-[var(--surface)] text-[var(--on-surface)] border border-[var(--outline-variant)] rounded-2xl shadow-xl z-50 overflow-hidden animate-in fade-in zoom-in-95 duration-150">
+        <div className="absolute right-0 mt-2 w-72 bg-[var(--surface)] text-[var(--on-surface)] border border-[var(--outline-variant)] rounded-2xl shadow-xl z-50 overflow-hidden animate-in fade-in zoom-in-95 duration-150">
           <div className="bg-[var(--surface-container-high)] p-3 border-b border-[var(--outline-variant)]">
             <h3 className="font-extrabold text-xs text-[var(--primary)] uppercase tracking-wider">
-              İletişim & Reklam Hizmetleri
+              Üyelik & İletişim ve Reklam
             </h3>
           </div>
 
           <div className="p-2 space-y-1 text-xs">
+            {/* 1. EN ÜSTTE: Premium Üyelik Paketleri Butonu */}
+            <Link
+              href="/premium"
+              onClick={() => setIsOpen(false)}
+              className="flex items-center gap-3 p-2.5 rounded-xl bg-gradient-to-r from-amber-500/15 to-amber-500/5 hover:from-amber-500/25 hover:to-amber-500/15 border border-amber-500/30 transition-all group"
+            >
+              <span className="text-base p-1.5 rounded-lg bg-amber-500 text-white shadow-sm group-hover:scale-110 transition-transform">
+                👑
+              </span>
+              <div className="flex-1 min-w-0">
+                <div className="font-extrabold text-amber-700 dark:text-amber-400 flex items-center justify-between">
+                  <span>Premium Paketleri</span>
+                  <span className="text-[9px] bg-amber-500 text-white font-black px-1.5 py-0.5 rounded-full uppercase">Fırsat</span>
+                </div>
+                <div className="text-[10px] text-[var(--on-surface-variant)] truncate font-semibold">Reklamlardan Kurtulun!</div>
+              </div>
+            </Link>
+
+            <div className="my-1 border-t border-[var(--outline-variant)]/60"></div>
+
             <Link
               href="/iletisim?tab=contact"
               onClick={() => setIsOpen(false)}

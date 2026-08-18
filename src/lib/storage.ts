@@ -34,10 +34,11 @@ export class LocalStorageService implements IStorageService {
     // Process image with Sharp: resize max 1600px, compress to 80% WebP
     try {
       const sharp = (await import("sharp")).default;
-      buffer = await sharp(buffer)
+      const processed = await sharp(buffer)
         .resize(1600, 1600, { fit: "inside", withoutEnlargement: true })
         .webp({ quality: 80 })
         .toBuffer();
+      buffer = Buffer.from(processed);
     } catch (error) {
       console.error("WebP dönüştürme hatası, ham dosya kaydediliyor:", error);
       filename = `${uniqueSuffix}-${originalName}`;

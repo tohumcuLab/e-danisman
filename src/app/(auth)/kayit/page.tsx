@@ -5,6 +5,8 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { signIn } from "next-auth/react";
 
+import PremiumPromoCard from "@/components/shared/PremiumPromoCard";
+
 export default function RegisterPage() {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
@@ -102,6 +104,9 @@ export default function RegisterPage() {
             ⚠️ {error}
           </div>
         )}
+
+        {/* Formun Hemen Üzerinde Premium Bilgilendirme Kutusu */}
+        <PremiumPromoCard variant="sidebar" className="!p-4 my-2" />
 
         <form onSubmit={handleSubmit} className="space-y-4">
           {/* Ad ve Soyad (Yan Yana Ayrı Kutular) */}

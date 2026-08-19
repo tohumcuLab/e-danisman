@@ -66,16 +66,15 @@ export default async function RootLayout({
         <link rel="icon" href="/favicon.ico?v=9999" sizes="any" />
         <link rel="icon" href="/icon.svg?v=9999" type="image/svg+xml" />
         <link rel="apple-touch-icon" href="/apple-icon.png?v=9999" />
-        
+
         {/* Google AdSense Yayıncı / Doğrulama Kodu */}
-        {adsenseClientId && (
-          <script
-            async
-            src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${adsenseClientId}`}
-            crossOrigin="anonymous"
-          />
-        )}
+        <script
+          async
+          src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${adsenseClientId || "ca-pub-8453151879605141"}`}
+          crossOrigin="anonymous"
+        />
       </head>
+
       <body className="min-h-full flex flex-col">
         <Providers>
           <Header />

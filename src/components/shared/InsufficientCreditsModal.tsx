@@ -1,6 +1,8 @@
 import { useState, useEffect, useRef } from "react";
 import { sortAndShuffleAds } from "@/lib/adUtils";
 import GoogleAdSenseUnit from "@/components/shared/GoogleAdSenseUnit";
+import AdBlockModal from "@/components/shared/AdBlockModal";
+import { detectAdBlock } from "@/lib/adblockDetector";
 
 type InsufficientCreditsModalProps = {
   isOpen: boolean;
@@ -29,6 +31,7 @@ export default function InsufficientCreditsModal({
   const [claiming, setClaiming] = useState(false);
   const [message, setMessage] = useState("");
   const [dailyLimitReached, setDailyLimitReached] = useState(false);
+  const [showAdBlockModal, setShowAdBlockModal] = useState(false);
   
   const videoRef = useRef<HTMLVideoElement>(null);
   const countdownTimerRef = useRef<NodeJS.Timeout | null>(null);
@@ -119,9 +122,17 @@ export default function InsufficientCreditsModal({
   const isVideo = Boolean(mediaUrl && (mediaUrl.match(/\.(mp4|webm|ogg)$/i) || mediaUrl.includes("video")));
   const targetUrl = ad?.destinationUrl ? `/api/ads/${ad.id}/click` : null;
 
-  const handleStart = (e?: React.MouseEvent) => {
+  const handleStart = async (e?: React.MouseEvent) => {
     if (e) e.stopPropagation();
     if (isPlaying || isCompleted) return;
+
+    // 1. Reklam Engelleyici Kontrolü
+    const isBlocked = await detectAdBlock();
+    if (isBlocked) {
+      setShowAdBlockModal(true);
+      setMessage("⚠️ Reklam engelleyici tespit edildi. Kredi kazanmak için lütfen kapatın.");
+      return;
+    }
 
     setIsPlaying(true);
     setCountdown(5);
@@ -134,11 +145,34 @@ export default function InsufficientCreditsModal({
     if (countdownTimerRef.current) clearInterval(countdownTimerRef.current);
 
     let timeLeft = 5;
-    countdownTimerRef.current = setInterval(() => {
+    countdownTimerRef.current = setInterval(async () => {
       timeLeft -= 1;
       setCountdown(timeLeft);
+
+      if (timeLeft === 2) {
+        const reCheckBlocked = await detectAdBlock();
+        if (reCheckBlocked) {
+          if (countdownTimerRef.current) clearInterval(countdownTimerRef.current);
+          setIsPlaying(false);
+          setIsCompleted(false);
+          setShowAdBlockModal(true);
+          setMessage("⚠️ Reklam engelleyici algılandı. Görüntüleme başarısız.");
+          return;
+        }
+      }
+
       if (timeLeft <= 0) {
         if (countdownTimerRef.current) clearInterval(countdownTimerRef.current);
+        
+        const finalBlocked = await detectAdBlock();
+        if (finalBlocked) {
+          setIsPlaying(false);
+          setIsCompleted(false);
+          setShowAdBlockModal(true);
+          setMessage("⚠️ Reklam yüklenemedi. Lütfen reklam engelleyicinizi kapatın.");
+          return;
+        }
+
         setIsCompleted(true);
       }
     }, 1000);
@@ -151,11 +185,22 @@ export default function InsufficientCreditsModal({
   };
 
   const handleVideoEnded = () => {
-    setIsCompleted(true);
+    if (countdown <= 0) {
+      setIsCompleted(true);
+    }
   };
 
   const claimReward = async () => {
     if (!ad) return;
+
+    const isBlocked = await detectAdBlock();
+    if (isBlocked) {
+      setIsCompleted(false);
+      setShowAdBlockModal(true);
+      setMessage("⚠️ Reklam engelleyici aktif olduğu için kredi kazanılamadı.");
+      return;
+    }
+
     setClaiming(true);
     setMessage("");
     try {
@@ -394,6 +439,21 @@ export default function InsufficientCreditsModal({
           </div>
         )}
       </div>
+
+      {/* Reklam Engelleyici Uyarı Pop-up Modalı */}
+      <AdBlockModal
+        isOpen={showAdBlockModal}
+        onClose={() => setShowAdBlockModal(false)}
+        onRetry={async () => {
+          setShowAdBlockModal(false);
+          const isStillBlocked = await detectAdBlock();
+          if (isStillBlocked) {
+            setTimeout(() => setShowAdBlockModal(true), 300);
+          } else {
+            handleStart();
+          }
+        }}
+      />
     </div>
   );
 }

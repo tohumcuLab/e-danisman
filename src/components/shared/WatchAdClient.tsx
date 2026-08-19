@@ -7,6 +7,8 @@ import { signIn } from "next-auth/react";
 import { sortAndShuffleAds } from "@/lib/adUtils";
 import { Sparkles, Gift, Lock, UserPlus, CheckCircle2, ArrowRight } from "lucide-react";
 import GoogleAdSenseUnit from "@/components/shared/GoogleAdSenseUnit";
+import AdBlockModal from "@/components/shared/AdBlockModal";
+import { detectAdBlock } from "@/lib/adblockDetector";
 
 interface WatchAdClientProps {
   ads: any[];
@@ -29,6 +31,7 @@ export default function WatchAdClient({
   const [loading, setLoading] = useState(false);
   const [rewardClaimed, setRewardClaimed] = useState(false);
   const [message, setMessage] = useState("");
+  const [showAdBlockModal, setShowAdBlockModal] = useState(false);
   
   const countdownTimerRef = useRef<NodeJS.Timeout | null>(null);
   const googleContainerRef = useRef<HTMLDivElement>(null);
@@ -175,9 +178,17 @@ export default function WatchAdClient({
     }
   };
 
-  const handleStart = (e?: React.MouseEvent) => {
+  const handleStart = async (e?: React.MouseEvent) => {
     if (e) e.stopPropagation();
     if (isPlaying || isCompleted) return;
+
+    // 1. Reklam Engelleyici (AdBlock) Kontrolü
+    const isBlocked = await detectAdBlock();
+    if (isBlocked) {
+      setShowAdBlockModal(true);
+      setMessage("⚠️ Reklam engelleyici (AdBlock) tespit edildi. Kredi kazanabilmek için lütfen reklam engelleyicinizi devre dışı bırakın.");
+      return;
+    }
 
     setIsPlaying(true);
     setCountdown(5);
@@ -192,11 +203,36 @@ export default function WatchAdClient({
     }
 
     let timeLeft = 5;
-    countdownTimerRef.current = setInterval(() => {
+    countdownTimerRef.current = setInterval(async () => {
       timeLeft -= 1;
       setCountdown(timeLeft);
+
+      // İlerleme sırasında ara AdBlock kontrolü
+      if (timeLeft === 2) {
+        const reCheckBlocked = await detectAdBlock();
+        if (reCheckBlocked) {
+          if (countdownTimerRef.current) clearInterval(countdownTimerRef.current);
+          setIsPlaying(false);
+          setIsCompleted(false);
+          setShowAdBlockModal(true);
+          setMessage("⚠️ Reklam engelleyici algılandı. Görüntüleme başarısız.");
+          return;
+        }
+      }
+
       if (timeLeft <= 0) {
         if (countdownTimerRef.current) clearInterval(countdownTimerRef.current);
+        
+        // Son onay AdBlock kontrolü
+        const finalBlocked = await detectAdBlock();
+        if (finalBlocked) {
+          setIsPlaying(false);
+          setIsCompleted(false);
+          setShowAdBlockModal(true);
+          setMessage("⚠️ Reklam engelleyici tespit edildi. Lütfen AdBlock'u kapatıp yeniden deneyin.");
+          return;
+        }
+
         setIsCompleted(true);
       }
     }, 1000);
@@ -216,6 +252,15 @@ export default function WatchAdClient({
 
   // Ödül Talep Etme (Misafir için ilk 2 reklam kuralı)
   const claimReward = async () => {
+    // AdBlock aktifse kredi verilmesini önle
+    const isBlocked = await detectAdBlock();
+    if (isBlocked) {
+      setIsCompleted(false);
+      setShowAdBlockModal(true);
+      setMessage("⚠️ Reklam engelleyici aktif olduğu için ödül verilemedi.");
+      return;
+    }
+
     setLoading(true);
     setMessage("");
     try {
@@ -793,6 +838,21 @@ export default function WatchAdClient({
           </div>
         </div>
       )}
+
+      {/* 3. REKLAM ENGELLEYİCİ (ADBLOCK) UYARI POPUP MODALI */}
+      <AdBlockModal
+        isOpen={showAdBlockModal}
+        onClose={() => setShowAdBlockModal(false)}
+        onRetry={async () => {
+          setShowAdBlockModal(false);
+          const isStillBlocked = await detectAdBlock();
+          if (isStillBlocked) {
+            setTimeout(() => setShowAdBlockModal(true), 300);
+          } else {
+            handleStart();
+          }
+        }}
+      />
     </div>
   );
 }

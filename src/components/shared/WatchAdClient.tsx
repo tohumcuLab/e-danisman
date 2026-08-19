@@ -6,6 +6,7 @@ import Link from "next/link";
 import { signIn } from "next-auth/react";
 import { sortAndShuffleAds } from "@/lib/adUtils";
 import { Sparkles, Gift, Lock, UserPlus, CheckCircle2, ArrowRight } from "lucide-react";
+import GoogleAdSenseUnit from "@/components/shared/GoogleAdSenseUnit";
 
 interface WatchAdClientProps {
   ads: any[];
@@ -24,10 +25,14 @@ export default function WatchAdClient({
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
   const [isCompleted, setIsCompleted] = useState(false);
+  const [countdown, setCountdown] = useState(5);
   const [loading, setLoading] = useState(false);
   const [rewardClaimed, setRewardClaimed] = useState(false);
   const [message, setMessage] = useState("");
   
+  const countdownTimerRef = useRef<NodeJS.Timeout | null>(null);
+  const googleContainerRef = useRef<HTMLDivElement>(null);
+
   // Misafir Kredi ve İzlenen Reklam Sayacı State'i
   const [guestCredits, setGuestCredits] = useState<number>(0);
   const [guestWatchedCount, setGuestWatchedCount] = useState<number>(0);
@@ -49,6 +54,13 @@ export default function WatchAdClient({
 
   const videoRef = useRef<HTMLVideoElement>(null);
   const router = useRouter();
+
+  // Component unmount olduğunda sayacı temizle
+  useEffect(() => {
+    return () => {
+      if (countdownTimerRef.current) clearInterval(countdownTimerRef.current);
+    };
+  }, []);
 
   // İlk yüklemede localStorage'daki misafir kredilerini ve izleme sayısını oku
   useEffect(() => {
@@ -101,10 +113,37 @@ export default function WatchAdClient({
   }, [ads]);
 
   const ad = rotationAds.length > 0 ? rotationAds[currentIndex % rotationAds.length] : null;
+  const isGoogle = Boolean(ad && (ad.type === "GOOGLE" || Boolean(ad.networkCode?.trim())));
+
+  // Google AdSense veya özel HTML / Script kodlarını dinamik çalıştır
+  useEffect(() => {
+    if (!ad || !ad.networkCode || !googleContainerRef.current) return;
+    if (!isGoogle) return;
+
+    const scripts = googleContainerRef.current.querySelectorAll("script");
+    scripts.forEach((oldScript) => {
+      const newScript = document.createElement("script");
+      Array.from(oldScript.attributes).forEach((attr) => {
+        newScript.setAttribute(attr.name, attr.value);
+      });
+      newScript.textContent = oldScript.textContent;
+      oldScript.parentNode?.replaceChild(newScript, oldScript);
+    });
+
+    try {
+      if (typeof window !== "undefined" && (window as any).adsbygoogle) {
+        ((window as any).adsbygoogle = (window as any).adsbygoogle || []).push({});
+      }
+    } catch (e) {
+      // ignore
+    }
+  }, [ad, isGoogle, isPlaying]);
 
   const loadNextAd = () => {
+    if (countdownTimerRef.current) clearInterval(countdownTimerRef.current);
     setIsPlaying(false);
     setIsCompleted(false);
+    setCountdown(5);
     setRewardClaimed(false);
     setMessage("");
     if (rotationAds.length > 0) {
@@ -136,16 +175,31 @@ export default function WatchAdClient({
     }
   };
 
-  const handleStart = (e: React.MouseEvent) => {
-    e.stopPropagation();
+  const handleStart = (e?: React.MouseEvent) => {
+    if (e) e.stopPropagation();
+    if (isPlaying || isCompleted) return;
+
     setIsPlaying(true);
+    setCountdown(5);
+    setIsCompleted(false);
+
     if (isVideo && videoRef.current) {
-      videoRef.current.play();
-    } else {
-      setTimeout(() => {
-        setIsCompleted(true);
-      }, 5000);
+      videoRef.current.play().catch(() => {});
     }
+
+    if (countdownTimerRef.current) {
+      clearInterval(countdownTimerRef.current);
+    }
+
+    let timeLeft = 5;
+    countdownTimerRef.current = setInterval(() => {
+      timeLeft -= 1;
+      setCountdown(timeLeft);
+      if (timeLeft <= 0) {
+        if (countdownTimerRef.current) clearInterval(countdownTimerRef.current);
+        setIsCompleted(true);
+      }
+    }, 1000);
   };
 
   const handleMediaClick = () => {
@@ -155,7 +209,9 @@ export default function WatchAdClient({
   };
 
   const handleVideoEnded = () => {
-    setIsCompleted(true);
+    if (countdown <= 0) {
+      setIsCompleted(true);
+    }
   };
 
   // Ödül Talep Etme (Misafir için ilk 2 reklam kuralı)
@@ -375,45 +431,102 @@ export default function WatchAdClient({
           )}
         </div>
 
-        {/* Video / Medya Alanı */}
+        {/* Video / Medya / Google Reklam Alanı */}
         <div
           onClick={targetUrl ? handleMediaClick : undefined}
-          className={`relative bg-black w-full aspect-video flex items-center justify-center ${
+          className={`relative bg-neutral-900 w-full min-h-[300px] sm:min-h-[360px] flex items-center justify-center rounded-b-none overflow-hidden ${
             targetUrl ? "cursor-pointer group/media" : ""
           }`}
         >
-          {!isPlaying && !rewardClaimed ? (
-            <button
-              onClick={handleStart}
-              className="absolute z-10 bg-white/25 hover:bg-white/40 backdrop-blur-md text-white rounded-full w-20 h-20 flex items-center justify-center transition-all shadow-2xl hover:scale-110 cursor-pointer"
-            >
-              <div className="w-0 h-0 border-t-[12px] border-t-transparent border-l-[20px] border-l-white border-b-[12px] border-b-transparent ml-2" />
-            </button>
-          ) : null}
+          {/* Geri Sayım & Durum Rozeti (Sağ Üst) */}
+          {isPlaying && !rewardClaimed && (
+            <div className="absolute top-3 right-3 z-30 flex items-center gap-2">
+              {countdown > 0 ? (
+                <span className="bg-amber-500 text-white font-extrabold text-xs px-3.5 py-1.5 rounded-full shadow-lg flex items-center gap-1.5 animate-pulse">
+                  <span>⏳</span>
+                  <span>Kalan Süre: <strong>{countdown} sn</strong></span>
+                </span>
+              ) : (
+                <span className="bg-emerald-600 text-white font-extrabold text-xs px-3.5 py-1.5 rounded-full shadow-lg flex items-center gap-1.5 animate-in zoom-in">
+                  <span>✅</span>
+                  <span>İzleme Tamamlandı!</span>
+                </span>
+              )}
+            </div>
+          )}
 
-          {isVideo ? (
+          {/* İlerleme Çubuğu (Üst Kısım) */}
+          {isPlaying && !rewardClaimed && (
+            <div className="absolute top-0 left-0 w-full h-1.5 bg-white/20 z-30 overflow-hidden">
+              <div
+                className="h-full bg-emerald-500 transition-all duration-1000 ease-linear"
+                style={{ width: `${Math.min(100, ((5 - countdown) / 5) * 100)}%` }}
+              />
+            </div>
+          )}
+
+          {/* Reklamı Başlat Kaplama / Play Overlay (Henüz Başlatılmadıysa) */}
+          {!isPlaying && !rewardClaimed && (
+            <div className="absolute inset-0 z-20 bg-black/65 backdrop-blur-sm flex flex-col items-center justify-center p-6 text-center text-white space-y-4">
+              <button
+                onClick={handleStart}
+                type="button"
+                className="bg-[var(--primary)] hover:bg-[var(--primary-container)] text-white rounded-full w-20 h-20 sm:w-24 sm:h-24 flex items-center justify-center transition-all shadow-2xl hover:scale-110 cursor-pointer group ring-4 ring-white/20"
+              >
+                <div className="w-0 h-0 border-t-[14px] sm:border-t-[16px] border-t-transparent border-l-[24px] sm:border-l-[28px] border-l-white border-b-[14px] sm:border-b-[16px] border-b-transparent ml-2 group-hover:scale-105 transition-transform" />
+              </button>
+              <div>
+                <h3 className="font-extrabold text-base sm:text-lg">Reklamı Başlat & Kredi Kazan</h3>
+                <p className="text-xs text-white/85 mt-1 max-w-sm mx-auto">
+                  Ödülünüzü alabilmek için reklamı başlatın ve en az <strong>5 saniye</strong> boyunca görüntüleyin.
+                </p>
+              </div>
+            </div>
+          )}
+
+          {/* Gerçek Reklam İçeriği: Google AdSense / Video / Görsel */}
+          {isGoogle ? (
+            <div className="w-full h-full min-h-[300px] flex items-center justify-center p-4 bg-white/5">
+              {ad.networkCode?.match(/data-ad-slot=["'](\d+)["']/) ? (
+                <GoogleAdSenseUnit
+                  client={ad.networkCode.match(/data-ad-client=["'](ca-pub-[\d]+)["']/)?.[1]}
+                  slot={ad.networkCode.match(/data-ad-slot=["'](\d+)["']/)?.[1] || ""}
+                  format={ad.networkCode.match(/data-ad-format=["']([^"']+)["']/)?.[1] || "auto"}
+                  className="w-full max-w-full my-auto"
+                />
+              ) : (
+                <div
+                  ref={googleContainerRef}
+                  className="w-full overflow-hidden flex justify-center items-center my-auto"
+                  dangerouslySetInnerHTML={{ __html: ad.networkCode || "" }}
+                />
+              )}
+            </div>
+          ) : isVideo ? (
             <video
               ref={videoRef}
               src={mediaUrl}
               onEnded={handleVideoEnded}
-              className={`w-full h-full object-contain ${
+              className={`w-full h-full max-h-[400px] object-contain ${
                 !isPlaying || rewardClaimed ? "opacity-50" : "opacity-100"
               }`}
               controls={false}
               playsInline
             />
           ) : (
-            <div className="w-full h-full">
-              <img
-                src={mediaUrl}
-                alt={ad.title}
-                className={`w-full h-full object-contain ${
-                  !isPlaying || rewardClaimed ? "opacity-50" : "opacity-100"
-                } ${targetUrl ? "group-hover/media:scale-105 transition-transform duration-500" : ""}`}
-              />
-              {isPlaying && !isCompleted && !rewardClaimed && (
-                <div className="absolute top-4 right-4 bg-black/70 backdrop-blur-md text-white px-3.5 py-1.5 rounded-xl text-xs font-bold animate-pulse">
-                  ⏳ Lütfen bekleyin...
+            <div className="w-full h-full min-h-[260px] flex items-center justify-center">
+              {mediaUrl ? (
+                <img
+                  src={mediaUrl}
+                  alt={ad.title}
+                  className={`w-full max-h-[400px] object-contain ${
+                    !isPlaying || rewardClaimed ? "opacity-50" : "opacity-100"
+                  } ${targetUrl ? "group-hover/media:scale-105 transition-transform duration-500" : ""}`}
+                />
+              ) : (
+                <div className="text-white/60 text-sm p-8 text-center flex flex-col items-center gap-2">
+                  <span className="text-3xl">📢</span>
+                  <span>{ad.title}</span>
                 </div>
               )}
             </div>
@@ -438,18 +551,26 @@ export default function WatchAdClient({
             <button
               onClick={claimReward}
               disabled={!isCompleted || loading}
-              className="btn btn-primary px-8 py-3.5 text-sm sm:text-base font-extrabold rounded-2xl shadow-lg hover:shadow-xl transition-all disabled:opacity-50 cursor-pointer"
+              className={`w-full sm:w-auto px-8 py-3.5 text-sm sm:text-base font-extrabold rounded-2xl shadow-lg transition-all cursor-pointer ${
+                isCompleted
+                  ? "btn btn-primary hover:shadow-xl hover:scale-[1.02] ring-4 ring-[var(--primary)]/30"
+                  : isPlaying
+                  ? "btn bg-amber-500 hover:bg-amber-600 text-white opacity-90 cursor-not-allowed"
+                  : "btn btn-primary opacity-60 cursor-pointer"
+              }`}
             >
               {loading
                 ? "İşleniyor..."
                 : isCompleted
-                ? "🎉 Ödülü Al"
-                : "Ödülü Alabilmek İçin Reklamı Başlatın & İzleyin"}
+                ? `🎉 +${ad.creditReward || 1} Krediyi Al`
+                : isPlaying
+                ? `⏳ Reklam İzleniyor (${countdown} sn)...`
+                : "▶️ Reklamı Başlat & İzle (5 sn)"}
             </button>
           ) : (
             <button
               onClick={loadNextAd}
-              className="btn bg-[var(--primary)] hover:bg-[var(--primary-container)] text-white px-8 py-3.5 text-sm sm:text-base font-extrabold rounded-2xl shadow-lg flex items-center justify-center gap-2 mx-auto cursor-pointer"
+              className="btn bg-[var(--primary)] hover:bg-[var(--primary-container)] text-white px-8 py-3.5 text-sm sm:text-base font-extrabold rounded-2xl shadow-lg flex items-center justify-center gap-2 mx-auto cursor-pointer hover:scale-105 transition-all"
             >
               <span>▶️ Sonraki Reklamı İzle</span>
             </button>

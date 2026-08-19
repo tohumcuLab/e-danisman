@@ -9,13 +9,17 @@ export const authConfig = {
   },
   callbacks: {
     async redirect({ url, baseUrl }) {
-      const siteUrl = process.env.NEXTAUTH_URL || process.env.AUTH_URL || "https://sor.hobitohum.com";
-      if (url.includes("localhost")) {
-        const path = url.replace(/^https?:\/\/localhost(:\d+)?/, "");
-        return `${siteUrl}${path.startsWith("/") ? path : "/" + path}`;
+      if (url.startsWith("/")) return `${baseUrl}${url}`;
+      if (url.startsWith("http")) {
+        try {
+          const parsed = new URL(url);
+          const base = new URL(baseUrl);
+          if (parsed.origin === base.origin) {
+            return url;
+          }
+        } catch {}
       }
-      if (url.startsWith("/")) return `${siteUrl}${url}`;
-      return url.startsWith("http") ? url : siteUrl;
+      return baseUrl;
     },
     authorized({ auth, request: { nextUrl } }) {
       try {

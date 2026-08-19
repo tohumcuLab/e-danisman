@@ -165,7 +165,7 @@ export default async function QuestionDetailPage({ params }: { params: Promise<{
                 <h4 className="font-bold text-sm text-[var(--on-surface)] group-hover:text-[var(--primary)] transition-colors leading-tight">
                   {question.user.name}
                 </h4>
-                <p className="text-[11px] text-[var(--on-surface-variant)] mt-0.5">
+                <p className="text-[11px] text-[var(--on-surface-variant)] mt-0.5" suppressHydrationWarning>
                   {formatDistanceToNow(new Date(question.createdAt), { addSuffix: true, locale: tr })}
                 </p>
               </div>

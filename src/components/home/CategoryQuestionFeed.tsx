@@ -6,15 +6,14 @@ import { formatDistanceToNow } from "date-fns";
 import { tr } from "date-fns/locale";
 import FeedAdCard from "@/components/shared/FeedAdCard";
 
-function generateRandomAdPositions(itemCount: number, minGap = 3, maxGap = 5): Set<number> {
+function getDeterministicAdPositions(itemCount: number, gap = 4): Set<number> {
   const adPositions = new Set<number>();
   if (itemCount === 0) return adPositions;
 
-  let currentPos = Math.floor(Math.random() * (maxGap - minGap + 1)) + minGap;
-
+  let currentPos = gap;
   while (currentPos <= itemCount) {
     adPositions.add(currentPos);
-    currentPos += Math.floor(Math.random() * (maxGap - minGap + 1)) + minGap;
+    currentPos += gap;
   }
 
   return adPositions;
@@ -224,9 +223,9 @@ export default function CategoryQuestionFeed({ categories, initialQuestions, ads
     return categories.find((c) => c.id === selectedCategoryId) || null;
   }, [selectedCategoryId, categories]);
 
-  // Reklam pozisyonlarını hesapla
+  // Reklam pozisyonlarını hesapla (Deterministic - SSR ve Client tam uyumlu)
   const adPositions = useMemo(() => {
-    return generateRandomAdPositions(displayedQuestions.length, 3, 5);
+    return getDeterministicAdPositions(displayedQuestions.length, 4);
   }, [displayedQuestions.length]);
 
   let adCounter = 0;
@@ -413,7 +412,7 @@ export default function CategoryQuestionFeed({ categories, initialQuestions, ads
                       <h4 className="font-bold text-sm text-[var(--on-surface)] group-hover:text-[var(--primary)] transition-colors">
                         {q.user.name}
                       </h4>
-                      <p className="text-[11px] text-[var(--on-surface-variant)]">
+                      <p className="text-[11px] text-[var(--on-surface-variant)]" suppressHydrationWarning>
                         {formatDistanceToNow(new Date(q.createdAt), {
                           addSuffix: true,
                           locale: tr,

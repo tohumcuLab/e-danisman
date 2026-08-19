@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useSession } from "next-auth/react";
+import { safeSessionStorage } from "@/lib/safeStorage";
 import InsufficientCreditsModal from "./InsufficientCreditsModal";
 import PremiumModal from "./PremiumModal";
 
@@ -31,16 +32,14 @@ export default function AnswerForm({
 
   // Sayfa yüklendiğinde sessionStorage'dan taslak cevabı geri yükle
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      const savedDraft = sessionStorage.getItem(`draft_answer_${questionId}`);
-      const isPendingSubmit = sessionStorage.getItem(`pending_submit_${questionId}`);
+    const savedDraft = safeSessionStorage.getItem(`draft_answer_${questionId}`);
+    const isPendingSubmit = safeSessionStorage.getItem(`pending_submit_${questionId}`);
 
-      if (savedDraft) {
-        setBody(savedDraft);
-        if (isPendingSubmit && status === "authenticated") {
-          setDraftNotice("💡 Giriş yapmadan önce yazdığınız cevabınız korundu. Aşağıdan kontrol edip onaylayarak gönderebilirsiniz.");
-          sessionStorage.removeItem(`pending_submit_${questionId}`);
-        }
+    if (savedDraft) {
+      setBody(savedDraft);
+      if (isPendingSubmit && status === "authenticated") {
+        setDraftNotice("💡 Giriş yapmadan önce yazdığınız cevabınız korundu. Aşağıdan kontrol edip onaylayarak gönderebilirsiniz.");
+        safeSessionStorage.removeItem(`pending_submit_${questionId}`);
       }
     }
   }, [questionId, status]);
@@ -66,12 +65,10 @@ export default function AnswerForm({
   const handleBodyChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const text = e.target.value;
     setBody(text);
-    if (typeof window !== "undefined") {
-      if (text.trim()) {
-        sessionStorage.setItem(`draft_answer_${questionId}`, text);
-      } else {
-        sessionStorage.removeItem(`draft_answer_${questionId}`);
-      }
+    if (text.trim()) {
+      safeSessionStorage.setItem(`draft_answer_${questionId}`, text);
+    } else {
+      safeSessionStorage.removeItem(`draft_answer_${questionId}`);
     }
   };
 
@@ -101,10 +98,8 @@ export default function AnswerForm({
       // Başarılı gönderimde taslağı ve form alanını temizle
       setBody("");
       setDraftNotice("");
-      if (typeof window !== "undefined") {
-        sessionStorage.removeItem(`draft_answer_${questionId}`);
-        sessionStorage.removeItem(`pending_submit_${questionId}`);
-      }
+      safeSessionStorage.removeItem(`draft_answer_${questionId}`);
+      safeSessionStorage.removeItem(`pending_submit_${questionId}`);
 
       if (data.pendingApproval) {
         setSuccessMessage(data.message || "Cevabınız yönetici onayına gönderilmiştir.");
@@ -135,11 +130,13 @@ export default function AnswerForm({
 
     // 1. Üye girişi yapmayan kullanıcı için: taslağı işaretle ve giriş popup'ı aç
     if (status === "unauthenticated" || !session?.user) {
-      if (typeof window !== "undefined" && body.trim()) {
-        sessionStorage.setItem(`draft_answer_${questionId}`, body);
-        sessionStorage.setItem(`pending_submit_${questionId}`, "true");
+      if (body.trim()) {
+        safeSessionStorage.setItem(`draft_answer_${questionId}`, body);
+        safeSessionStorage.setItem(`pending_submit_${questionId}`, "true");
       }
-      window.dispatchEvent(new Event("prompt-guest-login"));
+      if (typeof window !== "undefined") {
+        window.dispatchEvent(new Event("prompt-guest-login"));
+      }
       return;
     }
 

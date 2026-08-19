@@ -4,6 +4,7 @@ import { useSession } from "next-auth/react";
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { safeSessionStorage } from "@/lib/safeStorage";
 
 export default function GuestAuthPromptModal() {
   const { data: session, status } = useSession();
@@ -25,7 +26,7 @@ export default function GuestAuthPromptModal() {
     }
 
     // Oturum esnasında önceden kapatıldı mı kontrol et
-    const isDismissed = sessionStorage.getItem("guest_auth_modal_dismissed");
+    const isDismissed = safeSessionStorage.getItem("guest_auth_modal_dismissed");
     
     if (!isDismissed) {
       // Sayfaya girdikten 5 saniye sonra otomatik göster
@@ -51,7 +52,7 @@ export default function GuestAuthPromptModal() {
 
   const handleClose = () => {
     setIsOpen(false);
-    sessionStorage.setItem("guest_auth_modal_dismissed", "true");
+    safeSessionStorage.setItem("guest_auth_modal_dismissed", "true");
   };
 
   if (!isOpen || status === "authenticated" || isAuthOrAdminPage) {

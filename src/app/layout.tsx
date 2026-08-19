@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { Header } from "@/components/layout/Header";
@@ -6,13 +6,20 @@ import { Footer } from "@/components/layout/Footer";
 import { Providers } from "@/components/providers/Providers";
 import GuestAuthPromptModal from "@/components/shared/GuestAuthPromptModal";
 import CookieConsentBanner from "@/components/shared/CookieConsentBanner";
+import { prisma } from "@/lib/prisma";
 
 const inter = Inter({
   variable: "--font-inter",
   subsets: ["latin"],
 });
 
-import { prisma } from "@/lib/prisma";
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
+  userScalable: true,
+  themeColor: "#006537",
+};
 
 export const metadata: Metadata = {
   title: "Tarımsal e-Danışman",
@@ -63,10 +70,6 @@ export default async function RootLayout({
   return (
     <html lang="tr" className={`${inter.variable} h-full antialiased`}>
       <head>
-        <link rel="icon" href="/favicon.ico?v=9999" sizes="any" />
-        <link rel="icon" href="/icon.svg?v=9999" type="image/svg+xml" />
-        <link rel="apple-touch-icon" href="/apple-icon.png?v=9999" />
-
         {/* Google AdSense Yayıncı / Doğrulama Kodu */}
         <script
           async

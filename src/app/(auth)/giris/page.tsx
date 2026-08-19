@@ -51,7 +51,8 @@ function LoginContent() {
       if (res?.error) {
         setError("Geçersiz e-posta adresi veya şifre.");
       } else {
-        window.location.href = "https://sor.hobitohum.com";
+        const callbackUrl = searchParams.get("callbackUrl");
+        window.location.href = callbackUrl && callbackUrl.startsWith("/") ? callbackUrl : "/";
       }
     } catch (err: any) {
       console.error("Giriş işlemi hatası:", err);

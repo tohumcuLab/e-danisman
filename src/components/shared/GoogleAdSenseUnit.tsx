@@ -27,15 +27,22 @@ export default function GoogleAdSenseUnit({
   useEffect(() => {
     if (!clientId || !slot || isPushed.current) return;
 
-    try {
-      if (typeof window !== "undefined") {
-        const adsbygoogle = (window as any).adsbygoogle || [];
-        adsbygoogle.push({});
-        isPushed.current = true;
+    const timer = setTimeout(() => {
+      try {
+        if (typeof window !== "undefined" && adRef.current) {
+          const status = adRef.current.getAttribute("data-adsbygoogle-status");
+          if (!status && !isPushed.current) {
+            isPushed.current = true;
+            const adsbygoogle = (window as any).adsbygoogle || [];
+            adsbygoogle.push({});
+          }
+        }
+      } catch (err) {
+        // WebKit veya AdBlock kısıtlamasında sessizce yoksay
       }
-    } catch (err) {
-      console.warn("Google AdSense birimi yüklenemedi:", err);
-    }
+    }, 100);
+
+    return () => clearTimeout(timer);
   }, [clientId, slot]);
 
   if (!clientId || !slot) {

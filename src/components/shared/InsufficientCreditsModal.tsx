@@ -63,26 +63,20 @@ export default function InsufficientCreditsModal({
 
   const isGoogle = Boolean(ad && (ad.type === "GOOGLE" || Boolean(ad.networkCode?.trim())));
 
-  // Google AdSense veya özel HTML / Script kodlarını dinamik çalıştır
+  // Google AdSense veya özel HTML / Script kodlarını dinamik güvenli çalıştırma
   useEffect(() => {
     if (!ad || !ad.networkCode || !googleContainerRef.current) return;
     if (!isGoogle) return;
 
-    const scripts = googleContainerRef.current.querySelectorAll("script");
-    scripts.forEach((oldScript) => {
-      const newScript = document.createElement("script");
-      Array.from(oldScript.attributes).forEach((attr) => {
-        newScript.setAttribute(attr.name, attr.value);
-      });
-      newScript.textContent = oldScript.textContent;
-      oldScript.parentNode?.replaceChild(newScript, oldScript);
-    });
+    const timer = setTimeout(() => {
+      try {
+        if (typeof window !== "undefined" && (window as any).adsbygoogle) {
+          ((window as any).adsbygoogle = (window as any).adsbygoogle || []).push({});
+        }
+      } catch (e) {}
+    }, 150);
 
-    try {
-      if (typeof window !== "undefined" && (window as any).adsbygoogle) {
-        ((window as any).adsbygoogle = (window as any).adsbygoogle || []).push({});
-      }
-    } catch (e) {}
+    return () => clearTimeout(timer);
   }, [ad, isGoogle, isPlaying]);
 
   const fetchAd = async () => {

@@ -276,7 +276,7 @@ export default async function PublicProfilePage({
             userQuestions.map((q: any) => (
               <div key={q.id} className="card p-5 hover:border-[var(--primary)] transition-all space-y-3">
                 <div className="flex items-center justify-between gap-2 text-xs">
-                  <span className="text-[11px] text-[var(--on-surface-variant)] font-semibold">
+                  <span className="text-[11px] text-[var(--on-surface-variant)] font-semibold" suppressHydrationWarning>
                     {formatDistanceToNow(new Date(q.createdAt), { addSuffix: true, locale: tr })}
                   </span>
                 </div>
@@ -341,7 +341,7 @@ export default async function PublicProfilePage({
                   <span className="bg-amber-500/20 text-amber-800 dark:text-amber-300 px-2.5 py-0.5 rounded-md font-bold text-[11px]">
                     ⏳ Yönetici Onayında
                   </span>
-                  <span className="text-[11px] text-[var(--on-surface-variant)] font-semibold">
+                  <span className="text-[11px] text-[var(--on-surface-variant)] font-semibold" suppressHydrationWarning>
                     {formatDistanceToNow(new Date(q.createdAt), { addSuffix: true, locale: tr })}
                   </span>
                 </div>
@@ -411,7 +411,7 @@ export default async function PublicProfilePage({
 
                 <div className="flex items-center justify-between text-xs text-[var(--on-surface-variant)] pt-3 border-t border-[var(--outline-variant)]">
                   <div>👍 <strong>{ans.likeCount}</strong> Beğeni</div>
-                  <div>{formatDistanceToNow(new Date(ans.createdAt), { addSuffix: true, locale: tr })}</div>
+                  <div suppressHydrationWarning>{formatDistanceToNow(new Date(ans.createdAt), { addSuffix: true, locale: tr })}</div>
                 </div>
               </div>
             ))
@@ -430,7 +430,7 @@ export default async function PublicProfilePage({
             userUnansweredQuestions.map((q: any) => (
               <div key={q.id} className="card p-5 border-l-4 border-amber-500 space-y-3">
                 <div className="flex items-center justify-between gap-2 text-xs">
-                  <span className="text-[11px] text-[var(--on-surface-variant)] font-semibold">
+                  <span className="text-[11px] text-[var(--on-surface-variant)] font-semibold" suppressHydrationWarning>
                     {formatDistanceToNow(new Date(q.createdAt), { addSuffix: true, locale: tr })}
                   </span>
                 </div>
@@ -476,7 +476,7 @@ export default async function PublicProfilePage({
       {/* Profil Altı Sponsorlu Reklam */}
       {feedAds.length > 0 && (
         <div className="mt-8">
-          <FeedAdCard ad={feedAds[Math.floor(Math.random() * feedAds.length)]} />
+          <FeedAdCard ad={feedAds[0]} />
         </div>
       )}
     </div>

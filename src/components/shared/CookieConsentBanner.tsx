@@ -2,13 +2,14 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import { safeLocalStorage } from "@/lib/safeStorage";
 
 export default function CookieConsentBanner() {
   const [show, setShow] = useState(false);
 
   useEffect(() => {
     // Daha önce onay verilmiş mi kontrol et
-    const consent = localStorage.getItem("hobitohum_cookie_consent");
+    const consent = safeLocalStorage.getItem("hobitohum_cookie_consent");
     if (!consent) {
       // 800ms sonra yumuşak bir animasyonla aç
       const timer = setTimeout(() => setShow(true), 800);
@@ -17,12 +18,12 @@ export default function CookieConsentBanner() {
   }, []);
 
   const handleAcceptAll = () => {
-    localStorage.setItem("hobitohum_cookie_consent", "all");
+    safeLocalStorage.setItem("hobitohum_cookie_consent", "all");
     setShow(false);
   };
 
   const handleAcceptEssential = () => {
-    localStorage.setItem("hobitohum_cookie_consent", "essential");
+    safeLocalStorage.setItem("hobitohum_cookie_consent", "essential");
     setShow(false);
   };
 

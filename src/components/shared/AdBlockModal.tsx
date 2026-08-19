@@ -15,7 +15,7 @@ export default function AdBlockModal({ isOpen, onClose, onRetry }: AdBlockModalP
     if (onRetry) {
       onRetry();
     } else {
-      window.location.reload();
+      onClose();
     }
   };
 

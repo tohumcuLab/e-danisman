@@ -27,32 +27,24 @@ export default function FeedAdCard({ ad }: { ad: Ad }) {
     fetch(`/api/ads/${ad.id}/impression`, { method: "POST" }).catch(() => {});
   }, [ad]);
 
-  // Google AdSense veya özel HTML / Script kodlarını dinamik çalıştır
+  // Google AdSense veya özel HTML / Script kodlarını dinamik güvenli çalıştırma
   useEffect(() => {
     if (!ad || !ad.networkCode || !containerRef.current) return;
 
     const isGoogleAd = ad.type === "GOOGLE" || Boolean(ad.networkCode.trim());
     if (!isGoogleAd) return;
 
-    // Eğer networkCode içerisinde inline <script> etiketleri varsa çalıştır
-    const scripts = containerRef.current.querySelectorAll("script");
-    scripts.forEach((oldScript) => {
-      const newScript = document.createElement("script");
-      Array.from(oldScript.attributes).forEach((attr) => {
-        newScript.setAttribute(attr.name, attr.value);
-      });
-      newScript.textContent = oldScript.textContent;
-      oldScript.parentNode?.replaceChild(newScript, oldScript);
-    });
-
-    // Eğer Google AdSense push çağrısı gerekiyorsa
-    try {
-      if (typeof window !== "undefined" && (window as any).adsbygoogle) {
-        ((window as any).adsbygoogle = (window as any).adsbygoogle || []).push({});
+    const timer = setTimeout(() => {
+      try {
+        if (typeof window !== "undefined" && (window as any).adsbygoogle) {
+          ((window as any).adsbygoogle = (window as any).adsbygoogle || []).push({});
+        }
+      } catch (e) {
+        // ignore
       }
-    } catch (e) {
-      // ignore
-    }
+    }, 150);
+
+    return () => clearTimeout(timer);
   }, [ad]);
 
   if (!ad) return null;

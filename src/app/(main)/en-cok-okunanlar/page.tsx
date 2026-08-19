@@ -94,7 +94,7 @@ export default async function EnCokOkunanlarPage({
                             <h4 className="font-bold text-sm text-[var(--on-surface)] group-hover/user:text-[var(--primary)] transition-colors">
                               {q.user.name}
                             </h4>
-                            <p className="text-[11px] text-[var(--on-surface-variant)]">
+                            <p className="text-[11px] text-[var(--on-surface-variant)]" suppressHydrationWarning>
                               {formatDistanceToNow(new Date(q.createdAt), { addSuffix: true, locale: tr })}
                             </p>
                           </div>

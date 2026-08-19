@@ -1,5 +1,6 @@
 /**
- * Tarayıcıda AdBlock (reklam engelleyici) olup olmadığını tespit eden yardımcı fonksiyon
+ * Tarayıcıda AdBlock (reklam engelleyici) olup olmadığını tespit eden yardımcı fonksiyon.
+ * iOS Safari'nin yerleşik Gizlilik ve İzleme Koruması'nı yanlışlıkla AdBlock sanmayacak şekilde optimize edilmiştir.
  */
 export async function detectAdBlock(): Promise<boolean> {
   if (typeof window === "undefined") return false;
@@ -35,27 +36,42 @@ export async function detectAdBlock(): Promise<boolean> {
     // ignore
   }
 
-  // 2. YÖNTEM: Google AdSense sunucusuna test isteği gönderme (Network Engellemesi Tespiti)
+  // 2. YÖNTEM: adsbygoogle nesnesinin varlığını ve engellenme durumunu kontrol etme
   try {
-    const testUrl = "https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js";
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 2500);
+    const hasAdSenseScriptLoaded = Boolean(
+      (window as any).adsbygoogle ||
+      document.querySelector('script[src*="pagead2.googlesyndication.com"]')
+    );
 
-    const response = await fetch(testUrl, {
-      method: "HEAD",
-      mode: "no-cors",
-      cache: "no-store",
-      signal: controller.signal,
-    });
+    // Eğer sayfa AdSense scriptini barındırıyorsa ancak global nesne engellenmişse kontrol et
+    if (!hasAdSenseScriptLoaded) {
+      const testUrl = "https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js";
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 2000);
 
-    clearTimeout(timeoutId);
-    // Eğer istek tamamlandıysa AdBlock network isteğini engellememiştir
-    return false;
-  } catch (err: any) {
-    // Eğer istek kullanıcı iptal etmediği halde "Failed to fetch" veya "net::ERR_BLOCKED_BY_CLIENT" ile düştüyse AdBlock aktiftir
-    if (err.name !== "AbortError") {
-      return true;
+      try {
+        const response = await fetch(testUrl, {
+          method: "HEAD",
+          mode: "no-cors",
+          cache: "no-store",
+          signal: controller.signal,
+        });
+        clearTimeout(timeoutId);
+        return false;
+      } catch (err: any) {
+        clearTimeout(timeoutId);
+        // AbortError veya generic iOS Safari tracking timeout durumlarında false pozitif vermeyi engelle
+        if (err.name === "AbortError") {
+          return false;
+        }
+        // Yalnızca net olarak istemci tarafı engelleme (ERR_BLOCKED_BY_CLIENT) tespit edildiğinde true dön
+        if (err.message && (err.message.includes("BLOCKED_BY_CLIENT") || err.message.includes("blocked"))) {
+          return true;
+        }
+      }
     }
+  } catch {
+    // ignore
   }
 
   return false;

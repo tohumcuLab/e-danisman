@@ -282,7 +282,7 @@ export default function AnswerItem({
                 </span>
               )}
             </div>
-            <p className="text-[10px] text-[var(--on-surface-variant)]">
+            <p className="text-[10px] text-[var(--on-surface-variant)]" suppressHydrationWarning>
               {formatDistanceToNow(new Date(answer.createdAt), { addSuffix: true, locale: tr })}
             </p>
           </div>
@@ -533,7 +533,7 @@ export default function AnswerItem({
                         <span className="font-bold text-[var(--on-surface)] group-hover:text-[var(--primary)] transition-colors">
                           {reply.user.name}
                         </span>
-                        <span className="text-[10px] text-[var(--on-surface-variant)] ml-2">
+                        <span className="text-[10px] text-[var(--on-surface-variant)] ml-2" suppressHydrationWarning>
                           {formatDistanceToNow(new Date(reply.createdAt), { addSuffix: true, locale: tr })}
                         </span>
                       </div>

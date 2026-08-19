@@ -9,6 +9,7 @@ import { Sparkles, Gift, Lock, UserPlus, CheckCircle2, ArrowRight } from "lucide
 import GoogleAdSenseUnit from "@/components/shared/GoogleAdSenseUnit";
 import AdBlockModal from "@/components/shared/AdBlockModal";
 import { detectAdBlock } from "@/lib/adblockDetector";
+import { safeLocalStorage } from "@/lib/safeStorage";
 
 interface WatchAdClientProps {
   ads: any[];
@@ -65,34 +66,30 @@ export default function WatchAdClient({
     };
   }, []);
 
-  // İlk yüklemede localStorage'daki misafir kredilerini ve izleme sayısını oku
+  // İlk yüklemede safeLocalStorage'daki misafir kredilerini ve izleme sayısını oku
   useEffect(() => {
-    try {
-      const savedCredits = localStorage.getItem("guest_pending_credits");
-      if (savedCredits) {
-        const val = parseInt(savedCredits, 10);
-        if (!isNaN(val) && val > 0) {
-          setGuestCredits(val);
-        }
+    const savedCredits = safeLocalStorage.getItem("guest_pending_credits");
+    if (savedCredits) {
+      const val = parseInt(savedCredits, 10);
+      if (!isNaN(val) && val > 0) {
+        setGuestCredits(val);
       }
+    }
 
-      const savedCount = localStorage.getItem("guest_rewarded_ad_count");
-      if (savedCount) {
-        const count = parseInt(savedCount, 10);
-        if (!isNaN(count)) {
-          setGuestWatchedCount(count);
-        }
+    const savedCount = safeLocalStorage.getItem("guest_rewarded_ad_count");
+    if (savedCount) {
+      const count = parseInt(savedCount, 10);
+      if (!isNaN(count)) {
+        setGuestWatchedCount(count);
       }
-    } catch (e) {
-      // ignore
     }
   }, []);
 
-  // Eğer kullanıcı zaten giriş yapmışsa ve localStorage'da bekleyen misafir kredisi varsa otomatik aktar
+  // Eğer kullanıcı zaten giriş yapmışsa ve safeLocalStorage'da bekleyen misafir kredisi varsa otomatik aktar
   useEffect(() => {
     if (isLoggedIn && user?.id) {
       setCurrentUser(user);
-      const pending = localStorage.getItem("guest_pending_credits");
+      const pending = safeLocalStorage.getItem("guest_pending_credits");
       if (pending && parseInt(pending, 10) > 0) {
         claimGuestCreditsToServer(parseInt(pending, 10));
       }
@@ -118,20 +115,10 @@ export default function WatchAdClient({
   const ad = rotationAds.length > 0 ? rotationAds[currentIndex % rotationAds.length] : null;
   const isGoogle = Boolean(ad && (ad.type === "GOOGLE" || Boolean(ad.networkCode?.trim())));
 
-  // Google AdSense veya özel HTML / Script kodlarını dinamik çalıştır
+  // Google AdSense veya özel HTML / Script kodlarını dinamik güvenli çalıştırma
   useEffect(() => {
     if (!ad || !ad.networkCode || !googleContainerRef.current) return;
     if (!isGoogle) return;
-
-    const scripts = googleContainerRef.current.querySelectorAll("script");
-    scripts.forEach((oldScript) => {
-      const newScript = document.createElement("script");
-      Array.from(oldScript.attributes).forEach((attr) => {
-        newScript.setAttribute(attr.name, attr.value);
-      });
-      newScript.textContent = oldScript.textContent;
-      oldScript.parentNode?.replaceChild(newScript, oldScript);
-    });
 
     try {
       if (typeof window !== "undefined" && (window as any).adsbygoogle) {
@@ -165,8 +152,8 @@ export default function WatchAdClient({
       });
       const data = await res.json();
       if (res.ok && data.success) {
-        localStorage.removeItem("guest_pending_credits");
-        localStorage.removeItem("guest_rewarded_ad_count");
+        safeLocalStorage.removeItem("guest_pending_credits");
+        safeLocalStorage.removeItem("guest_rewarded_ad_count");
         setGuestCredits(0);
         setGuestWatchedCount(0);
         setMessage(data.message || `🎉 ${amountToClaim} kredi hesabınıza aktarıldı.`);
@@ -283,10 +270,8 @@ export default function WatchAdClient({
             setGuestWatchedCount(newCount);
             setGuestCredits(newTotal);
 
-            try {
-              localStorage.setItem("guest_rewarded_ad_count", newCount.toString());
-              localStorage.setItem("guest_pending_credits", newTotal.toString());
-            } catch (e) {}
+            safeLocalStorage.setItem("guest_rewarded_ad_count", newCount.toString());
+            safeLocalStorage.setItem("guest_pending_credits", newTotal.toString());
 
             setMessage(`🎉 Tebrikler! +${rewardAmount} Kredi kazandınız. (Misafir Ödülü: ${newCount}/2)`);
           } else {

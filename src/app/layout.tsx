@@ -54,22 +54,50 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   let adsenseClientId = process.env.NEXT_PUBLIC_ADSENSE_CLIENT_ID || null;
-  if (!adsenseClientId) {
-    try {
-      const setting = await prisma.systemSetting.findUnique({
-        where: { key: "ADSENSE_CLIENT_ID" },
-      });
-      if (setting?.value?.trim()) {
+  let gaMeasurementId = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID || "G-YTY000VQPM";
+  
+  try {
+    const settings = await prisma.systemSetting.findMany({
+      where: {
+        key: { in: ["ADSENSE_CLIENT_ID", "GA_MEASUREMENT_ID"] },
+      },
+    });
+    
+    for (const setting of settings) {
+      if (setting.key === "ADSENSE_CLIENT_ID" && setting.value?.trim() && !process.env.NEXT_PUBLIC_ADSENSE_CLIENT_ID) {
         adsenseClientId = setting.value.trim();
       }
-    } catch {
-      // Hata durumunda yoksay
+      if (setting.key === "GA_MEASUREMENT_ID" && setting.value?.trim() && !process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID) {
+        gaMeasurementId = setting.value.trim();
+      }
     }
+  } catch {
+    // Hata durumunda varsayılanları koru
   }
 
   return (
     <html lang="tr" className={`${inter.variable} h-full antialiased`}>
       <head>
+        {/* Google Analytics (gtag.js) */}
+        {gaMeasurementId && (
+          <>
+            <script
+              async
+              src={`https://www.googletagmanager.com/gtag/js?id=${gaMeasurementId}`}
+            />
+            <script
+              dangerouslySetInnerHTML={{
+                __html: `
+                  window.dataLayer = window.dataLayer || [];
+                  function gtag(){dataLayer.push(arguments);}
+                  gtag('js', new Date());
+                  gtag('config', '${gaMeasurementId}');
+                `,
+              }}
+            />
+          </>
+        )}
+
         {/* Google AdSense Yayıncı / Doğrulama Kodu */}
         <script
           async

@@ -70,6 +70,28 @@ export default async function AdminSettingsPage() {
               description="Google'ın sayfa içerisinde en uygun yerlere otomatik reklam yerleştirmesini aktif etmek için 'true' bırakın."
             />
           </div>
+
+          {/* Google Analytics 4 Ayarları */}
+          <div className="bg-sky-50/50 dark:bg-sky-950/20 p-4 rounded-xl border border-sky-200 dark:border-sky-800 space-y-4">
+            <div className="flex items-center gap-2">
+              <span className="text-xl">📊</span>
+              <div>
+                <h3 className="font-extrabold text-sm text-sky-900 dark:text-sky-300">
+                  Google Analytics 4 (GA4) Entegrasyonu
+                </h3>
+                <p className="text-xs text-[var(--on-surface-variant)]">
+                  Ziyaretçi ve trafik istatistiklerini izlemek için Ölçüm Kimliğinizi (Measurement ID) tanımlayın.
+                </p>
+              </div>
+            </div>
+
+            <SettingsForm 
+              settingKey="GA_MEASUREMENT_ID"
+              initialValue={settingsMap["GA_MEASUREMENT_ID"] || "G-YTY000VQPM"}
+              label="GA4 Ölçüm Kimliği (G-XXXXXXXXXX)"
+              description="Google Analytics mülkünüzdeki Ölçüm Kimliği (Örn: G-YTY000VQPM)."
+            />
+          </div>
         </div>
 
         <div className="space-y-6">
